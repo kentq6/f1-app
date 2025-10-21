@@ -24,3 +24,17 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Team Primary Colors */
+@theme {
+  --mercedes-primary: #00D7B6;
+  --rbr-primary: #4781D7;
+  --ferrari-primary: #ED1131;
+  --mclaren-primary: #F47600;
+  --alpine-primary: #00A1E8;
+  --vcrb-primary: #6C98FF;
+  --am-primary: #229971;
+  --williams-primary: #1868DB;
+  --sauber-primary: #01C00E;
+  --haas-primary: #9C9FA2;
+}
