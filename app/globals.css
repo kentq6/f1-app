@@ -27,6 +27,7 @@ body {
 
 /* Team Primary Colors */
 @theme {
+  --formula-one-primary: #FF1801;
   --mercedes-primary: #00D7B6;
   --rbr-primary: #4781D7;
   --ferrari-primary: #ED1131;
