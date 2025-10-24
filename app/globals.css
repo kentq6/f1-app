@@ -45,17 +45,17 @@
 
 /* Team Primary Colors */
 @theme {
-  --formula-one-primary: #FF1801;
-  --mercedes-primary: #00D7B6;
-  --rbr-primary: #4781D7;
-  --ferrari-primary: #ED1131;
-  --mclaren-primary: #F47600;
-  --alpine-primary: #00A1E8;
-  --vcrb-primary: #6C98FF;
-  --am-primary: #229971;
-  --williams-primary: #1868DB;
-  --sauber-primary: #01C00E;
-  --haas-primary: #9C9FA2;
+  --color-formula-one-primary: #FF1801;
+  --color-mercedes: #00D7B6;
+  --color-red-bull: #4781D7;
+  --color-ferrari: #ED1131;
+  --color-mclaren: #F47600;
+  --color-alpine: #00A1E8;
+  --color-vcarb: #6C98FF;
+  --color-aston-martin: #229971;
+  --color-williams: #1868DB;
+  --color-kick-sauber: #01C00E;
+  --color-haas: #9C9FA2;
 }
 
 :root {
@@ -94,7 +94,8 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.2781 0.0296 256.85);
+  /* --background: oklch(0.145 0 0); */
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
