@@ -1,10 +1,12 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import Navbar from "@/components/NavBar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import Navbar from "@/components/Navbar";
+import AppSidebar from "@/components/AppSidebar";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,10 +40,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar />
-            <SidebarProvider>
-              <main>
-                {children}
+            <SidebarProvider defaultOpen>
+              <AppSidebar />
+              <main className="w-full overscroll-none">
+                <Navbar />
+                <div className="px-4">{children}</div>
+                <Footer />
               </main>
             </SidebarProvider>
           </ThemeProvider>
