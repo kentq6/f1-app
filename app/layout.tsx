@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Navbar from "@/components/Navbar";
-import AppSidebar from "@/components/AppSidebar";
+import AppSidebar from "@/components/AppSidebar/AppSidebar";
 import Footer from "@/components/Footer";
 
 const geistSans = Geist({
