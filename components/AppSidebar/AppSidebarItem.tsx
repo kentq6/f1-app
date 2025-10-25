@@ -1,5 +1,5 @@
 import React from "react";
-import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 
 interface Item {
   title: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar, Home, Inbox } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu } from "./ui/sidebar";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu } from "../ui/sidebar";
 import AppSidebarItem from "./AppSidebarItem";
 
 const AppSidebar = () => {
