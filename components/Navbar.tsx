@@ -30,7 +30,7 @@ const Navbar = () => {
       </div>
 
       {/* Center: About Link */}
-      <div className="flex-1 flex items-center justify-center h-full">
+      {/* <div className="flex-1 flex items-center justify-center h-full">
         <Link
           href="/about"
           className="text-base font-medium text-gray-700 hover:text-[#6c47ff] dark:text-gray-200 dark:hover:text-[#6c47ff] transition-colors flex items-center h-full"
@@ -38,7 +38,7 @@ const Navbar = () => {
         >
           About
         </Link>
-      </div>
+      </div> */}
 
       {/* Right: Auth and Toggle Light/Dark Mode Buttoms */}
       <div className="flex items-center gap-2 mr-5">
