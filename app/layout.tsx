@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Navbar from "@/components/Navbar";
@@ -41,7 +41,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <SidebarProvider defaultOpen>
-              <AppSidebar />
+              <SignedIn>
+                <AppSidebar />
+              </SignedIn>
               <main className="w-full overscroll-none">
                 <Navbar />
                 <div className="px-4">{children}</div>
