@@ -50,6 +50,7 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
   const [stints, setStints] = useState<Stint[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
   const { theme } = useTheme();
 
   // Safely load stint data only if filteredSession is not null
@@ -76,6 +77,17 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
       ),
     [stints]
   );
+
+  // Initialize with first 5 drivers when data loads
+  useEffect(() => {
+    if (
+      drivers.length > 0 &&
+      selectedDrivers.length === 0 &&
+      !hasManuallyCleared
+    ) {
+      setSelectedDrivers(drivers.slice(0, 20));
+    }
+  }, [drivers, selectedDrivers.length, hasManuallyCleared]);
 
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
@@ -242,10 +254,12 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
 
   const handleSelectAll = () => {
     setSelectedDrivers(drivers);
+    setHasManuallyCleared(false);
   };
 
   const handleClearAll = () => {
     setSelectedDrivers([]);
+    setHasManuallyCleared(true);
   };
 
   // Chart height calculations: always one row per driver
