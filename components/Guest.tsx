@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import MockComponent from "@/components/MockComponent";
-import StintData from "@/components/StintData";
+import { useEffect, useState, ChangeEvent } from "react";
 import axios from "axios";
-// import Image from "next/image";
+import MockComponent from "@/components/MockComponent";
+import TireStintChart from "@/components/TireStintChart";
+// import SessionTable from "./SessionTable";
 
 type Session = {
   circuit_key: number;
@@ -25,93 +25,233 @@ type Session = {
 
 const Guest = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number | "">("");
+  const [selectedTrack, setSelectedTrack] = useState<string>("");
+  const [selectedSessionName, setSelectedSessionName] = useState<string>("");
+  const [initializedFilters, setInitializedFilters] = useState(false);
 
-  // get latest session information
-  const getSessionData = async () => {
-    const res = await axios.get(
-      "https://api.openf1.org/v1/sessions?session_key=latest"
-    );
-    setSessions(res.data);
+  // This session is the currently "active" one whose data should show on the page (for TireStintChart)
+  const [filteredSession, setFilteredSession] = useState<Session | null>(null);
+
+  // Load ALL session metadata on mount (should only run once)
+  useEffect(() => {
+    axios
+      .get("https://api.openf1.org/v1/sessions")
+      .then((response) => setSessions(response.data))
+      .catch((err) => console.error("Error fetching sessions: ", err));
+  }, []);
+
+  // Memo useful reference: Find latest session for default
+  const latestSession =
+    sessions.length > 0
+      ? sessions.reduce((latest, curr) =>
+          new Date(curr.date_start) > new Date(latest.date_start) ? curr : latest
+        )
+      : undefined;
+
+  // On first load, set filters to latest session and set it as the currently active session (if available)
+  useEffect(() => {
+    if (
+      sessions.length > 0 &&
+      !initializedFilters &&
+      latestSession
+    ) {
+      setSelectedYear(latestSession.year);
+      setSelectedTrack(latestSession.circuit_short_name);
+      setSelectedSessionName(latestSession.session_name);
+      setFilteredSession(latestSession); // <--- Fetch & show latest session initially
+      setInitializedFilters(true);
+    }
+  }, [sessions, initializedFilters, latestSession]);
+
+  // Compute options for select fields
+  const yearOptions = Array.from(new Set(sessions.map((s) => s.year))).sort(
+    (a, b) => b - a
+  );
+
+  const trackOptions = Array.from(
+    new Set(
+      sessions
+        .filter((s) => (selectedYear ? s.year === selectedYear : true))
+        .map((s) => s.circuit_short_name)
+    )
+  ).sort((a, b) => {
+    // Find the earliest session for each circuit to compare their first date
+    const getFirstSessionDate = (track: string) => {
+      const session = sessions
+        .filter(
+          (s) =>
+            s.circuit_short_name === track &&
+            (selectedYear ? s.year === selectedYear : true)
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.date_start).getTime() - new Date(b.date_start).getTime()
+        )[0];
+      return session
+        ? new Date(session.date_start).getTime()
+        : Number.MAX_SAFE_INTEGER;
+    };
+    return getFirstSessionDate(a) - getFirstSessionDate(b);
+  });
+
+  const sessionTypeOptions = Array.from(
+    new Set(
+      sessions
+        .filter(
+          (s) =>
+            (selectedYear ? s.year === selectedYear : true) &&
+            (selectedTrack ? s.circuit_short_name === selectedTrack : true)
+        )
+        .map((s) => s.session_name)
+    )
+  ).sort();
+
+  // Handler for filter changes:
+  const handleYearChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedYear(e.target.value === "" ? "" : parseInt(e.target.value));
+    setSelectedTrack("");
+    setSelectedSessionName("");
+    // Do not select a session until all three filters are chosen
+    setFilteredSession(null);
+  };
+  const handleTrackChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTrack(e.target.value);
+    setSelectedSessionName("");
+    setFilteredSession(null);
+  };
+  const handleSessionTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSessionName(e.target.value);
+    // Do not set filteredSession yet; will be handled in below effect
   };
 
+  // When all three filters (year, track, session type) are set, show updated session.
+  // Only set filteredSession when the session actually changes due to filter interaction.
   useEffect(() => {
-    getSessionData().catch((err) =>
-      console.error("Error fetching sessions: ", err)
-    );
-  }, []);
+    // If not all chosen, clear filteredSession.
+    if (
+      selectedYear !== "" &&
+      selectedTrack !== "" &&
+      selectedSessionName !== ""
+    ) {
+      const found = sessions.find(
+        (s) =>
+          s.year === selectedYear &&
+          s.circuit_short_name === selectedTrack &&
+          s.session_name === selectedSessionName
+      );
+      setFilteredSession(found ?? null);
+    } else {
+      setFilteredSession(null);
+    }
+  }, [selectedYear, selectedTrack, selectedSessionName, sessions]);
 
   return (
     <main className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300">
-      {/* Mobile-optimized container with responsive padding */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        {/* Full-width sections below - mobile-friendly spacing */}
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
-          <StintData />
+          {/* Filters UI */}
+          <div className="w-full bg-white dark:bg-gray-800 text-gray-800  dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            <h3 className="text-lg font-bold">Session Select</h3>
+            {/* Year */}
+            <div>
+              <label
+                htmlFor="yearSelect"
+                className="block text-sm font-medium mb-1"
+              >
+                Year
+              </label>
+              <select
+                id="yearSelect"
+                value={selectedYear}
+                onChange={handleYearChange}
+                className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
+              >
+                {yearOptions.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Track */}
+            <div>
+              <label
+                htmlFor="trackSelect"
+                className="block text-sm font-medium mb-1"
+              >
+                Track
+              </label>
+              <select
+                id="trackSelect"
+                value={selectedTrack}
+                onChange={handleTrackChange}
+                className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
+                disabled={trackOptions.length === 0}
+              >
+                {trackOptions.map((track) => (
+                  <option key={track} value={track}>
+                    {track}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Session Type */}
+            <div>
+              <label
+                htmlFor="sessionTypeSelect"
+                className="block text-sm font-medium mb-1"
+              >
+                Session Name
+              </label>
+              <select
+                id="sessionTypeSelect"
+                value={selectedSessionName}
+                onChange={handleSessionTypeChange}
+                className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
+                disabled={sessionTypeOptions.length === 0}
+              >
+                {sessionTypeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {type.replace(/_/g, " ")}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Sample components */}
+          <TireStintChart filteredSession={filteredSession} />
           <MockComponent />
         </div>
 
-        {/* Mobile-first responsive grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-          {/* Left Column - Stacked on mobile */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch mt-6">
+          {/* Left Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
-            {/* Welcome section with improved mobile layout */}
+            {/* Welcome section (as before) */}
             <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
-              {/* User Details - responsive text and layout */}
               <div className="flex-1 text-center sm:text-left">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-2 sm:gap-3 mb-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white text-sm sm:text-lg">👋</span>
                   </div>
-                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                    {/* Welcome Back, {user.firstName}! */}
-                  </h2>
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100"></h2>
                 </div>
                 <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto sm:mx-0">
-                  Here&#39;s a quick overview of your recent expense activity.
-                  Track your spending, analyze patterns, and manage your budget
-                  efficiently!
+                  Sample text
                 </p>
-                {/* Mobile-optimized badge grid */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center sm:justify-start">
-                  <div className="bg-linear-to-r from-emerald-50 to-green-50 dark:from-emerald-900/30 dark:to-green-900/30 border border-emerald-100 dark:border-emerald-800 px-3 py-2 rounded-xl flex items-center gap-2 justify-center sm:justify-start">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-linear-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-white text-xs">📅</span>
-                    </div>
-                    <div className="text-center sm:text-left">
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 block">
-                        Joined
-                      </span>
-                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                        {/* {new Date(user.createdAt).toLocaleDateString()} */}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border border-green-100 dark:border-green-800 px-3 py-2 rounded-xl flex items-center gap-2 justify-center sm:justify-start">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-linear-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-white text-xs">⚡</span>
-                    </div>
-                    <div className="text-center sm:text-left">
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 block">
-                        Last Active
-                      </span>
-                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                        {/* {user.lastActiveAt
-                          ? new Date(user.lastActiveAt).toLocaleDateString()
-                          : "Today"} */}
-                      </span>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
-            {/* Add New Expense */}
+
+            {/* <SessionTable filteredSession={filteredSession} /> */}
+
+            {/* Add New Expense mockup */}
             <MockComponent />
             <MockComponent />
           </div>
 
-          {/* Right Column - Stacked below on mobile */}
+          {/* Right Column */}
           <div className="space-y-4 sm:space-y-6">
-            {/* Expense Analytics */}
             <MockComponent />
             <MockComponent />
           </div>
