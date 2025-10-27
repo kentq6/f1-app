@@ -26,6 +26,17 @@ type Stint = {
   tyre_age_at_start: number;
 };
 
+interface TireStintChartProp {
+  filteredSession: {
+    session_key: number;
+    year: number;
+    circuit_short_name: string;
+    session_type: string;
+    session_name: string;
+    date_start: string;
+  } | null;
+}
+
 // F1 compound colors
 const compoundColors: Record<string, string> = {
   SOFT: "#DA291C",
@@ -35,24 +46,27 @@ const compoundColors: Record<string, string> = {
   WET: "#0067AD",
 };
 
-export default function TireStintChart() {
+const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
   const [stints, setStints] = useState<Stint[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
   const { theme } = useTheme();
 
-  // Fetch API data
-  const getStintData = async () => {
-    const res = await axios.get(
-      "https://api.openf1.org/v1/stints?session_key=latest"
-    );
-    setStints(res.data);
-  };
-
+  // Safely load stint data only if filteredSession is not null
   useEffect(() => {
-    getStintData().catch((err) => console.error("Error fetching stints:", err));
-  }, []);
+    if (!filteredSession) {
+      setStints([]);
+      return;
+    }
+    axios
+      .get(
+        `https://api.openf1.org/v1/stints?session_key=${filteredSession.session_key}`
+      )
+      .then((response) => setStints(response.data))
+      .catch((error) =>
+        console.error("Error fetching tire stints: ", error)
+      );
+  }, [filteredSession]);
 
   // Extract unique driver numbers
   const drivers = useMemo(
@@ -62,17 +76,6 @@ export default function TireStintChart() {
       ),
     [stints]
   );
-
-  // Initialize with first 5 drivers when data loads
-  useEffect(() => {
-    if (
-      drivers.length > 0 &&
-      selectedDrivers.length === 0 &&
-      !hasManuallyCleared
-    ) {
-      setSelectedDrivers(drivers.slice(0, 5));
-    }
-  }, [drivers, selectedDrivers.length, hasManuallyCleared]);
 
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
@@ -109,7 +112,7 @@ export default function TireStintChart() {
     const dataArray: ChartDataItem[] = [];
     const bgColors: string[] = [];
     const borderColors: string[] = [];
-    const isDark = theme === 'dark';
+    const isDark = theme === "dark";
 
     selectedDrivers.forEach((driverNumber) => {
       const driverLabel = `Driver ${driverNumber}`;
@@ -239,12 +242,10 @@ export default function TireStintChart() {
 
   const handleSelectAll = () => {
     setSelectedDrivers(drivers);
-    setHasManuallyCleared(false);
   };
 
   const handleClearAll = () => {
     setSelectedDrivers([]);
-    setHasManuallyCleared(true);
   };
 
   // Chart height calculations: always one row per driver
@@ -256,20 +257,29 @@ export default function TireStintChart() {
       : Math.max(minChartHeight, selectedDrivers.length * rowHeight);
 
   const outerDivHeight =
-    selectedDrivers.length <= 5
-      ? 500
-      : Math.max(500, chartHeight + 80);
+    selectedDrivers.length <= 5 ? 500 : Math.max(500, chartHeight + 80);
+
+  if (!filteredSession) {
+    // Show a message if required session data not provided
+    return (
+      <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4 flex items-center justify-center" style={{ minHeight: 300 }}>
+        <p>Please select a session to view tire stint data.</p>
+      </div>
+    );
+  }
 
   return (
     <div
       className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4"
       style={{ height: `${outerDivHeight}px` }}
     >
+      <h1 className="text-lg font-bold">Tire Stints</h1>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Tire Stints by Driver</h2>
+        <h3>{`${filteredSession.year} ${filteredSession.circuit_short_name} ${filteredSession.session_name}`}</h3>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">
-            {selectedDrivers.length} driver{selectedDrivers.length !== 1 ? "s" : ""} selected
+            {selectedDrivers.length} driver
+            {selectedDrivers.length !== 1 ? "s" : ""} selected
           </span>
 
           {/* Driver Selection Dropdown */}
@@ -340,3 +350,5 @@ export default function TireStintChart() {
     </div>
   );
 }
+
+export default TireStintChart;
