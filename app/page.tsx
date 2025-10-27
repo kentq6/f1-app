@@ -11,6 +11,7 @@ export default async function HomePage() {
     return <Guest />;
   }
 
+  // Return user favorittes along with latest session data
   return (
     <>
       <UserFavorites />
