@@ -9,7 +9,7 @@ const Footer = () => {
   ];
   
   const socials = [
-    { name: "Personal", href: "/", icon: Computer },
+    { name: "Portfolio", href: "/", icon: Computer },
     { name: "Github", href: "/about", icon: Github },
   ];
 
@@ -66,7 +66,7 @@ const Footer = () => {
                     <span className="text-white text-xs">
                       <social.icon color="black" />
                     </span>
-                    Personal
+                    {social.name}
                   </div>
                 </a>
               ))}
