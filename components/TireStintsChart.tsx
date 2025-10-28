@@ -14,6 +14,7 @@ import {
 import { useTheme } from "next-themes";
 import { Driver } from "@/types/driver";
 import { Session } from "@/types/session";
+import { ChevronDown } from "lucide-react";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -28,7 +29,7 @@ type Stint = {
   tyre_age_at_start: number;
 };
 
-interface MergedData extends Stint {
+interface TireStintsData extends Stint {
   name_acronym?: string;
 }
 
@@ -50,18 +51,17 @@ const TireStintsChart = ({
   filteredSession,
   driversData,
 }: TireStintChartProp) => {
-  // const [stints, setStints] = useState<Stint[]>([]);
+  const [tireStintsData, setTireStintsData] = useState<TireStintsData[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
   const { theme } = useTheme();
 
-  const [mergedData, setMergedData] = useState<MergedData[]>([]);
 
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
     if (!filteredSession) {
-      setMergedData([]);
+      setTireStintsData([]);
       return;
     }
 
@@ -79,7 +79,7 @@ const TireStintsChart = ({
         );
 
         // Merge driver info into stints
-        const combined: MergedData[] = stints.map((stint: Stint) => {
+        const combined: TireStintsData[] = stints.map((stint: Stint) => {
           const driver = driversMap.get(stint.driver_number);
           return {
             ...stint,
@@ -87,7 +87,7 @@ const TireStintsChart = ({
           };
         });
 
-        setMergedData(combined);
+        setTireStintsData(combined);
       } catch (error) {
         console.error("Error fetching tire stints data: ", error);
       }
@@ -99,10 +99,10 @@ const TireStintsChart = ({
   // Extract unique driver numbers
   const drivers = useMemo(
     () =>
-      Array.from(new Set(mergedData.map((s) => s.driver_number))).sort(
+      Array.from(new Set(tireStintsData.map((s) => s.driver_number))).sort(
         (a, b) => a - b
       ),
-    [mergedData]
+    [tireStintsData]
   );
 
   const driverAcronymMap = useMemo(
@@ -127,7 +127,7 @@ const TireStintsChart = ({
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
     const map = new Map<number, Stint[]>();
-    for (const stint of mergedData) {
+    for (const stint of tireStintsData) {
       if (!map.has(stint.driver_number)) map.set(stint.driver_number, []);
       map.get(stint.driver_number)!.push(stint);
     }
@@ -140,7 +140,7 @@ const TireStintsChart = ({
       );
     }
     return map;
-  }, [mergedData]);
+  }, [tireStintsData]);
 
   // Chart.js data for correctly rendered contiguous stints
   const chartData = useMemo(() => {
@@ -162,7 +162,7 @@ const TireStintsChart = ({
     const isDark = theme === "dark";
 
     selectedDrivers.forEach((driverNumber) => {
-      const driverLabel = driverAcronymMap[driverNumber] || `Driver ${driverNumber}`;
+      const driverLabel = `${driverAcronymMap[driverNumber]} ${driverNumber}` || `Driver ${driverNumber}`;
       const arr = driverStintsMap.get(driverNumber) || [];
       arr.forEach((stint) => {
         // For openF1, lap_start/lap_end are inclusive stints
@@ -262,7 +262,7 @@ const TireStintsChart = ({
       },
       y: {
         type: "category" as const,
-        labels: selectedDrivers.map((driverNumber) => driverAcronymMap[driverNumber] || `Driver ${driverNumber}`),
+        labels: selectedDrivers.map((driverNumber) => `${driverAcronymMap[driverNumber]} ${driverNumber}` || `Driver ${driverNumber}`),
         title: { display: true, text: "Driver Number" },
         grid: {
           display: true,
@@ -343,12 +343,12 @@ const TireStintsChart = ({
                   isDropdownOpen ? "rotate-180" : ""
                 }`}
               >
-                ▼
+                <ChevronDown />
               </span>
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-1 w-64 bg-white dark:bg-gray-800 border rounded-md shadow-lg z-10 max-h-80 overflow-y-auto">
+              <div className="absolute right-0 mt-1 w-40 bg-white dark:bg-gray-800 border rounded-md shadow-lg z-10 max-h-80 overflow-y-auto">
                 <div className="p-2 border-b flex gap-2">
                   <button
                     onClick={handleSelectAll}
@@ -366,6 +366,7 @@ const TireStintsChart = ({
                   </button>
                 </div>
                 <div className="p-1">
+                {/* selectedDrivers.map((driverNumber) => `${driverAcronymMap[driverNumber]} ${driverNumber}` || `Driver ${driverNumber}`) */}
                   {drivers.map((driverNumber) => (
                     <label
                       key={driverNumber}
@@ -377,7 +378,11 @@ const TireStintsChart = ({
                         onChange={() => handleDriverToggle(driverNumber)}
                         className="rounded"
                       />
-                      <span className="text-sm">Driver #{driverNumber}</span>
+                      <span className="text-sm">
+                        {driverAcronymMap[driverNumber]
+                          ? `${driverAcronymMap[driverNumber]} ${driverNumber}`
+                          : `Driver ${driverNumber}`}
+                      </span>
                     </label>
                   ))}
                 </div>
