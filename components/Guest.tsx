@@ -6,6 +6,7 @@ import MockComponent from "@/components/MockComponent";
 import TireStintChart from "@/components/TireStintsChart";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
+import WeatherInfo from "./WeatherInfo";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -146,12 +147,12 @@ const Guest = () => {
   }, [selectedYear, selectedTrack, selectedSessionName, sessionsData]);
 
   return (
-    <main className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300">
+      <div className="max-w-7xl mx-auto">
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
           {/* Filters UI */}
           <div className="w-full bg-white dark:bg-gray-800 text-gray-800  dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-            <h3 className="text-lg font-bold">Session Select</h3>
+            <h1 className="text-lg font-bold">Session Select</h1>
             {/* Year */}
             <div>
               <label
@@ -247,8 +248,7 @@ const Guest = () => {
 
             {/* <SessionTable filteredSession={filteredSession} /> */}
 
-            {/* Add New Expense mockup */}
-            <MockComponent />
+            <WeatherInfo filteredSession={filteredSession} />
             {/* <MockComponent /> */}
           </div>
 
