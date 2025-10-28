@@ -31,12 +31,12 @@ type Stint = {
 
 interface TireStintsData extends Stint {
   name_acronym?: string;
-}
+};
 
-interface TireStintChartProp {
+interface TireStintChartProps {
   filteredSession: Session | null;
   driversData: Driver[];
-}
+};
 
 // F1 compound colors
 const compoundColors: Record<string, string> = {
@@ -50,7 +50,7 @@ const compoundColors: Record<string, string> = {
 const TireStintsChart = ({
   filteredSession,
   driversData,
-}: TireStintChartProp) => {
+}: TireStintChartProps) => {
   const [tireStintsData, setTireStintsData] = useState<TireStintsData[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
