@@ -1,6 +1,6 @@
-import { Session } from '@/types/session';
-import axios from 'axios';
-import { useEffect, useState } from 'react'
+import { Session } from "@/types/session";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 type Weather = {
   air_temperature: number;
@@ -17,11 +17,9 @@ type Weather = {
 
 interface WeatherInfoProp {
   filteredSession: Session | null;
-};
+}
 
-const WeatherInfo = ({
-  filteredSession
-}: WeatherInfoProp) => {
+const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
   const [weatherData, setWeatherData] = useState<Weather[]>([]);
 
   // Safely load weather data only if filteredSession is not null
@@ -47,8 +45,21 @@ const WeatherInfo = ({
   }, [filteredSession]);
 
   return (
-    <div>WeatherInfo</div>
-  )
-}
+    <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
+      <h1 className="text-lg font-bold">Weather</h1>
+      <div className="flex justify-between items-center mb-4">
 
-export default WeatherInfo
+        {/* <div>
+        {weatherData.length > 0
+          ? `Average Track Temperature: ${(
+              weatherData.reduce((sum, data) => sum + data.track_temperature, 0) /
+              weatherData.length
+            ).toFixed(1)}°C`
+          : "No weather data available."}
+      </div> */}
+      </div>
+    </div>
+  );
+};
+
+export default WeatherInfo;
