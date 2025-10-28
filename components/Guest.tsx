@@ -224,14 +224,14 @@ const Guest = () => {
             filteredSession={filteredSession}
             driversData={driversData}
           />
-          <MockComponent />
+          {/* <MockComponent /> */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch mt-6">
           {/* Left Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
             {/* Welcome section (as before) */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+            {/* <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
               <div className="flex-1 text-center sm:text-left">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-2 sm:gap-3 mb-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -243,19 +243,19 @@ const Guest = () => {
                   Sample text
                 </p>
               </div>
-            </div>
+            </div> */}
 
             {/* <SessionTable filteredSession={filteredSession} /> */}
 
             {/* Add New Expense mockup */}
             <MockComponent />
-            <MockComponent />
+            {/* <MockComponent /> */}
           </div>
 
           {/* Right Column */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
             <MockComponent />
-            <MockComponent />
+            {/* <MockComponent /> */}
           </div>
         </div>
       </div>
