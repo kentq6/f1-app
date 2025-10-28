@@ -151,77 +151,79 @@ const Guest = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
           {/* Filters UI */}
-          <div className="w-full bg-white dark:bg-gray-800 text-gray-800  dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+          <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
             <h1 className="text-lg font-bold">Session Select</h1>
-            {/* Year */}
-            <div>
-              <label
-                htmlFor="yearSelect"
-                className="block text-sm font-medium mb-1"
-              >
-                Year
-              </label>
-              <select
-                id="yearSelect"
-                value={selectedYear}
-                onChange={handleYearChange}
-                className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
-              >
-                {yearOptions.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* Track */}
-            <div>
-              <label
-                htmlFor="trackSelect"
-                className="block text-sm font-medium mb-1"
-              >
-                Track
-              </label>
-              <select
-                id="trackSelect"
-                value={selectedTrack}
-                onChange={handleTrackChange}
-                className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
-                disabled={trackOptions.length === 0}
-              >
-                {trackOptions.map((track) => (
-                  <option key={track} value={track}>
-                    {track}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* Session Type */}
-            <div>
-              <label
-                htmlFor="sessionTypeSelect"
-                className="block text-sm font-medium mb-1"
-              >
-                Session Name
-              </label>
-              <select
-                id="sessionTypeSelect"
-                value={selectedSessionName}
-                onChange={handleSessionTypeChange}
-                className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
-                disabled={sessionTypeOptions.length === 0}
-              >
-                {sessionTypeOptions.map((type) => (
-                  <option key={type} value={type}>
-                    {type.replace(/_/g, " ")}
-                  </option>
-                ))}
-              </select>
+            <div className="flex justify-start items-center gap-6 mb-4 p-4">
+              {/* Year */}
+              <div>
+                <label
+                  htmlFor="yearSelect"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Year
+                </label>
+                <select
+                  id="yearSelect"
+                  value={selectedYear}
+                  onChange={handleYearChange}
+                  className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
+                >
+                  {yearOptions.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Track */}
+              <div>
+                <label
+                  htmlFor="trackSelect"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Track
+                </label>
+                <select
+                  id="trackSelect"
+                  value={selectedTrack}
+                  onChange={handleTrackChange}
+                  className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
+                  disabled={trackOptions.length === 0}
+                >
+                  {trackOptions.map((track) => (
+                    <option key={track} value={track}>
+                      {track}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Session Type */}
+              <div>
+                <label
+                  htmlFor="sessionTypeSelect"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Session
+                </label>
+                <select
+                  id="sessionTypeSelect"
+                  value={selectedSessionName}
+                  onChange={handleSessionTypeChange}
+                  className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
+                  disabled={sessionTypeOptions.length === 0}
+                >
+                  {sessionTypeOptions.map((type) => (
+                    <option key={type} value={type}>
+                      {type.replace(/_/g, " ")}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
           {/* Sample components */}
-          <TireStintChart 
+          <TireStintChart
             filteredSession={filteredSession}
             driversData={driversData}
           />
