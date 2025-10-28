@@ -3,82 +3,81 @@
 import { useEffect, useState, ChangeEvent } from "react";
 import axios from "axios";
 import MockComponent from "@/components/MockComponent";
-import TireStintChart from "@/components/TireStintChart";
+import TireStintChart from "@/components/TireStintsChart";
+import { Session } from "@/types/session";
+import { Driver } from "@/types/driver";
 // import SessionTable from "./SessionTable";
 
-type Session = {
-  circuit_key: number;
-  circuit_short_name: string;
-  country_code: string;
-  country_key: number;
-  country_name: string;
-  date_end: string;
-  date_start: string;
-  gmt_offset: string;
-  location: string;
-  meeting_key: number;
-  session_key: number;
-  session_name: string;
-  session_type: string;
-  year: number;
-};
-
 const Guest = () => {
-  const [sessions, setSessions] = useState<Session[]>([]);
+  // Session select
+  const [sessionsData, setSessionsData] = useState<Session[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | "">("");
   const [selectedTrack, setSelectedTrack] = useState<string>("");
   const [selectedSessionName, setSelectedSessionName] = useState<string>("");
   const [initializedFilters, setInitializedFilters] = useState(false);
+
+  // Drivers
+  const [driversData, setDriversData] = useState<Driver[]>([]);
 
   // This session is the currently "active" one whose data should show on the page (for TireStintChart)
   const [filteredSession, setFilteredSession] = useState<Session | null>(null);
 
   // Load ALL session metadata on mount (should only run once)
   useEffect(() => {
-    axios
-      .get("https://api.openf1.org/v1/sessions")
-      .then((response) => setSessions(response.data))
-      .catch((err) => console.error("Error fetching sessions: ", err));
+    const fetchData = async () => {
+      try {
+        // Fetch sessions and drivers in parallel
+        const [sessionsRes, driversRes] = await Promise.all([
+          axios.get<Session[]>("https://api.openf1.org/v1/sessions"),
+          axios.get<Driver[]>("https://api.openf1.org/v1/drivers"),
+        ]);
+        setSessionsData(sessionsRes.data);
+        setDriversData(driversRes.data);
+      } catch (error) {
+        // If either request fails, handle the error
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Memo useful reference: Find latest session for default
   const latestSession =
-    sessions.length > 0
-      ? sessions.reduce((latest, curr) =>
-          new Date(curr.date_start) > new Date(latest.date_start) ? curr : latest
+    sessionsData.length > 0
+      ? sessionsData.reduce((latest, curr) =>
+          new Date(curr.date_start) > new Date(latest.date_start)
+            ? curr
+            : latest
         )
       : undefined;
 
   // On first load, set filters to latest session and set it as the currently active session (if available)
   useEffect(() => {
-    if (
-      sessions.length > 0 &&
-      !initializedFilters &&
-      latestSession
-    ) {
+    if (sessionsData.length > 0 && !initializedFilters && latestSession) {
       setSelectedYear(latestSession.year);
       setSelectedTrack(latestSession.circuit_short_name);
       setSelectedSessionName(latestSession.session_name);
       setFilteredSession(latestSession); // <--- Fetch & show latest session initially
       setInitializedFilters(true);
     }
-  }, [sessions, initializedFilters, latestSession]);
+  }, [sessionsData, initializedFilters, latestSession]);
 
   // Compute options for select fields
-  const yearOptions = Array.from(new Set(sessions.map((s) => s.year))).sort(
+  const yearOptions = Array.from(new Set(sessionsData.map((s) => s.year))).sort(
     (a, b) => b - a
   );
 
   const trackOptions = Array.from(
     new Set(
-      sessions
+      sessionsData
         .filter((s) => (selectedYear ? s.year === selectedYear : true))
         .map((s) => s.circuit_short_name)
     )
   ).sort((a, b) => {
     // Find the earliest session for each circuit to compare their first date
     const getFirstSessionDate = (track: string) => {
-      const session = sessions
+      const session = sessionsData
         .filter(
           (s) =>
             s.circuit_short_name === track &&
@@ -97,7 +96,7 @@ const Guest = () => {
 
   const sessionTypeOptions = Array.from(
     new Set(
-      sessions
+      sessionsData
         .filter(
           (s) =>
             (selectedYear ? s.year === selectedYear : true) &&
@@ -134,7 +133,7 @@ const Guest = () => {
       selectedTrack !== "" &&
       selectedSessionName !== ""
     ) {
-      const found = sessions.find(
+      const found = sessionsData.find(
         (s) =>
           s.year === selectedYear &&
           s.circuit_short_name === selectedTrack &&
@@ -144,7 +143,7 @@ const Guest = () => {
     } else {
       setFilteredSession(null);
     }
-  }, [selectedYear, selectedTrack, selectedSessionName, sessions]);
+  }, [selectedYear, selectedTrack, selectedSessionName, sessionsData]);
 
   return (
     <main className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300">
@@ -221,7 +220,10 @@ const Guest = () => {
           </div>
 
           {/* Sample components */}
-          <TireStintChart filteredSession={filteredSession} />
+          <TireStintChart 
+            filteredSession={filteredSession}
+            driversData={driversData}
+          />
           <MockComponent />
         </div>
 
