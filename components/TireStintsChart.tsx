@@ -12,6 +12,8 @@ import {
   Legend,
 } from "chart.js";
 import { useTheme } from "next-themes";
+import { Driver } from "@/types/driver";
+import { Session } from "@/types/session";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -26,15 +28,13 @@ type Stint = {
   tyre_age_at_start: number;
 };
 
+interface MergedData extends Stint {
+  name_acronym?: string;
+}
+
 interface TireStintChartProp {
-  filteredSession: {
-    session_key: number;
-    year: number;
-    circuit_short_name: string;
-    session_type: string;
-    session_name: string;
-    date_start: string;
-  } | null;
+  filteredSession: Session | null;
+  driversData: Driver[];
 }
 
 // F1 compound colors
@@ -46,39 +46,74 @@ const compoundColors: Record<string, string> = {
   WET: "#0067AD",
 };
 
-const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
-  const [stints, setStints] = useState<Stint[]>([]);
+const TireStintsChart = ({
+  filteredSession,
+  driversData,
+}: TireStintChartProp) => {
+  // const [stints, setStints] = useState<Stint[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
   const { theme } = useTheme();
 
+  const [mergedData, setMergedData] = useState<MergedData[]>([]);
+
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
     if (!filteredSession) {
-      setStints([]);
+      setMergedData([]);
       return;
     }
-    axios
-      .get(
-        `https://api.openf1.org/v1/stints?session_key=${filteredSession.session_key}`
-      )
-      .then((response) => setStints(response.data))
-      .catch((error) =>
-        console.error("Error fetching tire stints: ", error)
-      );
-  }, [filteredSession]);
+
+    const fetchedStints = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.openf1.org/v1/stints?session_key=${filteredSession.session_key}`
+        );
+
+        const stints = response.data;
+
+        // Create a quick lookup map from driversData (props)
+        const driversMap = new Map<number, Driver>(
+          driversData.map((d) => [d.driver_number, d])
+        );
+
+        // Merge driver info into stints
+        const combined: MergedData[] = stints.map((stint: Stint) => {
+          const driver = driversMap.get(stint.driver_number);
+          return {
+            ...stint,
+            name_acronym: driver?.name_acronym ?? "UNK",
+          };
+        });
+
+        setMergedData(combined);
+      } catch (error) {
+        console.error("Error fetching tire stints data: ", error);
+      }
+    };
+
+    fetchedStints();
+  }, [filteredSession, driversData]);
 
   // Extract unique driver numbers
   const drivers = useMemo(
     () =>
-      Array.from(new Set(stints.map((s) => s.driver_number))).sort(
+      Array.from(new Set(mergedData.map((s) => s.driver_number))).sort(
         (a, b) => a - b
       ),
-    [stints]
+    [mergedData]
   );
 
-  // Initialize with first 5 drivers when data loads
+  const driverAcronymMap = useMemo(
+    () =>
+      Object.fromEntries(
+        driversData.map((d) => [d.driver_number, d.name_acronym])
+      ),
+    [driversData]
+  );
+
+  // Initialize with all 20 drivers when data loads
   useEffect(() => {
     if (
       drivers.length > 0 &&
@@ -92,7 +127,7 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
     const map = new Map<number, Stint[]>();
-    for (const stint of stints) {
+    for (const stint of mergedData) {
       if (!map.has(stint.driver_number)) map.set(stint.driver_number, []);
       map.get(stint.driver_number)!.push(stint);
     }
@@ -105,7 +140,7 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
       );
     }
     return map;
-  }, [stints]);
+  }, [mergedData]);
 
   // Chart.js data for correctly rendered contiguous stints
   const chartData = useMemo(() => {
@@ -127,7 +162,7 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
     const isDark = theme === "dark";
 
     selectedDrivers.forEach((driverNumber) => {
-      const driverLabel = `Driver ${driverNumber}`;
+      const driverLabel = driverAcronymMap[driverNumber] || `Driver ${driverNumber}`;
       const arr = driverStintsMap.get(driverNumber) || [];
       arr.forEach((stint) => {
         // For openF1, lap_start/lap_end are inclusive stints
@@ -163,7 +198,7 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
         },
       ],
     };
-  }, [selectedDrivers, driverStintsMap, theme]);
+  }, [selectedDrivers, driverStintsMap, driverAcronymMap, theme]);
 
   // Get min and max lap numbers for scaling
   const [lapMin, lapMax] = useMemo(() => {
@@ -227,7 +262,7 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
       },
       y: {
         type: "category" as const,
-        labels: selectedDrivers.map((driverNumber) => `Driver ${driverNumber}`),
+        labels: selectedDrivers.map((driverNumber) => driverAcronymMap[driverNumber] || `Driver ${driverNumber}`),
         title: { display: true, text: "Driver Number" },
         grid: {
           display: true,
@@ -270,13 +305,13 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
       ? minChartHeight
       : Math.max(minChartHeight, selectedDrivers.length * rowHeight);
 
-  const outerDivHeight =
-    selectedDrivers.length <= 5 ? 500 : Math.max(500, chartHeight + 80);
-
   if (!filteredSession) {
     // Show a message if required session data not provided
     return (
-      <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4 flex items-center justify-center" style={{ minHeight: 300 }}>
+      <div
+        className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4 flex items-center justify-center"
+        style={{ minHeight: 300 }}
+      >
         <p>Please select a session to view tire stint data.</p>
       </div>
     );
@@ -285,7 +320,6 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
   return (
     <div
       className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4"
-      style={{ height: `${outerDivHeight}px` }}
     >
       <h1 className="text-lg font-bold">Tire Stints</h1>
       <div className="flex justify-between items-center mb-4">
@@ -363,6 +397,6 @@ const TireStintChart = ({ filteredSession }: TireStintChartProp) => {
       </div>
     </div>
   );
-}
+};
 
-export default TireStintChart;
+export default TireStintsChart;
