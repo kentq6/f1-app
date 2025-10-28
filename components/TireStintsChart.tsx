@@ -323,7 +323,6 @@ const TireStintsChart = ({
     >
       <h1 className="text-lg font-bold">Tire Stints</h1>
       <div className="flex justify-between items-center mb-4">
-        <h3>{`${filteredSession.year} ${filteredSession.circuit_short_name} ${filteredSession.session_name}`}</h3>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">
             {selectedDrivers.length} driver
