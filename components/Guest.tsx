@@ -153,122 +153,121 @@ const Guest = () => {
   return (
     <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
       <div className="max-w-7xl mx-auto">
-        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
-          {/* Filters UI */}
-          <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
-            <h1 className="text-lg font-bold">Session Select</h1>
-            <div className="flex justify-start items-center gap-6 mb-4 p-4">
-              {/* Year */}
-              <div>
-                <label className="block text-sm font-medium mb-1">Year</label>
-                <Select
-                  value={selectedYear === "" ? "" : String(selectedYear)}
-                  onValueChange={(val) =>
-                    setSelectedYear(val === "" ? "" : Number(val))
-                  }
-                >
-                  <SelectTrigger className="w-24">
-                    <SelectValue placeholder="Select Year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Years</SelectLabel>
-                      {yearOptions.map((year) => (
-                        <SelectItem key={year} value={String(year)}>
-                          {year}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              {/* Track */}
-              <div>
-                <label className="block text-sm font-medium mb-1">Track</label>
-                <Select
-                  value={selectedTrack === "" ? "" : String(selectedTrack)}
-                  onValueChange={(val) =>
-                    setSelectedTrack(val === "" ? "" : String(val))
-                  }
-                >
-                  <SelectTrigger className="w-50">
-                    <SelectValue placeholder="Select Track" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Tracks</SelectLabel>
-                      {trackOptions.map((track) => (
-                        <SelectItem key={track} value={String(track)}>
-                          {track}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              {/* Session */}
-              <div>
-                <label className="block text-sm font-medium mb-1">Year</label>
-                <Select
-                  value={selectedSession === "" ? "" : String(selectedSession)}
-                  onValueChange={(val) =>
-                    setSelectedSession(val === "" ? "" : String(val))
-                  }
-                >
-                  <SelectTrigger className="w-30">
-                    <SelectValue placeholder="Select Session" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Sessions</SelectLabel>
-                      {sessionOptions.map((session) => (
-                        <SelectItem key={session} value={String(session)}>
-                          {session}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+        {/* Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch mt-6">
+          {/* Left Column */}
+          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
+            {/* Filter */}
+            <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
+              <h1 className="text-lg font-bold">Session Select</h1>
+              <div className="flex justify-start items-center gap-6 mb-4 p-4">
+                {/* Year */}
+                <div>
+                  <label className="block text-sm font-bold mb-1">Year</label>
+                  <Select
+                    value={selectedYear === "" ? "" : String(selectedYear)}
+                    onValueChange={(val) =>
+                      setSelectedYear(val === "" ? "" : Number(val))
+                    }
+                  >
+                    <SelectTrigger className="w-24">
+                      <SelectValue placeholder="Select Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Years</SelectLabel>
+                        {yearOptions.map((year) => (
+                          <SelectItem key={year} value={String(year)}>
+                            {year}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* Track */}
+                <div>
+                  <label className="block text-sm font-bold mb-1">
+                    Track
+                  </label>
+                  <Select
+                    value={selectedTrack === "" ? "" : String(selectedTrack)}
+                    onValueChange={(val) =>
+                      setSelectedTrack(val === "" ? "" : String(val))
+                    }
+                  >
+                    <SelectTrigger className="w-45">
+                      <SelectValue placeholder="Select Track" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Tracks</SelectLabel>
+                        {trackOptions.map((track) => (
+                          <SelectItem key={track} value={String(track)}>
+                            {track}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* Session */}
+                <div>
+                  <label className="block text-sm font-bold mb-1">Session</label>
+                  <Select
+                    value={
+                      selectedSession === "" ? "" : String(selectedSession)
+                    }
+                    onValueChange={(val) =>
+                      setSelectedSession(val === "" ? "" : String(val))
+                    }
+                  >
+                    <SelectTrigger className="w-30">
+                      <SelectValue placeholder="Select Session" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Sessions</SelectLabel>
+                        {sessionOptions.map((session) => (
+                          <SelectItem key={session} value={String(session)}>
+                            {session}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Sample components */}
+          {/* Right Column */}
+          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
+            <WeatherInfo filteredSession={filteredSession} />
+          </div>
+        </div>
+
+        {/* TireStintChart & ... */}
+        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
           <TireStintChart
             filteredSession={filteredSession}
             driversData={driversData}
           />
-          {/* <MockComponent /> */}
         </div>
 
+        {/* Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch mt-6">
           {/* Left Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
-            {/* Welcome section (as before) */}
-            {/* <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
-                <div className="flex-1 text-center sm:text-left">
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-2 sm:gap-3 mb-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <span className="text-white text-sm sm:text-lg">👋</span>
-                    </div>
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100"></h2>
-                  </div>
-                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto sm:mx-0">
-                    Sample text
-                  </p>
-                </div>
-              </div> */}
-
             {/* <SessionTable filteredSession={filteredSession} /> */}
-
-            <WeatherInfo filteredSession={filteredSession} />
-            {/* <MockComponent /> */}
+            <MockComponent />
+            <MockComponent />
           </div>
 
           {/* Right Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
             <MockComponent />
-            {/* <MockComponent /> */}
+            <MockComponent />
           </div>
         </div>
       </div>
