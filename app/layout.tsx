@@ -47,7 +47,6 @@ export default function RootLayout({
               <main className="w-full overscroll-none">
                 <Navbar />
                 <div className="px-4">{children}</div>
-                <Footer />
               </main>
             </SidebarProvider>
           </ThemeProvider>
