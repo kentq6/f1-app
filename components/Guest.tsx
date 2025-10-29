@@ -16,18 +16,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Loading from "./Loading";
+import Footer from "./Footer";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
-  // Session select
-  const [sessionsData, setSessionsData] = useState<Session[]>([]);
+  // Filter select
   const [selectedYear, setSelectedYear] = useState<number | "">("");
   const [selectedTrack, setSelectedTrack] = useState<string>("");
   const [selectedSession, setSelectedSession] = useState<string>("");
   const [initializedFilters, setInitializedFilters] = useState(false);
 
+  // Sessions
+  const [sessionsData, setSessionsData] = useState<Session[]>([]);
   // Drivers
   const [driversData, setDriversData] = useState<Driver[]>([]);
+
+  // Data is loaded
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // This session is the currently "active" one whose data should show on the page (for TireStintChart)
   const [filteredSession, setFilteredSession] = useState<Session | null>(null);
@@ -43,9 +49,11 @@ const Guest = () => {
         ]);
         setSessionsData(sessionsRes.data);
         setDriversData(driversRes.data);
+        setIsLoaded(true); // <-- Only set to true after data is fetched
       } catch (error) {
         // If either request fails, handle the error
         console.error("Error fetching data:", error);
+        setIsLoaded(true); // Optional: Show loading spinner until error, then let page render and show fallback
       }
     };
 
@@ -113,7 +121,10 @@ const Guest = () => {
             (selectedTrack ? s.circuit_short_name === selectedTrack : true)
         )
         // Sort by date_start (oldest to newest) before mapping to names
-        .sort((a, b) => new Date(a.date_start).getTime() - new Date(b.date_start).getTime())
+        .sort(
+          (a, b) =>
+            new Date(a.date_start).getTime() - new Date(b.date_start).getTime()
+        )
         .map((s) => s.session_name)
     )
   );
@@ -122,11 +133,7 @@ const Guest = () => {
   // Only set filteredSession when the session actually changes due to filter interaction.
   useEffect(() => {
     // If not all chosen, clear filteredSession.
-    if (
-      selectedYear !== "" &&
-      selectedTrack !== "" &&
-      selectedSession !== ""
-    ) {
+    if (selectedYear !== "" && selectedTrack !== "" && selectedSession !== "") {
       const found = sessionsData.find(
         (s) =>
           s.year === selectedYear &&
@@ -139,6 +146,10 @@ const Guest = () => {
     }
   }, [selectedYear, selectedTrack, selectedSession, sessionsData]);
 
+  if (!isLoaded) {
+    return <Loading />;
+  }
+
   return (
     <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
       <div className="max-w-7xl mx-auto">
@@ -149,9 +160,7 @@ const Guest = () => {
             <div className="flex justify-start items-center gap-6 mb-4 p-4">
               {/* Year */}
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Year
-                </label>
+                <label className="block text-sm font-medium mb-1">Year</label>
                 <Select
                   value={selectedYear === "" ? "" : String(selectedYear)}
                   onValueChange={(val) =>
@@ -175,9 +184,7 @@ const Guest = () => {
               </div>
               {/* Track */}
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Track
-                </label>
+                <label className="block text-sm font-medium mb-1">Track</label>
                 <Select
                   value={selectedTrack === "" ? "" : String(selectedTrack)}
                   onValueChange={(val) =>
@@ -201,9 +208,7 @@ const Guest = () => {
               </div>
               {/* Session */}
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Year
-                </label>
+                <label className="block text-sm font-medium mb-1">Year</label>
                 <Select
                   value={selectedSession === "" ? "" : String(selectedSession)}
                   onValueChange={(val) =>
@@ -241,18 +246,18 @@ const Guest = () => {
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
             {/* Welcome section (as before) */}
             {/* <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
-              <div className="flex-1 text-center sm:text-left">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-2 sm:gap-3 mb-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white text-sm sm:text-lg">👋</span>
+                <div className="flex-1 text-center sm:text-left">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-2 sm:gap-3 mb-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <span className="text-white text-sm sm:text-lg">👋</span>
+                    </div>
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100"></h2>
                   </div>
-                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100"></h2>
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto sm:mx-0">
+                    Sample text
+                  </p>
                 </div>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto sm:mx-0">
-                  Sample text
-                </p>
-              </div>
-            </div> */}
+              </div> */}
 
             {/* <SessionTable filteredSession={filteredSession} /> */}
 
@@ -267,6 +272,7 @@ const Guest = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </main>
   );
 };
