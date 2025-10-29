@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import MockComponent from "@/components/MockComponent";
 import TireStintChart from "@/components/TireStintsChart";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import WeatherInfo from "./WeatherInfo";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -14,7 +23,7 @@ const Guest = () => {
   const [sessionsData, setSessionsData] = useState<Session[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | "">("");
   const [selectedTrack, setSelectedTrack] = useState<string>("");
-  const [selectedSessionName, setSelectedSessionName] = useState<string>("");
+  const [selectedSession, setSelectedSession] = useState<string>("");
   const [initializedFilters, setInitializedFilters] = useState(false);
 
   // Drivers
@@ -58,7 +67,7 @@ const Guest = () => {
     if (sessionsData.length > 0 && !initializedFilters && latestSession) {
       setSelectedYear(latestSession.year);
       setSelectedTrack(latestSession.circuit_short_name);
-      setSelectedSessionName(latestSession.session_name);
+      setSelectedSession(latestSession.session_name);
       setFilteredSession(latestSession); // <--- Fetch & show latest session initially
       setInitializedFilters(true);
     }
@@ -95,7 +104,7 @@ const Guest = () => {
     return getFirstSessionDate(a) - getFirstSessionDate(b);
   });
 
-  const sessionTypeOptions = Array.from(
+  const sessionOptions = Array.from(
     new Set(
       sessionsData
         .filter(
@@ -103,27 +112,11 @@ const Guest = () => {
             (selectedYear ? s.year === selectedYear : true) &&
             (selectedTrack ? s.circuit_short_name === selectedTrack : true)
         )
+        // Sort by date_start (oldest to newest) before mapping to names
+        .sort((a, b) => new Date(a.date_start).getTime() - new Date(b.date_start).getTime())
         .map((s) => s.session_name)
     )
-  ).sort();
-
-  // Handler for filter changes:
-  const handleYearChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(e.target.value === "" ? "" : parseInt(e.target.value));
-    setSelectedTrack("");
-    setSelectedSessionName("");
-    // Do not select a session until all three filters are chosen
-    setFilteredSession(null);
-  };
-  const handleTrackChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTrack(e.target.value);
-    setSelectedSessionName("");
-    setFilteredSession(null);
-  };
-  const handleSessionTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSessionName(e.target.value);
-    // Do not set filteredSession yet; will be handled in below effect
-  };
+  );
 
   // When all three filters (year, track, session type) are set, show updated session.
   // Only set filteredSession when the session actually changes due to filter interaction.
@@ -132,22 +125,22 @@ const Guest = () => {
     if (
       selectedYear !== "" &&
       selectedTrack !== "" &&
-      selectedSessionName !== ""
+      selectedSession !== ""
     ) {
       const found = sessionsData.find(
         (s) =>
           s.year === selectedYear &&
           s.circuit_short_name === selectedTrack &&
-          s.session_name === selectedSessionName
+          s.session_name === selectedSession
       );
       setFilteredSession(found ?? null);
     } else {
       setFilteredSession(null);
     }
-  }, [selectedYear, selectedTrack, selectedSessionName, sessionsData]);
+  }, [selectedYear, selectedTrack, selectedSession, sessionsData]);
 
   return (
-    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300">
+    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
       <div className="max-w-7xl mx-auto">
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
           {/* Filters UI */}
@@ -156,68 +149,81 @@ const Guest = () => {
             <div className="flex justify-start items-center gap-6 mb-4 p-4">
               {/* Year */}
               <div>
-                <label
-                  htmlFor="yearSelect"
-                  className="block text-sm font-medium mb-1"
-                >
+                <label className="block text-sm font-medium mb-1">
                   Year
                 </label>
-                <select
-                  id="yearSelect"
-                  value={selectedYear}
-                  onChange={handleYearChange}
-                  className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
+                <Select
+                  value={selectedYear === "" ? "" : String(selectedYear)}
+                  onValueChange={(val) =>
+                    setSelectedYear(val === "" ? "" : Number(val))
+                  }
                 >
-                  {yearOptions.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-24">
+                    <SelectValue placeholder="Select Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Years</SelectLabel>
+                      {yearOptions.map((year) => (
+                        <SelectItem key={year} value={String(year)}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
               {/* Track */}
               <div>
-                <label
-                  htmlFor="trackSelect"
-                  className="block text-sm font-medium mb-1"
-                >
+                <label className="block text-sm font-medium mb-1">
                   Track
                 </label>
-                <select
-                  id="trackSelect"
-                  value={selectedTrack}
-                  onChange={handleTrackChange}
-                  className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
-                  disabled={trackOptions.length === 0}
+                <Select
+                  value={selectedTrack === "" ? "" : String(selectedTrack)}
+                  onValueChange={(val) =>
+                    setSelectedTrack(val === "" ? "" : String(val))
+                  }
                 >
-                  {trackOptions.map((track) => (
-                    <option key={track} value={track}>
-                      {track}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-50">
+                    <SelectValue placeholder="Select Track" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Tracks</SelectLabel>
+                      {trackOptions.map((track) => (
+                        <SelectItem key={track} value={String(track)}>
+                          {track}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
-              {/* Session Type */}
+              {/* Session */}
               <div>
-                <label
-                  htmlFor="sessionTypeSelect"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Session
+                <label className="block text-sm font-medium mb-1">
+                  Year
                 </label>
-                <select
-                  id="sessionTypeSelect"
-                  value={selectedSessionName}
-                  onChange={handleSessionTypeChange}
-                  className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none"
-                  disabled={sessionTypeOptions.length === 0}
+                <Select
+                  value={selectedSession === "" ? "" : String(selectedSession)}
+                  onValueChange={(val) =>
+                    setSelectedSession(val === "" ? "" : String(val))
+                  }
                 >
-                  {sessionTypeOptions.map((type) => (
-                    <option key={type} value={type}>
-                      {type.replace(/_/g, " ")}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-30">
+                    <SelectValue placeholder="Select Session" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Sessions</SelectLabel>
+                      {sessionOptions.map((session) => (
+                        <SelectItem key={session} value={String(session)}>
+                          {session}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
