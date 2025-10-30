@@ -1,13 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Computer, Github } from "lucide-react";
+import Logo from "./Logo";
 
 const Footer = () => {
   const quickLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
   ];
-  
+
   const socials = [
     { name: "Portfolio", href: "/", icon: Computer },
     { name: "Github", href: "/about", icon: Github },
@@ -19,14 +19,7 @@ const Footer = () => {
         {/* Logo */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Logo */}
-          <Link href="/">
-            <Image
-              src="/F1-unofficial-logo.svg"
-              height={150}
-              width={150}
-              alt="F1 Logo"
-            />
-          </Link>
+          <Logo height={150} width={150} />
 
           {/* Navigation Links */}
           <div className="text-center md:text-left">

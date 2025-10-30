@@ -1,15 +1,9 @@
 "use client";
 
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import Link from "next/link";
-import Image from "next/image";
 import { SidebarTrigger } from "./ui/sidebar";
+import Logo from "./Logo";
 
 const Navbar = () => {
   return (
@@ -21,14 +15,7 @@ const Navbar = () => {
           <SidebarTrigger />
         </SignedIn>
         {/* Logo */}
-        <Link href="/">
-          <Image
-            src="/F1-unofficial-logo.svg"
-            height={150}
-            width={150}
-            alt="F1 Logo"
-          />
-        </Link>
+        <Logo height={150} width={150} />
       </div>
 
       {/* Center: About Link */}
@@ -49,9 +36,7 @@ const Navbar = () => {
         </div>
         <SignedOut>
           <SignInButton>
-            <button
-              className="px-5 py-2 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors text-white font-semibold shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
+            <button className="px-5 py-2 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors text-white font-semibold shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed">
               Sign In
             </button>
           </SignInButton>
