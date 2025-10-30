@@ -3,9 +3,9 @@ import axios from "axios";
 import {
   CloudDrizzle,
   CloudRain,
-  CloudSun,
-  Snowflake,
   Sun,
+  ThermometerSnowflake,
+  ThermometerSun,
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
@@ -114,11 +114,11 @@ const getWeatherIcon = (temp: number, rainValue: number) => {
   } else {
     // No Rain
     if (temp >= 31) {
-      return <Sun size={50} strokeWidth={2} />; // Hot
-    } else if (temp >= 10 && temp < 31) {
-      return <CloudSun size={50} strokeWidth={2} />; // Warm
+      return <ThermometerSun size={50} strokeWidth={2} />; // Hot
+    } else if (temp <= 20) {
+      return <ThermometerSnowflake size={50} strokeWidth={2} />; // Cold
     } else {
-      return <Snowflake size={50} strokeWidth={2} />; // Cold
+      return <Sun size={50} strokeWidth={2} />; // Warm
     }
   }
 };
@@ -159,6 +159,7 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
         Weather
       </h1>
       <Separator className="mb-4" />
+      {/* Weather Icon and Temperature */}
       <div className="w-full flex justify-center mt-1">
         <div className="flex flex-col items-center justify-center">
           <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow border border-gray-200/60 dark:border-gray-700/60">
@@ -185,6 +186,7 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
           </div>
         </div>
       </div>
+      {/* Weather Information Table */}
       <div className="flex flex-col gap-2 mb-2 mt-4">
         {dailyAverages.length === 0 ? (
           <span className="text-gray-500 text-sm px-2 py-3">No weather data available.</span>
@@ -194,7 +196,6 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-900/60">
                   <th className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">Date</th>
-                  {/* <th className="px-2 py-1">Air Temp (°C / °F)</th> */}
                   <th className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 border-b border-gray-100/70 dark:border-gray-700/70">
                     Track Temp<br className="hidden sm:block" />
                     <span className="font-normal text-xs">(°C / °F)</span>
