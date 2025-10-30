@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import Loading from "./Loading";
 import Footer from "./Footer";
+import { Separator } from "./ui/separator";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -159,7 +160,22 @@ const Guest = () => {
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
             {/* Filter */}
             <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
-              <h1 className="text-lg font-bold">Session Select</h1>
+              <h1 className="text-lg font-bold text-left w-full pb-2">
+                Session Select
+              </h1>
+              <Separator className="mb-4" />
+              {filteredSession && (
+                <div className="mb-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-col gap-1">
+                  <div className="font-semibold text-base">
+                    {filteredSession.year} {filteredSession.country_name} Grand
+                    Prix
+                  </div>
+                  <div className="text-sm opacity-80">
+                    <span className="font-medium">Session Type:</span>{" "}
+                    {filteredSession.session_type}
+                  </div>
+                </div>
+              )}
               <div className="flex justify-start items-center gap-6 mb-4 p-4">
                 {/* Year */}
                 <div>
@@ -187,9 +203,7 @@ const Guest = () => {
                 </div>
                 {/* Track */}
                 <div>
-                  <label className="block text-sm font-bold mb-1">
-                    Track
-                  </label>
+                  <label className="block text-sm font-bold mb-1">Track</label>
                   <Select
                     value={selectedTrack === "" ? "" : String(selectedTrack)}
                     onValueChange={(val) =>
@@ -213,7 +227,9 @@ const Guest = () => {
                 </div>
                 {/* Session */}
                 <div>
-                  <label className="block text-sm font-bold mb-1">Session</label>
+                  <label className="block text-sm font-bold mb-1">
+                    Session
+                  </label>
                   <Select
                     value={
                       selectedSession === "" ? "" : String(selectedSession)
