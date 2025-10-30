@@ -15,6 +15,7 @@ import { useTheme } from "next-themes";
 import { Driver } from "@/types/driver";
 import { Session } from "@/types/session";
 import { ChevronDown } from "lucide-react";
+import { Separator } from "./ui/separator";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -31,12 +32,12 @@ type Stint = {
 
 interface TireStintsData extends Stint {
   name_acronym?: string;
-};
+}
 
 interface TireStintChartProps {
   filteredSession: Session | null;
   driversData: Driver[];
-};
+}
 
 // F1 compound colors
 const compoundColors: Record<string, string> = {
@@ -56,7 +57,6 @@ const TireStintsChart = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
   const { theme } = useTheme();
-
 
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
@@ -162,7 +162,9 @@ const TireStintsChart = ({
     const isDark = theme === "dark";
 
     selectedDrivers.forEach((driverNumber) => {
-      const driverLabel = `${driverAcronymMap[driverNumber]} ${driverNumber}` || `Driver ${driverNumber}`;
+      const driverLabel =
+        `${driverAcronymMap[driverNumber]} ${driverNumber}` ||
+        `Driver ${driverNumber}`;
       const arr = driverStintsMap.get(driverNumber) || [];
       arr.forEach((stint) => {
         // For openF1, lap_start/lap_end are inclusive stints
@@ -262,7 +264,11 @@ const TireStintsChart = ({
       },
       y: {
         type: "category" as const,
-        labels: selectedDrivers.map((driverNumber) => `${driverAcronymMap[driverNumber]} ${driverNumber}` || `Driver ${driverNumber}`),
+        labels: selectedDrivers.map(
+          (driverNumber) =>
+            `${driverAcronymMap[driverNumber]} ${driverNumber}` ||
+            `Driver ${driverNumber}`
+        ),
         title: { display: true, text: "Driver Number" },
         grid: {
           display: true,
@@ -318,10 +324,9 @@ const TireStintsChart = ({
   }
 
   return (
-    <div
-      className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4"
-    >
-      <h1 className="text-lg font-bold">Tire Stints</h1>
+    <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
+      <h1 className="text-lg font-bold text-left w-full pb-2">Tire Stints</h1>
+      <Separator className="mb-4" />
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">
@@ -365,7 +370,7 @@ const TireStintsChart = ({
                   </button>
                 </div>
                 <div className="p-1">
-                {/* selectedDrivers.map((driverNumber) => `${driverAcronymMap[driverNumber]} ${driverNumber}` || `Driver ${driverNumber}`) */}
+                  {/* selectedDrivers.map((driverNumber) => `${driverAcronymMap[driverNumber]} ${driverNumber}` || `Driver ${driverNumber}`) */}
                   {drivers.map((driverNumber) => (
                     <label
                       key={driverNumber}
