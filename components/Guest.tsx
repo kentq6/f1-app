@@ -22,6 +22,8 @@ import { Separator } from "./ui/separator";
 import Image from "next/image";
 import StartingGridTable from "./StartingGridTable";
 import SessionResultTable from "./SessionResultTable";
+import GridLayout from "./layout/GridLayout";
+import SimpleLayout from "./layout/SimpleLayout";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -157,6 +159,7 @@ const Guest = () => {
   return (
     <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
       <div className="max-w-7xl mx-auto">
+
         {/* Session Select & Weather Info */}
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
           {/* Left Column */}
@@ -292,27 +295,37 @@ const Guest = () => {
         </div>
 
         {/* Starting Grid and Session Result Tables */}
-        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-          {/* Left Column */}
-          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
-            <StartingGridTable />
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
-            <SessionResultTable />
-          </div>
-        </div>
+        <GridLayout
+          components={[
+            <StartingGridTable
+              key="StartingGrid"
+              filteredSession={filteredSession}
+            />,
+            <SessionResultTable
+              key="SessionResult"
+              filteredSession={filteredSession}
+            />,
+          ]}
+        />
 
         {/* Stint Chart & ... */}
+        <SimpleLayout
+          components={[
+            <TireStintChart
+              key="TireStintChart"
+              filteredSession={filteredSession}
+              driversData={driversData}
+            />,
+            // <MockComponent key="MockComponent" />,
+          ]}
+        />
+
+        {/* Simple Layout */}
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
-          <TireStintChart
-            filteredSession={filteredSession}
-            driversData={driversData}
-          />
+          <MockComponent />
         </div>
 
-        {/* Columns */}
+        {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch mt-6">
           {/* Left Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
