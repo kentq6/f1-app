@@ -189,7 +189,7 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
         {dailyAverages.length === 0 ? (
           <span className="text-gray-500 text-sm px-2 py-3">No weather data available.</span>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-gray-100/60 dark:border-gray-700/60 bg-gray-50/70 dark:bg-gray-900/40">
+          <div className=" mb-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-row items-center justify-between gap-1 overflow-x-auto">
             <table className="w-full text-xs md:text-sm mt-0 text-left">
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-900/60">
