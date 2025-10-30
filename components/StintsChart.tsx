@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
@@ -30,11 +28,11 @@ type Stint = {
   tyre_age_at_start: number;
 };
 
-interface TireStintsData extends Stint {
+interface DriverData extends Stint {
   name_acronym?: string;
 }
 
-interface TireStintChartProps {
+interface StintChartProps {
   filteredSession: Session | null;
   driversData: Driver[];
 }
@@ -48,11 +46,11 @@ const compoundColors: Record<string, string> = {
   WET: "#0067AD",
 };
 
-const TireStintsChart = ({
+const StintsChart = ({
   filteredSession,
   driversData,
-}: TireStintChartProps) => {
-  const [tireStintsData, setTireStintsData] = useState<TireStintsData[]>([]);
+}: StintChartProps) => {
+  const [tireStintsData, setTireStintsData] = useState<DriverData[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
@@ -79,7 +77,7 @@ const TireStintsChart = ({
         );
 
         // Merge driver info into stints
-        const combined: TireStintsData[] = stints.map((stint: Stint) => {
+        const combined: DriverData[] = stints.map((stint: Stint) => {
           const driver = driversMap.get(stint.driver_number);
           return {
             ...stint,
@@ -408,4 +406,4 @@ const TireStintsChart = ({
   );
 };
 
-export default TireStintsChart;
+export default StintsChart;

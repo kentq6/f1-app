@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MockComponent from "@/components/MockComponent";
-import TireStintChart from "@/components/TireStintsChart";
+import StintsChart from "@/components/StintsChart";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import WeatherInfo from "./WeatherInfo";
@@ -191,7 +191,7 @@ const Guest = () => {
         {/* Stint Chart & ... */}
         <SimpleLayout
           components={[
-            <TireStintChart
+            <StintsChart
               key="TireStintChart"
               filteredSession={filteredSession}
               driversData={driversData}
