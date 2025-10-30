@@ -7,23 +7,13 @@ import TireStintChart from "@/components/TireStintsChart";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import WeatherInfo from "./WeatherInfo";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Loading from "./Loading";
 import Footer from "./Footer";
-import { Separator } from "./ui/separator";
-import Image from "next/image";
 import StartingGridTable from "./StartingGridTable";
 import SessionResultTable from "./SessionResultTable";
 import GridLayout from "./layout/GridLayout";
 import SimpleLayout from "./layout/SimpleLayout";
+import SessionSelect from "./SessionSelect";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -159,133 +149,23 @@ const Guest = () => {
   return (
     <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
       <div className="max-w-7xl mx-auto">
-
         {/* Session Select & Weather Info */}
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
           {/* Left Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
             {/* Session Select */}
-            <div className="w-full h-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
-              <h1 className="text-lg font-bold text-left w-full pb-2">
-                Session Select
-              </h1>
-              <Separator className="mb-4" />
-              {/* Session Info Container */}
-              {filteredSession && (
-                <div className="mb-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-row items-center justify-between gap-1">
-                  <div className="flex flex-col">
-                    {/* Year & Country */}
-                    <div className="font-semibold text-base">
-                      {filteredSession.year} {filteredSession.country_name}
-                    </div>
-                    {/* Date */}
-                    <div className="text-sm opacity-80 mt-1">
-                      <span className="font-medium">Date: </span>
-                      {new Date(filteredSession.date_start).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        }
-                      )}
-                    </div>
-                    {/* Session Type */}
-                    <div className="text-sm opacity-80 mt-1">
-                      <span className="font-medium">Session Type:</span>{" "}
-                      {filteredSession.session_type}
-                    </div>
-                  </div>
-                  {/* Flag */}
-                  <Image
-                    src={`/country-flags/${filteredSession.country_code}.svg`}
-                    height={60}
-                    width={100}
-                    alt={`${filteredSession.country_code}`}
-                    className="mr-3"
-                  />
-                </div>
-              )}
-              {/* Selections Container */}
-              <div className="flex justify-start items-center gap-6 mb-4 p-4">
-                {/* Year */}
-                <div>
-                  <label className="block text-sm font-bold mb-1">Year</label>
-                  <Select
-                    value={selectedYear === "" ? "" : String(selectedYear)}
-                    onValueChange={(val) =>
-                      setSelectedYear(val === "" ? "" : Number(val))
-                    }
-                  >
-                    <SelectTrigger className="w-24">
-                      <SelectValue placeholder="Select Year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Years</SelectLabel>
-                        {yearOptions.map((year) => (
-                          <SelectItem key={year} value={String(year)}>
-                            {year}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {/* Track */}
-                <div>
-                  <label className="block text-sm font-bold mb-1">Track</label>
-                  <Select
-                    value={selectedTrack === "" ? "" : String(selectedTrack)}
-                    onValueChange={(val) =>
-                      setSelectedTrack(val === "" ? "" : String(val))
-                    }
-                  >
-                    <SelectTrigger className="w-45">
-                      <SelectValue placeholder="Select Track" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Tracks</SelectLabel>
-                        {trackOptions.map((track) => (
-                          <SelectItem key={track} value={String(track)}>
-                            {track}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {/* Session */}
-                <div>
-                  <label className="block text-sm font-bold mb-1">
-                    Session
-                  </label>
-                  <Select
-                    value={
-                      selectedSession === "" ? "" : String(selectedSession)
-                    }
-                    onValueChange={(val) =>
-                      setSelectedSession(val === "" ? "" : String(val))
-                    }
-                  >
-                    <SelectTrigger className="w-30">
-                      <SelectValue placeholder="Select Session" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Sessions</SelectLabel>
-                        {sessionOptions.map((session) => (
-                          <SelectItem key={session} value={String(session)}>
-                            {session}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
+            <SessionSelect
+              selectedYear={selectedYear}
+              selectedTrack={selectedTrack}
+              selectedSession={selectedSession}
+              filteredSession={filteredSession}
+              yearOptions={yearOptions}
+              trackOptions={trackOptions}
+              sessionOptions={sessionOptions}
+              onYearChange={setSelectedYear}
+              onTrackChange={setSelectedTrack}
+              onSessionChange={setSelectedSession}
+            />
           </div>
 
           {/* Right Column */}
@@ -299,11 +179,11 @@ const Guest = () => {
           components={[
             <StartingGridTable
               key="StartingGrid"
-              filteredSession={filteredSession}
+              // filteredSession={filteredSession}
             />,
             <SessionResultTable
               key="SessionResult"
-              filteredSession={filteredSession}
+              // filteredSession={filteredSession}
             />,
           ]}
         />
