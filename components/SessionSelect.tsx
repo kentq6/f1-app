@@ -64,14 +64,21 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
               {filteredSession.session_type}
             </div>
           </div>
-          <Image
-            src={`/country-flags/${filteredSession.country_code}.svg`}
-            height={60}
-            width={100}
-            alt={`${filteredSession.country_code}`}
-            className="mr-3"
-            style={{ height: "70px", width: "105px" }}
-          />
+          <div className="flex flex-col items-center ml-3">
+            <div className="w-[105px] h-[75px] rounded-md overflow-hidden shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-transform duration-200 hover:scale-105">
+              <Image
+                src={`/country-flags/${filteredSession.country_code}.svg`}
+                width={105}
+                height={75}
+                alt={`${filteredSession.country_code} Flag`}
+                className="object-cover w-full h-full"
+                style={{ minWidth: "105px", minHeight: "75px" }}
+              />
+            </div>
+            <span className="text-xs font-medium mt-2 text-gray-700 dark:text-gray-300 tracking-wide">
+              {filteredSession.country_code}
+            </span>
+          </div>
         </div>
       )}
 
