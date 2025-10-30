@@ -108,17 +108,17 @@ function computeAveragesByDay(weatherData: Weather[]) {
 
 const getWeatherIcon = (temp: number, rainValue: number) => {
   if (rainValue > 0 && rainValue < 2.5) {
-    return <CloudDrizzle size={50} strokeWidth={2.5} />; // Drizzle
+    return <CloudDrizzle size={50} strokeWidth={2} />; // Drizzle
   } else if (rainValue >= 2.5) {
-    return <CloudRain size={50} strokeWidth={2.5} />; // Rain
+    return <CloudRain size={50} strokeWidth={2} />; // Rain
   } else {
     // No Rain
     if (temp >= 31) {
-      return <Sun size={50} strokeWidth={2.5} />; // Hot
+      return <Sun size={50} strokeWidth={2} />; // Hot
     } else if (temp >= 10 && temp < 31) {
-      return <CloudSun size={50} strokeWidth={2.5} />; // Warm
+      return <CloudSun size={50} strokeWidth={2} />; // Warm
     } else {
-      return <Snowflake size={50} strokeWidth={2.5} />; // Cold
+      return <Snowflake size={50} strokeWidth={2} />; // Cold
     }
   }
 };
