@@ -159,8 +159,8 @@ const Guest = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch mt-6">
           {/* Left Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
-            {/* Filter */}
-            <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
+            {/* Session Select */}
+            <div className="w-full h-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
               <h1 className="text-lg font-bold text-left w-full pb-2">
                 Session Select
               </h1>
