@@ -19,6 +19,7 @@ import {
 import Loading from "./Loading";
 import Footer from "./Footer";
 import { Separator } from "./ui/separator";
+import Image from "next/image";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -164,16 +165,39 @@ const Guest = () => {
                 Session Select
               </h1>
               <Separator className="mb-4" />
+              {/* Session Info Container */}
               {filteredSession && (
-                <div className="mb-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-col gap-1">
-                  <div className="font-semibold text-base">
-                    {filteredSession.year} {filteredSession.country_name} Grand
-                    Prix
+                <div className="mb-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-row items-center justify-between gap-1">
+                  <div className="flex flex-col">
+                    {/* Year & Country */}
+                    <div className="font-semibold text-base">
+                      {filteredSession.year} {filteredSession.country_name}
+                    </div>
+                    {/* Date */}
+                    <div className="text-sm opacity-70">
+                      {new Date(filteredSession.date_start).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}
+                    </div>
+                    {/* Session Type */}
+                    <div className="text-sm opacity-80 mt-1">
+                      <span className="font-medium">Session Type:</span>{" "}
+                      {filteredSession.session_type}
+                    </div>
                   </div>
-                  <div className="text-sm opacity-80">
-                    <span className="font-medium">Session Type:</span>{" "}
-                    {filteredSession.session_type}
-                  </div>
+                  {/* Flag */}
+                  <Image
+                    src={`/country-flags/${filteredSession.country_code}.svg`}
+                    height={60}
+                    width={100}
+                    alt={`${filteredSession.country_code}`}
+                    className="mr-3"
+                  />
                 </div>
               )}
               <div className="flex justify-start items-center gap-6 mb-4 p-4">
