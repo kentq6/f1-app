@@ -20,6 +20,8 @@ import Loading from "./Loading";
 import Footer from "./Footer";
 import { Separator } from "./ui/separator";
 import Image from "next/image";
+import StartingGridTable from "./StartingGridTable";
+import SessionResultTable from "./SessionResultTable";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -131,8 +133,8 @@ const Guest = () => {
     )
   );
 
-  // When all three filters (year, track, session type) are set, show updated session.
-  // Only set filteredSession when the session actually changes due to filter interaction.
+  // When all three filters (year, track, session type) are set, show updated session
+  // Only set filteredSession when the session actually changes due to filter interaction
   useEffect(() => {
     // If not all chosen, clear filteredSession.
     if (selectedYear !== "" && selectedTrack !== "" && selectedSession !== "") {
@@ -155,8 +157,8 @@ const Guest = () => {
   return (
     <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
       <div className="max-w-7xl mx-auto">
-        {/* Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch mt-6">
+        {/* Session Select & Weather Info */}
+        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
           {/* Left Column */}
           <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
             {/* Session Select */}
@@ -201,6 +203,7 @@ const Guest = () => {
                   />
                 </div>
               )}
+              {/* Selections Container */}
               <div className="flex justify-start items-center gap-6 mb-4 p-4">
                 {/* Year */}
                 <div>
@@ -288,7 +291,20 @@ const Guest = () => {
           </div>
         </div>
 
-        {/* TireStintChart & ... */}
+        {/* Starting Grid and Session Result Tables */}
+        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+          {/* Left Column */}
+          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
+            <StartingGridTable />
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
+            <SessionResultTable />
+          </div>
+        </div>
+
+        {/* Stint Chart & ... */}
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
           <TireStintChart
             filteredSession={filteredSession}
