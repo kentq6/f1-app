@@ -70,6 +70,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
             width={100}
             alt={`${filteredSession.country_code}`}
             className="mr-3"
+            style={{ height: "70px", width: "105px" }}
           />
         </div>
       )}
