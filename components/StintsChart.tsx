@@ -70,7 +70,7 @@ const StintsChart = ({
         );
 
         // Merge driver info into stints
-        const combined: DriverData[] = stints.map((stint: Stint) => {
+        const mergedData: DriverData[] = stints.map((stint: Stint) => {
           const driver = driversMap.get(stint.driver_number);
           return {
             ...stint,
@@ -78,7 +78,7 @@ const StintsChart = ({
           };
         });
 
-        setTireStintsData(combined);
+        setTireStintsData(mergedData);
       } catch (error) {
         console.error("Error fetching tire stints data: ", error);
       }
