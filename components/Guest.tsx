@@ -174,7 +174,8 @@ const Guest = () => {
                       {filteredSession.year} {filteredSession.country_name}
                     </div>
                     {/* Date */}
-                    <div className="text-sm opacity-70">
+                    <div className="text-sm opacity-80 mt-1">
+                      <span className="font-medium">Date: </span>
                       {new Date(filteredSession.date_start).toLocaleDateString(
                         "en-US",
                         {
