@@ -15,8 +15,7 @@ import GridLayout from "./layout/GridLayout";
 import SimpleLayout from "./layout/SimpleLayout";
 import SessionSelect from "./SessionSelect";
 import Navbar from "./Navbar";
-import { SignedIn } from "@clerk/nextjs";
-import AppSidebar from "./AppSidebar/AppSidebar";
+// import { SignedIn } from "@clerk/nextjs";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
