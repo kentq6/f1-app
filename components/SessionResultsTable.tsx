@@ -144,7 +144,7 @@ const SessionResultsTable = ({
                 <TableCell>{result.name_acronym}</TableCell>
                 <TableCell>
                   <div className="inline-flex items-center gap-2 rounded-full">
-                    <span 
+                    <span
                       className="w-2.5 h-2.5 rounded-full "
                       style={{
                         backgroundColor: result.team_colour?.startsWith("#")
