@@ -27,7 +27,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({ components }) => {
   });
 
   return (
-    <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+    <div className="mt-2 sm:mt-3 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3 items-stretch">
       {/* Left Column */}
       <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
         {leftColumn.map((component, idx) => (
