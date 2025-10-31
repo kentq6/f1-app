@@ -368,7 +368,7 @@ const StintsChart = ({
     // Show a message if required session data not provided
     return (
       <div
-        className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4 flex items-center justify-center"
+        className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-md border border-gray-100/50 dark:border-gray-700/50 p-4 flex items-center justify-center"
         style={{ minHeight: 300 }}
       >
         <p>Please select a session to view tire stint data.</p>
@@ -377,7 +377,7 @@ const StintsChart = ({
   }
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-4">
+    <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-md border border-gray-100/50 dark:border-gray-700/50 p-4">
       <h1 className="text-lg font-bold text-left w-full pb-2">Tire Stints</h1>
       <Separator className="mb-4" />
       <div className="flex justify-between items-center mb-4">
