@@ -9,8 +9,8 @@ import { Driver } from "@/types/driver";
 import WeatherInfo from "./WeatherInfo";
 import Loading from "./Loading";
 import Footer from "./Footer";
-import StartingGridTable from "./StartingGridTable";
-import SessionResultTable from "./SessionResultTable";
+// import StartingGridTable from "./StartingGridTable";
+import SessionResultsTable from "./SessionResultsTable";
 import GridLayout from "./layout/GridLayout";
 import SimpleLayout from "./layout/SimpleLayout";
 import SessionSelect from "./SessionSelect";
@@ -150,11 +150,10 @@ const Guest = () => {
     <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
       <div className="max-w-7xl mx-auto">
         {/* Session Select & Weather Info */}
-        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-          {/* Left Column */}
-          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
-            {/* Session Select */}
+        <GridLayout
+          components={[
             <SessionSelect
+              key="SessionSelect"
               selectedYear={selectedYear}
               selectedTrack={selectedTrack}
               selectedSession={selectedSession}
@@ -165,28 +164,48 @@ const Guest = () => {
               onYearChange={setSelectedYear}
               onTrackChange={setSelectedTrack}
               onSessionChange={setSelectedSession}
-            />
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-4 sm:space-y-6 flex flex-col h-full">
-            <WeatherInfo filteredSession={filteredSession} />
-          </div>
-        </div>
+            />,
+            <WeatherInfo key="WeatherInfo" filteredSession={filteredSession} />,
+          ]}
+        />
 
         {/* Starting Grid and Session Result Tables */}
-        <GridLayout
+        {/* NOTE: Starting Grid API is still in beta and DOES NOT work */}
+        <SimpleLayout
           components={[
-            <StartingGridTable
-              key="StartingGrid"
-              // filteredSession={filteredSession}
-            />,
-            <SessionResultTable
-              key="SessionResult"
-              // filteredSession={filteredSession}
+            <SessionResultsTable
+              key="SessionResultsTable"
+              filteredSession={filteredSession}
+              driversData={driversData}
             />,
           ]}
         />
+        {/* {selectedSession === "Race" || selectedSession === "Sprint" ? (
+          <GridLayout
+            components={[
+              <StartingGridTable
+                key="StartingGridTable"
+                filteredSession={filteredSession}
+                driversData={driversData}
+              />,
+              <SessionResultsTable
+                key="SessionResultsTable"
+                filteredSession={filteredSession}
+                driversData={driversData}
+              />,
+            ]}
+          />
+        ) : (
+          <SimpleLayout
+            components={[
+              <SessionResultsTable
+                key="SessionResultsTable"
+                filteredSession={filteredSession}
+                driversData={driversData}
+              />,
+            ]}
+          />
+        )} */}
 
         {/* Stint Chart & ... */}
         <SimpleLayout
