@@ -147,7 +147,7 @@ const Guest = () => {
   }
 
   return (
-    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 pb-10">
+    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Session Select & Weather Info */}
         <GridLayout

@@ -8,7 +8,7 @@ import Logo from "./Logo";
 const Navbar = () => {
   return (
     // Nav and Side Bars
-    <nav className="p-4 flex items-center justify-between sticky top-0 z-10 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 h-20">
+    <nav className="px-4 flex items-center justify-between sticky top-0 z-10 bg-white border-b border-gray-100/50 dark:bg-gray-800 dark:border-gray-700/50 h-15 shadow-md border">
       {/* Left: Sidebar Toggle + Logo */}
       <div className="flex items-center">
         <SignedIn>
@@ -30,7 +30,7 @@ const Navbar = () => {
       </div> */}
 
       {/* Right: Auth and Toggle Light/Dark Mode Buttoms */}
-      <div className="flex items-center gap-2 mr-5">
+      <div className="flex items-center gap-2">
         <div className="mr-5">
           <ThemeToggle />
         </div>
