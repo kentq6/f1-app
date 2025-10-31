@@ -39,15 +39,17 @@ export default function RootLayout({
             // enableSystem
             disableTransitionOnChange
           >
-            <SidebarProvider defaultOpen>
-              <SignedIn>
-                <AppSidebar />
-              </SignedIn>
-              <main className="w-full overscroll-none">
-                <Navbar />
-                <div className="px-4">{children}</div>
-              </main>
-            </SidebarProvider>
+            <div className="flex min-h-screen w-full overflow-hidden">
+              <SidebarProvider defaultOpen>
+                <SignedIn>
+                  <AppSidebar />
+                </SignedIn>
+                <main className="flex-1 overflow-x-hidden">
+                  {/* <Navbar /> */}
+                  <div className="w-full">{children}</div>
+                </main>
+              </SidebarProvider>
+            </div>
           </ThemeProvider>
         </body>
       </html>

@@ -14,6 +14,9 @@ import SessionResultsTable from "./SessionResultsTable";
 import GridLayout from "./layout/GridLayout";
 import SimpleLayout from "./layout/SimpleLayout";
 import SessionSelect from "./SessionSelect";
+import Navbar from "./Navbar";
+import { SignedIn } from "@clerk/nextjs";
+import AppSidebar from "./AppSidebar/AppSidebar";
 // import SessionTable from "./SessionTable";
 
 const Guest = () => {
@@ -147,8 +150,10 @@ const Guest = () => {
   }
 
   return (
-    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300">
-      <div className="max-w-7xl mx-auto">
+    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 overflow-x-hidden">
+      <div className="w-full mx-auto px-4">
+        <Navbar />
+
         {/* Session Select & Weather Info */}
         <GridLayout
           components={[
