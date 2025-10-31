@@ -123,7 +123,7 @@ const SessionResultsTable = ({
       <h1 className="text-lg font-bold text-left w-full pb-2">Results</h1>
       <Separator className="mb-4" />
       {/* Session Results Table */}
-      <div className="">
+      <div>
         <Table>
           <TableHeader>
             <TableRow>
