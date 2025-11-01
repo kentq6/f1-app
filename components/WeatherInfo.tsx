@@ -202,9 +202,6 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
               <TableHeader className="bg-gray-100 dark:bg-gray-900/60 rounded-t-xl">
                 <TableRow>
                   <TableHead className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">
-                    Date
-                  </TableHead>
-                  <TableHead className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">
                     Track Temp
                     <br className="hidden sm:block" />
                     <span className="font-normal text-xs">(°C / °F)</span>
@@ -241,9 +238,6 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                         : ''
                     }`}
                   >
-                    <TableCell className="px-3 py-1 whitespace-nowrap font-medium text-gray-900 dark:text-gray-200">
-                      {day.date}
-                    </TableCell>
                     <TableCell className="px-3 py-1 whitespace-nowrap">
                       <span className="font-medium text-gray-800 dark:text-gray-300">
                         {day.track_temperature.toFixed(1)}
