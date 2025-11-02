@@ -9,14 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
 
 type Weather = {
   air_temperature: number;
@@ -114,17 +107,22 @@ function computeAveragesByDay(weatherData: Weather[]) {
 
 const getWeatherIcon = (temp: number, rainValue: number) => {
   if (rainValue > 0 && rainValue < 2.5) {
-    return <CloudDrizzle size={50} strokeWidth={2} />; // Drizzle
+    // Light Drizzle, blueish
+    return <CloudDrizzle size={50} strokeWidth={2} color="#38bdf8" />;
   } else if (rainValue >= 2.5) {
-    return <CloudRain size={50} strokeWidth={2} />; // Rain
+    // Heavy Rain, deeper blue
+    return <CloudRain size={50} strokeWidth={2} color="#0ea5e9" />;
   } else {
     // No Rain
     if (temp >= 31) {
-      return <ThermometerSun size={50} strokeWidth={2} />; // Hot
+      // Hot, orange-red
+      return <ThermometerSun size={50} strokeWidth={2} color="#fb923c" />;
     } else if (temp <= 20) {
-      return <ThermometerSnowflake size={50} strokeWidth={2} />; // Cold
+      // Cold, light blue
+      return <ThermometerSnowflake size={50} strokeWidth={2} color="#60a5fa" />;
     } else {
-      return <Sun size={50} strokeWidth={2} />; // Warm
+      // Warm/mild, yellow
+      return <Sun size={50} strokeWidth={2} color="#facc15" />;
     }
   }
 };
@@ -159,121 +157,136 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
   // Show the first day's icon as a representative for the session if available
   const firstDay = dailyAverages.length > 0 ? dailyAverages[0] : null;
 
+  if (WeatherInfo.length === 0) {
+    return <div>No weather data available.</div>;
+  }
+
   return (
-    <div className="w-full h-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-md border border-gray-100/50 dark:border-gray-700/50 p-4">
-      <h1 className="text-lg font-bold text-left w-full pb-2">Weather</h1>
-      <Separator className="mb-4" />
-      {/* Weather Icon and Temperature */}
-      <div className="w-full flex justify-center mt-1">
-        <div className="flex flex-col items-center justify-center">
-          <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow border border-gray-200/60 dark:border-gray-700/60">
-            {firstDay
-              ? getWeatherIcon(firstDay.air_temperature, firstDay.rainfall)
-              : null}
-          </div>
-          <div className="mt-2 text-sm font-medium">
-            {typeof firstDay?.track_temperature === "number" ? (
-              <>
-                <span className="tracking-tight font-semibold">
-                  {firstDay.track_temperature.toFixed(1)}
-                </span>
-                <span className="opacity-80"> °C</span>
-                <span className="mx-1 opacity-60">/</span>
-                <span className="tracking-tight font-semibold">
-                  {toFahrenheit(firstDay.track_temperature).toFixed(1)}
-                </span>
-                <span className="opacity-80"> °F</span>
-              </>
+    <div>
+      <h1 className="text-md font-bold pb-1">Weather (Avg.)</h1>
+      <Separator className="mb-1" />
+      <div className="flex items-center justify-between">
+        {/* Icon & Air, Track, Rainfall Metrics */}
+        <div className="flex flex-col items-center justify-center gap-2 grow">
+          <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow-md border border-border dark:border-border flex items-center justify-center mt-2 w-[72px] h-[72px]">
+            {firstDay ? (
+              getWeatherIcon(firstDay.air_temperature, firstDay.rainfall)
             ) : (
-              <span className="text-gray-400">N/A</span>
+              <span className="text-lg">—</span>
+            )}
+          </div>
+          <div className="flex flex-col items-center text-xs font-medium mt-1 text-center min-h-[32px]">
+            {typeof firstDay?.air_temperature === "number" &&
+            typeof firstDay?.track_temperature === "number" ? (
+              <span className="whitespace-nowrap">
+                <span>
+                  Air Temp: <br />
+                </span>
+                <span className="font-semibold tracking-tight">
+                  {firstDay.air_temperature.toFixed(1)}
+                </span>
+                <span className="opacity-80">°C</span>
+                <span className="mx-1 opacity-40">/</span>
+                <span className="font-semibold tracking-tight">
+                  {toFahrenheit(firstDay.air_temperature).toFixed(1)}
+                </span>
+                <span className="opacity-80">°F</span>
+              </span>
+            ) : (
+              <span className="text-[13px] mt-4">No weather data</span>
             )}
           </div>
         </div>
-      </div>
-      {/* Weather Information Table */}
-      <div className="flex flex-col gap-2 mb-2 mt-4">
-        {dailyAverages.length === 0 ? (
-          <span className="text-gray-500 text-sm px-2 py-3">
-            No weather data available.
-          </span>
-        ) : (
-          <div className="mb-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-row items-center justify-between gap-1 overflow-x-auto">
-            <Table className="object-fit rounded-sm overflow-hidden">
-              <TableHeader className="bg-gray-100 dark:bg-gray-900/60 rounded-t-xl">
-                <TableRow>
-                  <TableHead className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">
-                    Track Temp
-                    <br className="hidden sm:block" />
-                    <span className="font-normal text-xs">(°C / °F)</span>
-                  </TableHead>
-                  <TableHead className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">
-                    Humidity
-                    <br className="hidden sm:block" />
-                    <span className="font-normal text-xs">(%)</span>
-                  </TableHead>
-                  <TableHead className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">
-                    Rainfall
-                    <br className="hidden sm:block" />
-                    <span className="font-normal text-xs">(mm / hr)</span>
-                  </TableHead>
-                  <TableHead className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">
-                    Wind
-                    <br className="hidden sm:block" />
-                    <span className="font-normal text-xs">(m/s)</span>
-                  </TableHead>
-                  <TableHead className="px-3 py-2 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-inherit border-b border-gray-100/70 dark:border-gray-700/70">
-                    Pressure
-                    <br className="hidden sm:block" />
-                    <span className="font-normal text-xs">(hPa)</span>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="rounded-b-xl">
-                {dailyAverages.map((day, i) => (
-                  <TableRow
-                    key={day.date}
-                    className={`odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/30 transition-colors ${
-                      i === dailyAverages.length - 1
-                        ? 'last:rounded-b-xl'
-                        : ''
-                    }`}
-                  >
-                    <TableCell className="px-3 py-1 whitespace-nowrap">
-                      <span className="font-medium text-gray-800 dark:text-gray-300">
-                        {day.track_temperature.toFixed(1)}
-                      </span>
-                      <span className="opacity-80"> °C</span>
-                      <span className="mx-1 opacity-60">/</span>
-                      <span className="font-medium text-gray-800 dark:text-gray-300">
-                        {toFahrenheit(day.track_temperature).toFixed(1)}
-                      </span>
-                      <span className="opacity-80"> °F</span>
-                    </TableCell>
-                    <TableCell className="px-3 py-1">
-                      {day.humidity.toFixed(0)}
-                    </TableCell>
-                    <TableCell className="px-3 py-1">
-                      {day.rainfall.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="px-3 py-1">
-                      {day.wind_speed.toFixed(1)}
-                      {isNaN(day.wind_direction) ? (
-                        ""
-                      ) : (
-                        <span className="text-gray-500 dark:text-gray-400 text-xs ml-1">
-                          ({getCardinalDirection(day.wind_direction)})
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="px-3 py-1">
-                      {day.pressure.toFixed(0)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+        {/* Weather Averages Table */}
+        <div className="flex flex-col mt-2">
+          {dailyAverages.length === 0 ? (
+            <span className="text-sm px-2 py-3">
+              No weather data available.
+            </span>
+          ) : (
+            <div className="rounded-lg border border-border dark:border-border bg-gray-50 dark:bg-gray-900/50 flex flex-col items-stretch gap-1 overflow-x-auto">
+              <Table className="object-fit rounded-sm overflow-hidden">
+                <TableBody className="rounded-b-xl">
+                  {/* Loop for each day or just single, depending on use-case */}
+                  {dailyAverages.map((day) => (
+                    <tbody key={day.date} className="contents">
+                      {/* Track Temperature */}
+                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                        <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
+                          Track Temp
+                        </TableHead>
+                        <TableCell className="px-3 py-1 whitespace-nowrap">
+                          <span className="font-medium">
+                            {day.track_temperature.toFixed(1)}
+                          </span>
+                          <span className="opacity-80"> °C</span>
+                          <span className="mx-1 opacity-60">/</span>
+                          <span className="font-medium">
+                            {toFahrenheit(day.track_temperature).toFixed(1)}
+                          </span>
+                          <span className="opacity-80"> °F</span>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                        <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
+                          Humidity
+                        </TableHead>
+                        <TableCell className="px-3 py-1 whitespace-nowrap">
+                          <span className="font-medium">
+                            {day.humidity.toFixed(0)}
+                          </span>
+                          <span className="opacity-80">%</span>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                        <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
+                          Rainfall
+                        </TableHead>
+                        <TableCell className="px-3 py-1 whitespace-nowrap">
+                          <span className="font-medium">
+                            {day.rainfall.toFixed(2)}
+                          </span>
+                          <span className="opacity-80"> mm / hr</span>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                        <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
+                          Wind
+                        </TableHead>
+                        <TableCell className="px-3 py-1 whitespace-nowrap">
+                          <span className="font-medium">
+                            {day.wind_speed.toFixed(1)}
+                          </span>
+
+                          <span className="opacity-80"> m/s</span>
+                          {isNaN(day.wind_direction) ? (
+                            ""
+                          ) : (
+                            <span className="text-gray-500 dark:text-gray-400 text-xs ml-1">
+                              ({getCardinalDirection(day.wind_direction)})
+                            </span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                        <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
+                          Pressure
+                        </TableHead>
+                        <TableCell className="px-3 py-1 whitespace-nowrap">
+                          <span className="font-medium">
+                            {day.pressure.toFixed(0)}
+                          </span>
+
+                          <span className="opacity-80"> hPa</span>
+                        </TableCell>
+                      </TableRow>
+                    </tbody>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
