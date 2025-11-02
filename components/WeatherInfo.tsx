@@ -163,7 +163,12 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
 
   return (
     <div>
-      <h1 className="text-md font-bold pb-1">Weather (Avg.)</h1>
+      <div className="flex items-center gap-2 pb-1">
+        <h1 className="text-md font-bold">Weather</h1>
+        <span className="text-[11px] px-2 py-0.5 rounded border border-border dark:border-border bg-gray-50 dark:bg-background font-semibold" title="Session averages are calculated using all available measurements for this session.">
+          Session Averages
+        </span>
+      </div>
       <Separator className="mb-1" />
       <div className="flex items-center justify-between">
         {/* Icon & Air, Track, Rainfall Metrics */}
@@ -204,14 +209,16 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
               No weather data available.
             </span>
           ) : (
-            <div className="rounded-lg border border-border dark:border-border bg-gray-50 dark:bg-gray-900/50 flex flex-col items-stretch gap-1 overflow-x-auto">
+            // Table Container
+            <div className="rounded-lg border border-border dark:border-border flex flex-col items-stretch gap-1 overflow-x-auto">
               <Table className="object-fit rounded-sm overflow-hidden">
+                
                 <TableBody className="rounded-b-xl">
                   {/* Loop for each day or just single, depending on use-case */}
                   {dailyAverages.map((day) => (
                     <tbody key={day.date} className="contents">
                       {/* Track Temperature */}
-                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                      <TableRow className="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
                         <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
                           Track Temp
                         </TableHead>
@@ -227,7 +234,8 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                           <span className="opacity-80"> °F</span>
                         </TableCell>
                       </TableRow>
-                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                      {/* Humidity */}
+                      <TableRow className="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
                         <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
                           Humidity
                         </TableHead>
@@ -238,7 +246,8 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                           <span className="opacity-80">%</span>
                         </TableCell>
                       </TableRow>
-                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                      {/* Rainfall Percentage */}
+                      <TableRow className="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
                         <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
                           Rainfall
                         </TableHead>
@@ -249,7 +258,8 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                           <span className="opacity-80"> mm / hr</span>
                         </TableCell>
                       </TableRow>
-                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                      {/* Wind Speed */}
+                      <TableRow className="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
                         <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
                           Wind
                         </TableHead>
@@ -268,7 +278,8 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                           )}
                         </TableCell>
                       </TableRow>
-                      <TableRow className="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
+                      {/* Air Pressure */}
+                      <TableRow className="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
                         <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
                           Pressure
                         </TableHead>
@@ -276,7 +287,6 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                           <span className="font-medium">
                             {day.pressure.toFixed(0)}
                           </span>
-
                           <span className="opacity-80"> hPa</span>
                         </TableCell>
                       </TableRow>
