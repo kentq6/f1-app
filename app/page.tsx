@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import StintsChart from "@/components/StintsChart";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
+import axios from "axios";
 import Loading from "@/components/Loading";
+import SessionInfo from "@/components/SessionInfo";
+import WeatherInfo from "@/components/WeatherInfo";
 import StartingGridTable from "@/components/StartingGridTable";
 import SessionResultsTable from "@/components/SessionResultsTable";
 import Navbar from "@/components/Navbar";
-import TopThreeResults from "@/components/TopThreeResults";
-import WeatherSummary from "@/components/WeatherInfo";
-import SessionInfo from "@/components/SessionInfo";
+import TopThreeTable from "@/components/TopThreeTable";
+import StintsChart from "@/components/StintsChart";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 // import SessionTable from "@/components/SessionTable";
@@ -176,15 +176,42 @@ const HomePage = () => {
         </div>
         {/* Small Component */}
         <div className="bg-primary-foreground p-4 rounded-lg">
-          <WeatherSummary filteredSession={filteredSession} />
+          <WeatherInfo filteredSession={filteredSession} />
         </div>
         {/* Long Component */}
-        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
-          Test
-        </div>
+        {filteredSession?.session_type === "Race" ||
+        filteredSession?.session_type === "Sprint" ? (
+          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="bg-primary-foreground p-4 rounded-lg">
+                <StartingGridTable 
+                  filteredSession={filteredSession}
+                  driversData={driversData}
+                />
+              </div>
+              <div className="bg-primary-foreground p-4 rounded-lg">
+                <TopThreeTable
+                  filteredSession={filteredSession}
+                  driversData={driversData}
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
+            <SessionResultsTable
+              filteredSession={filteredSession}
+              driversData={driversData}
+            />
+          </div>
+        )}
         <div className="bg-primary-foreground p-4 rounded-lg">Test</div>
         <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
-          Test
+          <TopThreeTable
+            filteredSession={filteredSession}
+            driversData={driversData}
+          />
+          {/* Testing */}
         </div>
         <div className="bg-primary-foreground p-4 rounded-lg">Test</div>
       </div>
