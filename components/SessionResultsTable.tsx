@@ -32,23 +32,23 @@ interface DriverData extends Result {
   team_name?: string;
 }
 
-interface SessionResultsTableProps {
+interface SessionResultsProps {
   filteredSession: Session | null;
   driversData: Driver[];
 }
 
-const SessionResultsTable = ({
+const SessionResults = ({
   filteredSession,
   driversData,
-}: SessionResultsTableProps) => {
-  const [sessionResultsData, setSessionResultsData] = useState<DriverData[]>(
+}: SessionResultsProps) => {
+  const [topThreeData, setTopThreeData] = useState<DriverData[]>(
     []
   );
 
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
     if (!filteredSession) {
-      setSessionResultsData([]);
+      setTopThreeData([]);
       return;
     }
 
@@ -76,7 +76,7 @@ const SessionResultsTable = ({
           };
         });
 
-        setSessionResultsData(mergedData);
+        setTopThreeData(mergedData);
       } catch (error) {
         console.error("Error fetching session results data: ", error);
       }
@@ -119,11 +119,13 @@ const SessionResultsTable = ({
   }
 
   return (
-    <div className="w-full h-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-md border border-gray-100/50 dark:border-gray-700/50 p-4">
-      <h1 className="text-lg font-bold text-left w-full pb-2">Results</h1>
-      <Separator className="mb-4" />
-      {/* Session Results Table */}
-      <div>
+    <div>
+      <h1 className="text-md font-bold pb-1">Session Results</h1>
+      <Separator className="mb-1" />
+      {/* Table */}
+      <div
+        className="h-[220px] overflow-y-auto overscroll-contain"
+      >
         <Table>
           <TableHeader>
             <TableRow>
@@ -133,11 +135,11 @@ const SessionResultsTable = ({
               <TableHead>Team</TableHead>
               <TableHead>Laps</TableHead>
               <TableHead>Time / Retired</TableHead>
-              <TableHead className="text-right">PTS</TableHead>
+              <TableHead>PTS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sessionResultsData.map((result) => (
+            {topThreeData.map((result) => (
               <TableRow key={result.position + "-" + result.driver_number}>
                 <TableCell className="font-medium">{result.position}</TableCell>
                 <TableCell>{result.driver_number}</TableCell>
@@ -157,7 +159,7 @@ const SessionResultsTable = ({
                 </TableCell>
                 <TableCell>{result.number_of_laps}</TableCell>
                 <TableCell>{getResultStatus(result)}</TableCell>
-                <TableCell className="text-right">{result.points}</TableCell>
+                <TableCell>{result.points}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -167,4 +169,4 @@ const SessionResultsTable = ({
   );
 };
 
-export default SessionResultsTable;
+export default SessionResults;

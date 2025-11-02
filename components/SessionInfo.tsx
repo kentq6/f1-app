@@ -15,7 +15,7 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
       </h1>
       <Separator className="mb-1" />
       {filteredSession ? (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between h-50 vertical-align">
           {/* Session Info */}
           <div>
             <div className="font-semibold text-lg">
