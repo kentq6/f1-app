@@ -22,11 +22,14 @@ const Logo = ({ height, width }: LogoProps) => {
   const logoSrc = !isMounted
     ? "/F1-logo-white.svg"
     : theme === "dark"
-      ? "/F1-logo-white.svg"
-      : "/F1-logo.svg";
+    ? "/F1-logo-white.svg"
+    : "/F1-logo.svg";
 
   return (
-    <Link href="/">
+    <Link 
+      href="/"
+      className="flex items-center"
+    >
       <Image
         src={logoSrc}
         height={height}
@@ -34,8 +37,11 @@ const Logo = ({ height, width }: LogoProps) => {
         alt="F1 Logo"
         priority
       />
+      <span className="font-bold text-[1.5rem] tracking-wide font-Oswald uppercase select-none">
+        Dashboard
+      </span>
     </Link>
   );
 };
 
-export default Logo
+export default Logo;
