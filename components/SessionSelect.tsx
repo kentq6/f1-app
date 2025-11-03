@@ -33,7 +33,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
 }) => {
   return (
     <div className="flex items-center gap-2 w-full">
-      <span className="font-bold  uppercase tracking-wider ">
+      <span className="font-bold uppercase tracking-wider ">
         Search Session:
       </span>
       {/* Year */}
