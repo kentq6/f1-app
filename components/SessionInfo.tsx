@@ -15,9 +15,9 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
       </h1>
       <Separator className="mb-1" />
       {filteredSession ? (
-        <div className="flex items-center justify-between h-50 vertical-align">
+        <div className="mt-4 flex flex-col items-center justify-center h-full max-h-full">
           {/* Session Info */}
-          <div>
+          <div className="flex flex-col items-center justify-center">
             <div className="font-semibold text-lg">
               {filteredSession.year} {filteredSession.country_name}
             </div>
@@ -35,15 +35,14 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
             </div>
           </div>
           {/* Flag and Country Acronym */}
-          <div className="flex flex-col items-center justify-center mt-2">
-            <div className="w-[150px] h-[100px] rounded-md overflow-hidden shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-transform duration-200 hover:scale-105">
+          <div className="flex flex-col items-center justify-center mt-4">
+            <div className="w-[210px] h-[140px] rounded-md overflow-hidden shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-transform duration-200 hover:scale-105">
               <Image
                 src={`/country-flags/${filteredSession.country_code}.svg`}
-                width={180}
-                height={120}
+                width={210}
+                height={140}
                 alt={`${filteredSession.country_code} Flag`}
                 className="object-cover w-full h-full"
-                style={{ minWidth: "120px", minHeight: "80px" }}
               />
             </div>
             <span className="text-xs font-medium mt-2 text-gray-700 dark:text-gray-300 tracking-wide">
