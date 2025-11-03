@@ -20,7 +20,7 @@ type Result = {
   dnf: boolean;
   dns: boolean;
   dsq: boolean;
-  gap_to_leader: number;
+  gap_to_leader: number | string;
   duration: number;
   meeting_key: number;
   session_key: number;
@@ -91,8 +91,13 @@ const SessionResults = ({
     if (result.dsq) return "DSQ";
     if (result.dns) return "DNS";
     if (result.dnf) return "DNF";
+
+    // Display "+N LAP(S)" if lapped
+    if (typeof result.gap_to_leader === 'string') {
+      return result.gap_to_leader;
+    }
+
     // display duration (in seconds) formatted as e.g. "+24.6s" if gap_to_leader, else winning time
-    // fallback to duration
     if (result.position === 1) {
       // winner
       if (result.duration && !isNaN(result.duration)) {
@@ -133,7 +138,7 @@ const SessionResults = ({
               <TableHead>Driver</TableHead>
               <TableHead>Team</TableHead>
               <TableHead>Laps</TableHead>
-              <TableHead>Time / Retired</TableHead>
+              <TableHead>Time</TableHead>
               {(filteredSession?.session_type === "Race" ||
                 filteredSession?.session_type === "Sprint") && (
                 <TableHead>PTS</TableHead>
