@@ -41,14 +41,12 @@ const SessionResults = ({
   filteredSession,
   driversData,
 }: SessionResultsProps) => {
-  const [topThreeData, setTopThreeData] = useState<DriverData[]>(
-    []
-  );
+  const [sessionResults, setSessionResultsData] = useState<DriverData[]>([]);
 
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
     if (!filteredSession) {
-      setTopThreeData([]);
+      setSessionResultsData([]);
       return;
     }
 
@@ -76,7 +74,7 @@ const SessionResults = ({
           };
         });
 
-        setTopThreeData(mergedData);
+        setSessionResultsData(mergedData);
       } catch (error) {
         console.error("Error fetching session results data: ", error);
       }
@@ -98,13 +96,16 @@ const SessionResults = ({
     if (result.position === 1) {
       // winner
       if (result.duration && !isNaN(result.duration)) {
-        // show in mm:ss.sss, or just seconds
-        const totalSeconds = result.duration / 1000;
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        if (minutes > 0)
-          return `${minutes}:${seconds.toFixed(3).padStart(6, "0")}`;
-        return `${seconds.toFixed(3)}s`;
+        // show in HH:mm:ss.mss
+        const hours = Math.floor(result.duration / 3600);
+        const minutes = Math.floor((result.duration % 3600) / 60);
+        const secs = Math.floor(result.duration % 60);
+        const millis = Math.round((result.duration % 1) * 1000);
+
+        const base = `${String(minutes).padStart(2, "0")}:${String(
+          secs
+        ).padStart(2, "0")}:${String(millis).padStart(3, "0")}`;
+        return hours > 0 ? `${String(hours).padStart(1, "0")}:${base}` : base;
       }
       return "--";
     }
@@ -123,9 +124,7 @@ const SessionResults = ({
       <h1 className="text-md font-bold pb-1">Session Results</h1>
       <Separator className="mb-1" />
       {/* Table */}
-      <div
-        className="h-[220px] overflow-y-auto overscroll-contain"
-      >
+      <div className="h-[300px] h-min-[220px] overflow-y-auto overscroll-contain">
         <Table>
           <TableHeader>
             <TableRow>
@@ -135,11 +134,14 @@ const SessionResults = ({
               <TableHead>Team</TableHead>
               <TableHead>Laps</TableHead>
               <TableHead>Time / Retired</TableHead>
-              <TableHead>PTS</TableHead>
+              {(filteredSession?.session_type === "Race" ||
+                filteredSession?.session_type === "Sprint") && (
+                <TableHead>PTS</TableHead>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {topThreeData.map((result) => (
+            {sessionResults.map((result) => (
               <TableRow key={result.position + "-" + result.driver_number}>
                 <TableCell className="font-medium">{result.position}</TableCell>
                 <TableCell>{result.driver_number}</TableCell>
@@ -159,7 +161,10 @@ const SessionResults = ({
                 </TableCell>
                 <TableCell>{result.number_of_laps}</TableCell>
                 <TableCell>{getResultStatus(result)}</TableCell>
-                <TableCell>{result.points}</TableCell>
+                {(filteredSession?.session_type === "Race" ||
+                  filteredSession?.session_type === "Sprint") && (
+                  <TableCell>{result.points}</TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
