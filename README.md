@@ -1,4 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# F1 Historical Stats Dashboard
+
+This is a [Next.js](https://nextjs.org) project for exploring and analyzing F1 race results and championship standings. The application is being built with TypeScript and features interactive components for session and standings selection.
+
+**NOTE: It is notable that this uses the free version of an open-source API, which is limited to historical data and does not provide live updates.
+
+## Project Progress
+
+So far, the following has been implemented:
+
+- **Session Selection**: Users can filter sessions by year, track, and session type via a custom dropdown component.
+- **Session Information**: Users are displayed the filtered information based on their session selection—the default value is the latest session available.
+- **Weather Information**: Users are displayed weather and temperature averages of the selected session.
+- **Session Results**: Users can view the position, laps completed, final times, and amount of points (if applicable) of each driver from the selected session. 
+- **Starting Grid**: Users can view the positions, lap duration, and gap to leader of each driver from the selected session.
+- **Stint Chart**: Users can view tires used and tire stints of each selected driver from the selected session.
+- **Championship standings**: Users can toggle between Constructors and Drivers standings to view results up to that session's date.
+- **Shadcn/ui integration**: Utilizing [shadcn/ui](https://ui.shadcn.com/) components for high-quality design elements.
+- **ClerkJS integration**: Utilizing [Clerk](https://clerk.com/) components for user authentication (planning to implement user-specific features in the near future).
+
+The project is under active development. See the [KAN board on Jira](https://kentq6.atlassian.net/jira/software/projects/KAN/boards/1) for progress, TODOs, and issues.
 
 ## Getting Started
 
@@ -14,23 +34,22 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the current progress.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development Notes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Core editing is taking place in the `components/` and `app/` directories.
+- The UI and functionality are subject to frequent updates as features are being flushed out.
+- The focus is currently on championship standings selection, table rendering, and robust state management.
 
-## Learn More
+## Resources
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js Documentation](https://nextjs.org/docs)
+- [shadcn/ui Documentation](https://ui.shadcn.com/)
+- [F1 API docs](https://openf1.org/)
+- [Jira KAN board](https://kentq6.atlassian.net/jira/software/projects/KAN/boards/1)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project is set up for easy deployment on [Vercel](https://vercel.com/). See [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
