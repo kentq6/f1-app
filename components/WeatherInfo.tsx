@@ -173,8 +173,8 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
         </span>
       </div>
       <Separator className="mb-1" />
-      <div className="h-[300px] h-min-[220px] flex items-center justify-between">
-        {/* Icon & Air, Track, Rainfall Metrics */}
+      <div className="h-[300px] h-min-[220px] items-center">
+        {/* Icon & Air Temp */}
         <div className="flex flex-col items-center justify-center gap-2 grow">
           <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow-md border border-border dark:border-border flex items-center justify-center mt-2 w-[72px] h-[72px]">
             {firstDay ? (
@@ -183,7 +183,7 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
               <span className="text-lg">—</span>
             )}
           </div>
-          <div className="flex flex-col items-center text-xs font-medium mt-1 text-center min-h-[32px]">
+          <div className="flex flex-col items-center text-xs font-medium text-center min-h-[32px]">
             {typeof firstDay?.air_temperature === "number" &&
             typeof firstDay?.track_temperature === "number" ? (
               <span className="whitespace-nowrap">
@@ -206,16 +206,16 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
           </div>
         </div>
         {/* Weather Averages Table */}
-        <div className="flex flex-col mt-2">
+        <div className="mt-2">
           {dailyAverages.length === 0 ? (
             <span className="text-sm px-2 py-3">
               No weather data available.
             </span>
           ) : (
             // Table Container
-            <div className="rounded-lg border border-border dark:border-border flex flex-col items-stretch gap-1 overflow-x-auto">
-              <Table className="object-fit rounded-sm overflow-hidden">
-                <TableBody className="rounded-b-xl">
+            <div className="h-[170px] rounded-lg border border-border dark:border-border flex flex-col items-stretch overflow-y-auto overscroll-contain">
+              <Table className="grow">
+                <TableBody>
                   {/* Loop for each day or just single, depending on use-case */}
                   {dailyAverages.map((day) => (
                     <React.Fragment key={day.date}>
