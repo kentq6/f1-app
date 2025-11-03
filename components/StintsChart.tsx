@@ -13,8 +13,14 @@ import { useTheme } from "next-themes";
 import { Driver } from "@/types/driver";
 import { Session } from "@/types/session";
 import { Separator } from "./ui/separator";
-import { Select, SelectContent, SelectTrigger } from "./ui/select";
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -37,15 +43,12 @@ interface StintChartProps {
   driversData: Driver[];
 }
 
-const StintsChart = ({
-  filteredSession,
-  driversData,
-}: StintChartProps) => {
+const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
   const [tireStintsData, setTireStintsData] = useState<DriverData[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
-  
+
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -111,7 +114,13 @@ const StintsChart = ({
       selectedDrivers.length === 0 &&
       !hasManuallyCleared
     ) {
-      setSelectedDrivers(drivers.slice(0, 20));
+      // Pick 5 random, unique drivers from the drivers array
+      if (drivers.length >= 5) {
+        const shuffled = [...drivers].sort(() => 0.5 - Math.random());
+        setSelectedDrivers(shuffled.slice(0, 5));
+      } else {
+        setSelectedDrivers(drivers);
+      }
     }
   }, [drivers, selectedDrivers.length, hasManuallyCleared]);
 
@@ -134,40 +143,49 @@ const StintsChart = ({
   }, [tireStintsData]);
 
   // F1 compound colors - move to useCallback for stable reference
-  const getCompoundColor = useCallback((compound: string) => {
-    switch (compound) {
-      case "SOFT":
-        return {
-          bg: isDark ? "rgba(218, 41, 28, 0.5)" : "rgba(218, 41, 28, 0.6)", // #DA291C
-          border: isDark ? "rgba(218, 41, 28, 0.8)" : "rgba(218, 41, 28, 1)",
-        };
-      case "MEDIUM":
-        return {
-          bg: isDark ? "rgba(255, 215, 0, 0.5)" : "rgba(255, 215, 0, 0.6)", // #FFD700
-          border: isDark ? "rgba(255, 215, 0, 0.8)" : "rgba(255, 215, 0, 1)",
-        };
-      case "HARD":
-        return {
-          bg: isDark ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0.6)", // #FFFFFF
-          border: isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(30, 30, 30, 1)",
-        };
-      case "INTERMEDIATE":
-        return {
-          bg: isDark ? "rgba(67, 176, 42, 0.5)" : "rgba(67, 176, 42, 0.6)", // #43B02A
-          border: isDark ? "rgba(67, 176, 42, 0.8)" : "rgba(67, 176, 42, 1)",
-        };
-      case "WET":
-        return {
-          bg: isDark ? "rgba(0, 103, 173, 0.5)" : "rgba(0, 103, 173, 0.6)", // #0067AD
-          border: isDark ? "rgba(0, 103, 173, 0.8)" : "rgba(0, 103, 173, 1)",
-        };
-      default:
-        return {
-          bg: isDark ? "rgba(128, 128, 128, 0.5)" : "rgba(128, 128, 128, 0.6)", // fallback gray
-          border: isDark ? "rgba(128, 128, 128, 0.8)" : "rgba(128, 128, 128, 1)",
-        };
-    }
-  }, [isDark]);
+  const getCompoundColor = useCallback(
+    (compound: string) => {
+      switch (compound) {
+        case "SOFT":
+          return {
+            bg: isDark ? "rgba(218, 41, 28, 0.5)" : "rgba(218, 41, 28, 0.6)", // #DA291C
+            border: isDark ? "rgba(218, 41, 28, 0.8)" : "rgba(218, 41, 28, 1)",
+          };
+        case "MEDIUM":
+          return {
+            bg: isDark ? "rgba(255, 215, 0, 0.5)" : "rgba(255, 215, 0, 0.6)", // #FFD700
+            border: isDark ? "rgba(255, 215, 0, 0.8)" : "rgba(255, 215, 0, 1)",
+          };
+        case "HARD":
+          return {
+            bg: isDark
+              ? "rgba(255, 255, 255, 0.5)"
+              : "rgba(255, 255, 255, 0.6)", // #FFFFFF
+            border: isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(30, 30, 30, 1)",
+          };
+        case "INTERMEDIATE":
+          return {
+            bg: isDark ? "rgba(67, 176, 42, 0.5)" : "rgba(67, 176, 42, 0.6)", // #43B02A
+            border: isDark ? "rgba(67, 176, 42, 0.8)" : "rgba(67, 176, 42, 1)",
+          };
+        case "WET":
+          return {
+            bg: isDark ? "rgba(0, 103, 173, 0.5)" : "rgba(0, 103, 173, 0.6)", // #0067AD
+            border: isDark ? "rgba(0, 103, 173, 0.8)" : "rgba(0, 103, 173, 1)",
+          };
+        default:
+          return {
+            bg: isDark
+              ? "rgba(128, 128, 128, 0.5)"
+              : "rgba(128, 128, 128, 0.6)", // fallback gray
+            border: isDark
+              ? "rgba(128, 128, 128, 0.8)"
+              : "rgba(128, 128, 128, 1)",
+          };
+      }
+    },
+    [isDark]
+  );
 
   // Chart.js data for correctly rendered contiguous stints
   const chartData = useMemo(() => {
@@ -217,7 +235,7 @@ const StintsChart = ({
           borderColor: borderColors,
           borderWidth: 0.75,
           borderSkipped: false,
-          barThickness: 12,
+          barThickness: 8,
           categoryPercentage: 0.8,
           barPercentage: 0.96,
           parsing: {
@@ -250,23 +268,15 @@ const StintsChart = ({
     indexAxis: "y" as const,
     responsive: true,
     maintainAspectRatio: false,
-    layout: {
-      padding: {
-        top: 10,
-        bottom: 10,
-        left: 10,
-        right: 10,
-      },
-    },
     plugins: {
       legend: { display: false },
       tooltip: {
         backgroundColor: isDark
-          ? "rgba(31, 41, 55, 0.95)"
-          : "rgba(255, 255, 255, 0.95)",
-        titleColor: isDark ? "#f9fafb" : "#1f2937",
-        bodyColor: isDark ? "#d1d5db" : "#374151",
-        borderColor: isDark ? "#374151" : "#e5e7eb",
+          ? "rgba(24, 24, 27, 0.98)" // matches dark dropdowns and popovers
+          : "rgba(250, 250, 250, 0.98)", // matches light dropdowns and popovers
+        titleColor: isDark ? "#f3f4f6" : "#0f172a", // zinc-100 or slate-950
+        bodyColor: isDark ? "#e5e7eb" : "#334155", // zinc-200 or slate-700
+        borderColor: isDark ? "#27272a" : "#e5e7eb", // zinc-900 or zinc-200
         borderWidth: 1,
         cornerRadius: 8,
         callbacks: {
@@ -287,15 +297,17 @@ const StintsChart = ({
     scales: {
       x: {
         type: "linear" as const,
-        title: { 
-          display: true, 
+        title: {
+          display: true,
           text: "Lap Number",
           color: isDark ? "#adb5bd" : "#424242", // Axis title color
         },
         beginAtZero: true,
         grid: {
           display: true,
-          color: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(127, 140, 141, 0.18)",
+          color: isDark
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(127, 140, 141, 0.18)",
           borderColor: isDark ? "#adb5bd" : "#424242",
           lineWidth: 1.5,
         },
@@ -315,8 +327,8 @@ const StintsChart = ({
             `${driverAcronymMap[driverNumber]} ${driverNumber}` ||
             `Driver ${driverNumber}`
         ),
-        title: { 
-          display: true, 
+        title: {
+          display: true,
           text: "Driver Number",
           color: isDark ? "#adb5bd" : "#424242", // Axis title color
         },
@@ -331,6 +343,7 @@ const StintsChart = ({
     elements: {
       bar: {
         borderWidth: 1,
+        borderRadius: 5,
       },
     },
   };
@@ -356,14 +369,6 @@ const StintsChart = ({
     setHasManuallyCleared(true);
   };
 
-  // Chart height calculations: always one row per driver
-  const minChartHeight = 420;
-  const rowHeight = 32;
-  const chartHeight =
-    selectedDrivers.length <= 5
-      ? minChartHeight
-      : Math.max(minChartHeight, selectedDrivers.length * rowHeight);
-
   if (!filteredSession) {
     // Show a message if required session data not provided
     return (
@@ -377,14 +382,15 @@ const StintsChart = ({
   }
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-md border border-gray-100/50 dark:border-gray-700/50 p-4">
-      <h1 className="text-lg font-bold text-left w-full pb-2">Tire Stints</h1>
-      <Separator className="mb-4" />
-      <div className="flex justify-between items-center mb-4">
+    <div>
+      <h1 className="text-md font-bold pb-1">Stint Chart</h1>
+      <Separator className="mb-1" />
+      {/* Table */}
+      <div className="flex justify-between items-center mt-2">
         {/* Left side is now empty but can be used for future controls or just spacing */}
         <div></div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">
+          <span className="text-xs text-gray-600">
             {selectedDrivers.length} driver
             {selectedDrivers.length !== 1 ? "s" : ""} selected
           </span>
@@ -395,66 +401,71 @@ const StintsChart = ({
             value=""
             onValueChange={() => {}}
           >
-            <SelectTrigger className="px-3 py-2 text-sm border rounded-md bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 w-44">
-              <span>Select Drivers</span>
+            <SelectTrigger className="text-xs">
+              <SelectValue placeholder="Drivers" />
             </SelectTrigger>
             <SelectContent align="end" className="w-44">
-              <div className="p-2 border-b flex gap-2">
+              <div className="p-2 border-b flex gap-2 bg-muted/60">
+                {/* Select All Button */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectAll();
                   }}
-                  className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   type="button"
                   tabIndex={-1}
                 >
                   Select All
                 </button>
+                {/* Clear All Button */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleClearAll();
                   }}
-                  className="px-2 py-1 text-xs bg-gray-500 text-white rounded hover:bg-gray-600"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-muted text-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-muted/70 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   type="button"
                   tabIndex={-1}
                 >
                   Clear All
                 </button>
               </div>
-              <div className="p-1">
+              <SelectGroup>
                 {drivers.map((driverNumber) => (
-                  <label
+                  <div
                     key={driverNumber}
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded"
-                    onClick={e => e.stopPropagation()}
+                    className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDriverToggle(driverNumber);
+                    }}
                   >
                     <input
                       type="checkbox"
                       checked={selectedDrivers.includes(driverNumber)}
-                      onChange={() => handleDriverToggle(driverNumber)}
-                      className="rounded"
+                      readOnly
+                      className="h-4 w-4 border-gray-300 rounded accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
                       tabIndex={-1}
                     />
-                    <span className="text-sm">
+                    <span className="text-xs font-medium text-foreground">
                       {driverAcronymMap[driverNumber]
                         ? `${driverAcronymMap[driverNumber]} ${driverNumber}`
                         : `Driver ${driverNumber}`}
                     </span>
-                  </label>
+                  </div>
                 ))}
-              </div>
+              </SelectGroup>
             </SelectContent>
           </Select>
         </div>
       </div>
-      <div style={{ height: `${chartHeight}px` }}>
+      <div className="mt-2 h-[300px] h-min-[220px]">
         {selectedDrivers.length > 0 ? (
-          <Bar 
-            data={chartData} 
-            options={options} 
-            className="rounded-lg shadow-md mb-4 p-3 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
+          <Bar
+            data={chartData}
+            options={options}
+            className="h-[300px] h-min-[220px] overflow-y-auto rounded-lg shadow-md px-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background"
           />
         ) : (
           <div className="flex items-center justify-center h-full text-gray-500">
