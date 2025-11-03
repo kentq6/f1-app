@@ -234,7 +234,11 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
           borderColor: borderColors,
           borderWidth: 0.75,
           borderSkipped: false,
-          barThickness: 8,
+          barThickness: 
+            selectedDrivers.length > 15 ? 5
+            : selectedDrivers.length > 10 ? 7
+            : selectedDrivers.length > 5 ? 9
+            : 11,
           categoryPercentage: 0.8,
           barPercentage: 0.96,
           parsing: {
