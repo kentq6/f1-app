@@ -36,7 +36,7 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
           </div>
           {/* Flag and Country Acronym */}
           <div className="flex flex-col items-center justify-center mt-2">
-            <div className="w-[180px] h-[120px] rounded-md overflow-hidden shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-transform duration-200 hover:scale-105">
+            <div className="w-[150px] h-[100px] rounded-md overflow-hidden shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-transform duration-200 hover:scale-105">
               <Image
                 src={`/country-flags/${filteredSession.country_code}.svg`}
                 width={180}

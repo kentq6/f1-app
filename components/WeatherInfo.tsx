@@ -7,7 +7,7 @@ import {
   ThermometerSnowflake,
   ThermometerSun,
 } from "lucide-react";
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
 
@@ -165,12 +165,15 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
     <div>
       <div className="flex items-center gap-2 pb-1">
         <h1 className="text-md font-bold">Weather</h1>
-        <span className="text-[11px] px-2 py-0.5 rounded border border-border dark:border-border bg-gray-50 dark:bg-background font-semibold" title="Session averages are calculated using all available measurements for this session.">
+        <span
+          className="text-[11px] px-2 py-0.5 rounded border border-border dark:border-border bg-gray-50 dark:bg-background font-semibold"
+          title="Session averages are calculated using all available measurements for this session."
+        >
           Session Averages
         </span>
       </div>
       <Separator className="mb-1" />
-      <div className="flex items-center justify-between">
+      <div className="h-[300px] h-min-[220px] flex items-center justify-between">
         {/* Icon & Air, Track, Rainfall Metrics */}
         <div className="flex flex-col items-center justify-center gap-2 grow">
           <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow-md border border-border dark:border-border flex items-center justify-center mt-2 w-[72px] h-[72px]">
@@ -212,11 +215,10 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
             // Table Container
             <div className="rounded-lg border border-border dark:border-border flex flex-col items-stretch gap-1 overflow-x-auto">
               <Table className="object-fit rounded-sm overflow-hidden">
-                
                 <TableBody className="rounded-b-xl">
                   {/* Loop for each day or just single, depending on use-case */}
                   {dailyAverages.map((day) => (
-                    <tbody key={day.date} className="contents">
+                    <React.Fragment key={day.date}>
                       {/* Track Temperature */}
                       <TableRow className="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900/50 transition-colors">
                         <TableHead className="px-3 py-2 font-bold whitespace-nowrap">
@@ -267,7 +269,6 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                           <span className="font-medium">
                             {day.wind_speed.toFixed(1)}
                           </span>
-
                           <span className="opacity-80"> m/s</span>
                           {isNaN(day.wind_direction) ? (
                             ""
@@ -290,7 +291,7 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                           <span className="opacity-80"> hPa</span>
                         </TableCell>
                       </TableRow>
-                    </tbody>
+                    </React.Fragment>
                   ))}
                 </TableBody>
               </Table>
