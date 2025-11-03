@@ -10,7 +10,6 @@ import WeatherInfo from "@/components/WeatherInfo";
 import StartingGridTable from "@/components/StartingGridTable";
 import SessionResultsTable from "@/components/SessionResultsTable";
 import Navbar from "@/components/Navbar";
-import TopThreeTable from "@/components/TopThreeTable";
 import StintsChart from "@/components/StintsChart";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
@@ -152,7 +151,7 @@ const HomePage = () => {
   }
 
   return (
-    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 overflow-x-hidden px-4">
+    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 overflow-x-hidden px-4 pb-4">
       {/* Navbar */}
       <div className="w-full mx-auto pr-4">
         <Navbar
@@ -179,23 +178,12 @@ const HomePage = () => {
           <WeatherInfo filteredSession={filteredSession} />
         </div>
         {/* Long Component */}
-        {filteredSession?.session_type === "Race" ||
-        filteredSession?.session_type === "Sprint" ? (
+        {filteredSession?.session_type === "Qualifying" ? (
           <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="bg-primary-foreground p-4 rounded-lg">
-                <StartingGridTable 
-                  filteredSession={filteredSession}
-                  driversData={driversData}
-                />
-              </div>
-              <div className="bg-primary-foreground p-4 rounded-lg">
-                <TopThreeTable
-                  filteredSession={filteredSession}
-                  driversData={driversData}
-                />
-              </div>
-            </div>
+            <StartingGridTable
+              filteredSession={filteredSession}
+              driversData={driversData}
+            />
           </div>
         ) : (
           <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
@@ -207,19 +195,14 @@ const HomePage = () => {
         )}
         <div className="bg-primary-foreground p-4 rounded-lg">Test</div>
         <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
-          <TopThreeTable
+          <StintsChart
+            key="TireStintChart"
             filteredSession={filteredSession}
             driversData={driversData}
           />
-          {/* Testing */}
         </div>
         <div className="bg-primary-foreground p-4 rounded-lg">Test</div>
       </div>
-      <StintsChart
-        key="TireStintChart"
-        filteredSession={filteredSession}
-        driversData={driversData}
-      />
     </main>
   );
 };
