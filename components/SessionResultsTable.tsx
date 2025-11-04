@@ -12,22 +12,9 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { SessionResult } from "@/types/sessionResult";
 
-type Result = {
-  position: number;
-  driver_number: number;
-  number_of_laps: number;
-  points: number;
-  dnf: boolean;
-  dns: boolean;
-  dsq: boolean;
-  gap_to_leader: number | string;
-  duration: number;
-  meeting_key: number;
-  session_key: number;
-};
-
-interface DriverData extends Result {
+interface DriverData extends SessionResult {
   name_acronym?: string;
   team_colour?: string;
   team_name?: string;
@@ -66,7 +53,7 @@ const SessionResults = ({
         );
 
         // Merge driver info into session results
-        const mergedData: DriverData[] = results.map((result: Result) => {
+        const mergedData: DriverData[] = results.map((result: SessionResult) => {
           const driver = driversMap.get(result.driver_number);
           return {
             ...result,
