@@ -254,7 +254,6 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
   const [lapMin, lapMax] = useMemo(() => {
     let min: number = Infinity;
     let max: number = -Infinity;
-    console.log(chartData.datasets[0].data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chartData.datasets[0]?.data?.forEach((d: any) => {
       if (Array.isArray(d.x) && d.x.length === 2) {
