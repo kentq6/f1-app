@@ -43,6 +43,7 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
                 height={140}
                 alt={`${filteredSession.country_code} Flag`}
                 className="object-cover w-full h-full"
+                priority
               />
             </div>
             <span className="text-xs font-medium mt-2 text-gray-700 dark:text-gray-300 tracking-wide">
