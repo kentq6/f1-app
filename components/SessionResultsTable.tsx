@@ -3,6 +3,7 @@ import { Separator } from "./ui/separator";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import axios from "axios";
+import Image from "next/image";
 import {
   Table,
   TableBody,
@@ -30,6 +31,7 @@ interface DriverData extends Result {
   name_acronym?: string;
   team_colour?: string;
   team_name?: string;
+  headshot_url?: string;
 }
 
 interface SessionResultsProps {
@@ -71,6 +73,7 @@ const SessionResults = ({
             name_acronym: driver?.name_acronym ?? "UNK",
             team_colour: driver?.team_colour ?? "",
             team_name: driver?.team_name ?? "",
+            headshot_url: driver?.headshot_url ?? "",
           };
         });
 
@@ -93,7 +96,7 @@ const SessionResults = ({
     if (result.dnf) return "DNF";
 
     // Display "+N LAP(S)" if lapped
-    if (typeof result.gap_to_leader === 'string') {
+    if (typeof result.gap_to_leader === "string") {
       return result.gap_to_leader;
     }
 
@@ -150,7 +153,33 @@ const SessionResults = ({
               <TableRow key={result.position + "-" + result.driver_number}>
                 <TableCell className="font-medium">{result.position}</TableCell>
                 <TableCell>{result.driver_number}</TableCell>
-                <TableCell>{result.name_acronym}</TableCell>
+                <TableCell>
+                  <div className="inline-flex items-center gap-2 rounded-full">
+                    {result.name_acronym}
+                    {result.headshot_url ? (
+                      <span
+                        className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
+                        style={{
+                          backgroundColor: result.team_colour?.startsWith("#")
+                            ? result.team_colour
+                            : `#${result.team_colour}`,
+                        }}
+                      >
+                        <Image
+                          src={result.headshot_url}
+                          height={40}
+                          width={40}
+                          alt=""
+                          className="object-cover w-full h-full rounded-full "
+                        />
+                      </span>
+                    ) : (
+                      <span className="text-xs text-white font-semibold">
+                        {result.name_acronym}
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="inline-flex items-center gap-2 rounded-full">
                     <span
