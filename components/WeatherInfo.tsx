@@ -141,8 +141,8 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
           `https://api.openf1.org/v1/weather?session_key=${filteredSession.session_key}`
         );
         setWeatherData(response.data ?? []);
-      } catch (error) {
-        console.error("Error fetching weather data: ", error);
+      } catch (err) {
+        console.error("Error fetching weather data: ", err);
       }
     };
     fetchedWeather();

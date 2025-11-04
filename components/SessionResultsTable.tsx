@@ -65,8 +65,8 @@ const SessionResults = ({
         });
 
         setSessionResultsData(mergedData);
-      } catch (error) {
-        console.error("Error fetching session results data: ", error);
+      } catch (err) {
+        console.error("Error fetching session results data: ", err);
       }
     };
 

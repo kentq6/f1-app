@@ -51,9 +51,9 @@ const HomePage = () => {
         setSessionsData(sessionsRes.data);
         setDriversData(driversRes.data);
         setIsLoaded(true); // <-- Only set to true after data is fetched
-      } catch (error) {
+      } catch (err) {
         // If either request fails, handle the error
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", err);
         setIsLoaded(true); // Optional: Show loading spinner until error, then let page render and show fallback
       }
     };

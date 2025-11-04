@@ -69,8 +69,8 @@ const StartingGridTable = ({
         });
 
         setStartingGridData(mergedData);
-      } catch (error) {
-        console.error("Error fetching starting grid data: ", error);
+      } catch (err) {
+        console.error("Error fetching starting grid data: ", err);
       }
     };
 

@@ -81,8 +81,8 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
         });
 
         setTireStintsData(mergedData);
-      } catch (error) {
-        console.error("Error fetching tire stints data: ", error);
+      } catch (err) {
+        console.error("Error fetching tire stints data: ", err);
       }
     };
 
