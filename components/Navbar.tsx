@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <SignInButton>
             <button className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
               <div className="relative z-10 flex items-center gap-1">
-                <span>Sign In</span>
+                <span className="sm:hidden">Sign In</span>
                 <LogIn size={18} />
               </div>
             </button>
