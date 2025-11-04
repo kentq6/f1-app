@@ -11,6 +11,7 @@ import StartingGridTable from "@/components/StartingGridTable";
 import SessionResultsTable from "@/components/SessionResultsTable";
 import Navbar from "@/components/Navbar";
 import StintsChart from "@/components/StintsChart";
+import Standings from "@/components/championship/Standings";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 // import SessionTable from "@/components/SessionTable";
@@ -40,7 +41,7 @@ const HomePage = () => {
 
   // Load ALL session metadata on mount (should only run once)
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchedData = async () => {
       try {
         // Fetch sessions and drivers in parallel
         const [sessionsRes, driversRes] = await Promise.all([
@@ -57,7 +58,7 @@ const HomePage = () => {
       }
     };
 
-    fetchData();
+    fetchedData();
   }, []);
 
   // Memo useful reference: Find latest session for default
@@ -201,7 +202,12 @@ const HomePage = () => {
             driversData={driversData}
           />
         </div>
-        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border">Test</div>
+        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border">
+          <Standings 
+            filteredSession={filteredSession}
+            driversData={driversData}
+          />
+        </div>
       </div>
     </main>
   );
