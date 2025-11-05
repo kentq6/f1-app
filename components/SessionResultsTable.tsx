@@ -52,17 +52,21 @@ const SessionResults = ({
           driversData.map((d) => [d.driver_number, d])
         );
 
+        // console.log(driversMap);
+
         // Merge driver info into session results
-        const mergedData: DriverData[] = results.map((result: SessionResult) => {
-          const driver = driversMap.get(result.driver_number);
-          return {
-            ...result,
-            name_acronym: driver?.name_acronym ?? "UNK",
-            team_colour: driver?.team_colour ?? "",
-            team_name: driver?.team_name ?? "",
-            headshot_url: driver?.headshot_url ?? "",
-          };
-        });
+        const mergedData: DriverData[] = results.map(
+          (result: SessionResult) => {
+            const driver = driversMap.get(result.driver_number);
+            return {
+              ...result,
+              name_acronym: driver?.name_acronym ?? "UNK",
+              team_colour: driver?.team_colour ?? "",
+              team_name: driver?.team_name ?? "",
+              headshot_url: driver?.headshot_url ?? "",
+            };
+          }
+        );
 
         setSessionResultsData(mergedData);
       } catch (err) {
@@ -142,8 +146,7 @@ const SessionResults = ({
                 <TableCell>{result.driver_number}</TableCell>
                 <TableCell>
                   <div className="inline-flex items-center gap-2 rounded-full">
-                    {result.name_acronym}
-                    {result.headshot_url ? (
+                    {result.headshot_url && (
                       <span
                         className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
                         style={{
@@ -160,11 +163,8 @@ const SessionResults = ({
                           className="object-cover w-full h-full rounded-full "
                         />
                       </span>
-                    ) : (
-                      <span className="text-xs text-white font-semibold">
-                        {result.name_acronym}
-                      </span>
                     )}
+                    {result.name_acronym}
                   </div>
                 </TableCell>
                 <TableCell>
