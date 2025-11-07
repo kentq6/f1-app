@@ -17,8 +17,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "F1 Tracker App",
+  title: "F1 Stats Dashboard",
   description: "A fan-made Formula 1 app which tracks lap times, pit stop efficiency, and driver performance across seasons.",
+  openGraph: {
+		url: 'https://kentquach.com',
+		siteName: 'F1 Stats Dashboard',
+		images: [
+			{
+				url: '/F1-logo.svg',
+				width: 1200,
+				height: 630,
+				alt: 'F1 Stats Dashboard',
+			},
+		],
+		locale: 'en_US',
+		type: 'website',
+	},
 };
 
 export default function RootLayout({
