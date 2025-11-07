@@ -17,10 +17,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://f1-app-blond.vercel.app/'),
   title: "F1 Stats Dashboard",
-  description: "A fan-made Formula 1 app which tracks lap times, pit stop efficiency, and driver performance across seasons.",
+  description: "An unofficial Formula 1 dashboard which tracks historical stats and performances.",
+  authors: [{ name: "Kent Quach "}],
+  creator: "Kent Quach",
   openGraph: {
-		url: 'https://kentquach.com',
+		url: 'https://f1-app-blond.vercel.app/',
 		siteName: 'F1 Stats Dashboard',
 		images: [
 			{
