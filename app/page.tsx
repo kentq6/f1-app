@@ -182,14 +182,14 @@ const HomePage = () => {
 
         {/* Session Results OR Starting Grid */}
         {filteredSession?.session_type === "Qualifying" ? (
-          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
+          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
             <StartingGridTable
               filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
         ) : (
-          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border flex flex-col overflow-hidden h-full">
+          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 border border-border dark:border-border flex flex-col overflow-hidden h-full">
             <SessionResultsTable
               filteredSession={filteredSession}
               driversData={driversData}
@@ -203,7 +203,7 @@ const HomePage = () => {
         </div>
 
         {/* Stints Chart */}
-        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
+        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
           <StintsChart
             key="TireStintChart"
             filteredSession={filteredSession}
