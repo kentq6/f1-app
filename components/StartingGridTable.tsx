@@ -123,15 +123,15 @@ const StartingGridTable = ({
     }
 
     const gap = result.lap_duration - leader.lap_duration;
-    return (gap === 0 ? "Interval" : `+${gap.toFixed(3)}s`);
+    return gap === 0 ? "Interval" : `+${gap.toFixed(3)}s`;
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h1 className="text-md font-bold pb-1">Starting Grid</h1>
       <Separator className="mb-1" />
       {/* Starting Grid Table */}
-      <div className="h-[300px] overflow-y-auto overscroll-contain">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <Table>
           <TableHeader>
             <TableRow>

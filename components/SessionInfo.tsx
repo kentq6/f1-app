@@ -9,10 +9,8 @@ interface SessionInfoProp {
 
 const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
   return (
-    <div>
-      <h1 className="text-md font-bold pb-1">
-        Session Info
-      </h1>
+    <div className="flex flex-col h-full">
+      <h1 className="text-md font-bold pb-1">Session Info</h1>
       <Separator className="mb-1" />
       {filteredSession ? (
         <div className="mt-4 flex flex-col items-center justify-center h-full max-h-full">
@@ -23,11 +21,14 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
             </div>
             <div className="text-md opacity-80 mt-1">
               <span className="font-medium">Date: </span>
-              {new Date(filteredSession.date_start).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
+              {new Date(filteredSession.date_start).toLocaleDateString(
+                "en-US",
+                {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                }
+              )}
             </div>
             <div className="text-md opacity-80 mt-1">
               <span className="font-medium">Session Type:</span>{" "}

@@ -234,11 +234,14 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
           borderColor: borderColors,
           borderWidth: 0.75,
           borderSkipped: false,
-          barThickness: 
-            selectedDrivers.length > 15 ? 5
-            : selectedDrivers.length > 10 ? 7
-            : selectedDrivers.length > 5 ? 9
-            : 11,
+          barThickness:
+            selectedDrivers.length > 15
+              ? 5
+              : selectedDrivers.length > 10
+              ? 7
+              : selectedDrivers.length > 5
+              ? 9
+              : 11,
           categoryPercentage: 0.8,
           barPercentage: 0.96,
           parsing: {
@@ -374,17 +377,18 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
   if (!filteredSession) {
     // Show a message if required session data not provided
     return (
-      <div
-        className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl shadow-md border border-gray-100/50 dark:border-gray-700/50 p-4 flex items-center justify-center"
-        style={{ minHeight: 300 }}
-      >
-        <p>Please select a session to view tire stint data.</p>
+      <div className="flex flex-col h-full">
+        <h1 className="text-md font-bold pb-1">Stint Chart</h1>
+        <Separator className="mb-1" />
+        <div className="flex-1 min-h-0 flex items-center justify-center">
+          <p>Please select a session to view tire stint data.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h1 className="text-md font-bold pb-1">Stint Chart</h1>
       <Separator className="mb-1" />
       {/* Table */}
@@ -462,12 +466,12 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
           </Select>
         </div>
       </div>
-      <div className="mt-2 h-[300px] h-min-[220px]">
+      <div className="flex-1 min-h-0 mt-2">
         {selectedDrivers.length > 0 ? (
           <Bar
             data={chartData}
             options={options}
-            className="h-[300px] h-min-[220px] overflow-y-auto rounded-lg shadow-md px-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background"
+            className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background"
           />
         ) : (
           <div className="flex items-center justify-center h-full text-gray-500">

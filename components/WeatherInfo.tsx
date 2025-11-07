@@ -162,7 +162,7 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <div className="flex items-center gap-2 pb-1">
         <h1 className="text-md font-bold">Weather</h1>
         <span
@@ -173,7 +173,7 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
         </span>
       </div>
       <Separator className="mb-1" />
-      <div className="h-[300px] h-min-[220px] items-center">
+      <div className="flex-1 min-h-0 flex flex-col items-center">
         {/* Icon & Air Temp */}
         <div className="flex flex-col items-center justify-center gap-2 grow">
           <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow-md border border-border dark:border-border flex items-center justify-center mt-2 w-[72px] h-[72px]">
@@ -206,14 +206,14 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
           </div>
         </div>
         {/* Weather Averages Table */}
-        <div className="mt-2">
+        <div className="mt-2 flex-1 min-h-0 flex flex-col">
           {dailyAverages.length === 0 ? (
             <span className="text-sm px-2 py-3">
               No weather data available.
             </span>
           ) : (
             // Table Container
-            <div className="container h-[170px] rounded-lg border border-border dark:border-border flex flex-col items-stretch overflow-y-auto overscroll-contain">
+            <div className="container flex-1 min-h-0 rounded-lg border border-border dark:border-border flex flex-col items-stretch overflow-y-auto overscroll-contain">
               <Table className="text-xs">
                 <TableBody>
                   {/* Loop for each day or just single, depending on use-case */}

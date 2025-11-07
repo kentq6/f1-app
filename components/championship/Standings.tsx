@@ -73,9 +73,9 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
    * For drivers, break ties by who reached the points total LAST: i.e., later-achiever is placed first.
    * Assumes each driver object has an extra field `lastPointsReachedIdx` if needed.
    */
-  function sortStandingsArray<T extends { points?: number; lastPointsReachedIdx?: number }>(
-    standings: T[]
-  ): T[] {
+  function sortStandingsArray<
+    T extends { points?: number; lastPointsReachedIdx?: number }
+  >(standings: T[]): T[] {
     return standings
       .slice()
       .sort((a, b) => {
@@ -143,7 +143,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           points: number;
           lastPointsReachedIdx: number;
         };
-        
+
         // We need ordered list per driver of when their total matches their "final" total
 
         // 1. Compute final driver points, but also map the session result idx where they reached that number
@@ -155,7 +155,8 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
         const driverTotals: Record<number, number> = {};
         for (const r of sessionResults) {
           if (typeof r.driver_number !== "number") continue;
-          if (!(r.driver_number in driverTotals)) driverTotals[r.driver_number] = 0;
+          if (!(r.driver_number in driverTotals))
+            driverTotals[r.driver_number] = 0;
           driverTotals[r.driver_number] += r.points;
         }
 
@@ -167,7 +168,8 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
         for (let idx = 0; idx < sessionResultsOrdered.length; idx++) {
           const r = sessionResultsOrdered[idx];
           if (typeof r.driver_number !== "number") continue;
-          progress[r.driver_number] = (progress[r.driver_number] ?? 0) + r.points;
+          progress[r.driver_number] =
+            (progress[r.driver_number] ?? 0) + r.points;
           if (progress[r.driver_number] === driverTotals[r.driver_number]) {
             // At this sessionResult, they reached their final points value (so later is better for tiebreak)
             lastPointsReachedIdxMap[r.driver_number] = idx;
@@ -180,7 +182,8 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
         for (const driver_numberStr in driverTotals) {
           const driver_number = Number(driver_numberStr);
           const points = driverTotals[driver_number];
-          const lastPointsReachedIdx = lastPointsReachedIdxMap[driver_number] ?? -1;
+          const lastPointsReachedIdx =
+            lastPointsReachedIdxMap[driver_number] ?? -1;
           driverPointsArr.push({ driver_number, points, lastPointsReachedIdx });
         }
 
@@ -201,7 +204,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
               last_name: driver.last_name,
               headshot_url: driver.headshot_url,
               country_code: driver.country_code || "",
-              lastPointsReachedIdx
+              lastPointsReachedIdx,
             };
           })
           .filter(Boolean) as (Drivers & { lastPointsReachedIdx: number })[];
@@ -248,7 +251,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
   }, [filteredSession, driversData]);
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <div className="flex items-center gap-2 pb-1">
         <Select
           value={
@@ -286,7 +289,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
         </span>
       </div>
       <Separator className="mt-2 mb-1" />
-      <div className="h-[300px] h-min-[220px] overflow-y-auto overscroll-contain">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         {showChampionship === "Constructors" ? (
           <ConstructorsStandingsTable
             constructorsStandings={constructorsStandings}

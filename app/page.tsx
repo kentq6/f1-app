@@ -152,9 +152,9 @@ const HomePage = () => {
   }
 
   return (
-    <main className="text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 overflow-x-hidden px-4 pb-4">
+    <main className="h-screen text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300 overflow-hidden flex flex-col px-4 pb-4">
       {/* Navbar */}
-      <div className="w-full mx-auto pr-4">
+      <div className="w-full mx-auto pr-4 shrink-0">
         <Navbar
           selectedYear={selectedYear}
           selectedTrack={selectedTrack}
@@ -170,39 +170,39 @@ const HomePage = () => {
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
-        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border">
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 overflow-hidden">
+        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden">
           <SessionInfo filteredSession={filteredSession} />
         </div>
         {/* Small Component */}
-        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border">
+        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden">
           <WeatherInfo filteredSession={filteredSession} />
         </div>
         {/* Long Component */}
         {filteredSession?.session_type === "Qualifying" ? (
-          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border">
+          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
             <StartingGridTable
               filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
         ) : (
-          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border">
+          <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border flex flex-col overflow-hidden h-full">
             <SessionResultsTable
               filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
         )}
-        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border">Test</div>
-        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border">
+        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden">Test</div>
+        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
           <StintsChart
             key="TireStintChart"
             filteredSession={filteredSession}
             driversData={driversData}
           />
         </div>
-        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border">
+        <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden flex flex-col">
           <Standings 
             filteredSession={filteredSession}
             driversData={driversData}

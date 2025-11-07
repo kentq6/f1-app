@@ -119,11 +119,11 @@ const SessionResults = ({
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h1 className="text-md font-bold pb-1">Session Results</h1>
       <Separator className="mb-1" />
       {/* Table */}
-      <div className="h-[300px] h-min-[220px] overflow-y-auto overscroll-contain">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <Table>
           <TableHeader>
             <TableRow>
