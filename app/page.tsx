@@ -169,14 +169,18 @@ const HomePage = () => {
 
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 lg:overflow-hidden">
+        
+        {/* Session Info */}
         <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden">
           <SessionInfo filteredSession={filteredSession} />
         </div>
-        {/* Small Component */}
+
+        {/* Weather Info */}
         <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden">
           <WeatherInfo filteredSession={filteredSession} />
         </div>
-        {/* Long Component */}
+
+        {/* Session Results OR Starting Grid */}
         {filteredSession?.session_type === "Qualifying" ? (
           <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
             <StartingGridTable
@@ -192,9 +196,13 @@ const HomePage = () => {
             />
           </div>
         )}
+
+        {/* EMPTY */}
         <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden">
           Test
         </div>
+
+        {/* Stints Chart */}
         <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2 border border-border dark:border-border h-full overflow-hidden flex flex-col">
           <StintsChart
             key="TireStintChart"
@@ -202,6 +210,8 @@ const HomePage = () => {
             driversData={driversData}
           />
         </div>
+
+        {/* Drivers'/Constructors' Standings */}
         <div className="bg-primary-foreground p-4 rounded-lg border border-border dark:border-border h-full overflow-hidden flex flex-col">
           <Standings
             filteredSession={filteredSession}
