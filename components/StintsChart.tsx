@@ -380,8 +380,8 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
       <div className="flex flex-col h-full">
         <h1 className="text-md font-bold pb-1">Stint Chart</h1>
         <Separator className="mb-1" />
-        <div className="flex-1 min-h-0 flex items-center justify-center">
-          <p>Please select a session to view tire stint data.</p>
+        <div className="flex items-center justify-center h-full font-medium text-center">
+          <p>Select a session to view tire stint data.</p>
         </div>
       </div>
     );

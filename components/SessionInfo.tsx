@@ -53,7 +53,9 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
           </div>
         </div>
       ) : (
-        <div className="">Select a session to view information.</div>
+        <div className="flex items-center justify-center h-full font-medium text-center">
+          <span>Select a session to view information.</span>
+        </div>
       )}
     </div>
   );
