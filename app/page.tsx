@@ -153,19 +153,23 @@ const HomePage = () => {
 
   return (
     <main className="lg:h-screen text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300 overflow-hidden flex flex-col px-4 pb-4">
-      {/* Navbar */}
-      <Navbar
-        selectedYear={selectedYear}
-        selectedTrack={selectedTrack}
-        selectedSession={selectedSession}
-        filteredSession={filteredSession}
-        yearOptions={yearOptions}
-        trackOptions={trackOptions}
-        sessionOptions={sessionOptions}
-        onYearChange={setSelectedYear}
-        onTrackChange={setSelectedTrack}
-        onSessionChange={setSelectedSession}
-      />
+      <header className="fixed top-0 left-0 w-full z-50 bg-primary-foreground border-b border-border dark:border-border">
+        {/* Navbar */}
+        <Navbar
+          selectedYear={selectedYear}
+          selectedTrack={selectedTrack}
+          selectedSession={selectedSession}
+          filteredSession={filteredSession}
+          yearOptions={yearOptions}
+          trackOptions={trackOptions}
+          sessionOptions={sessionOptions}
+          onYearChange={setSelectedYear}
+          onTrackChange={setSelectedTrack}
+          onSessionChange={setSelectedSession}
+        />
+      </header>
+      {/* Add padding top so content is not hidden behind navbar */}
+      <div className="h-[68px] lg:h-[68px] mb-2"></div>
 
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:overflow-hidden">
