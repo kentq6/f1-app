@@ -45,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    // Nav and Side Bars
+    // Nav and Sidebar Trigger (if user is signed in)
     <nav className="sticky top-0 z-50">
       <div className="mx-auto px-2">
         <div className="flex items-center justify-between h-15">
