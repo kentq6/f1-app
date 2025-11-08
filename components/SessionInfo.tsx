@@ -13,14 +13,14 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
       <h1 className="text-md font-bold pb-1">Session Info</h1>
       <Separator className="mb-1" />
       {filteredSession ? (
-        <div className="mt-4 flex flex-col items-center justify-center h-full max-h-full">
-          
+        <div className="bg-gray-50 dark:bg-background mt-2 py-2 sm:py-4 rounded-sm sm:rounded-md border border-border dark:border-border flex flex-col items-center justify-center h-full w-full">
+
           {/* Session Info */}
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center">
             <div className="font-semibold text-md sm:text-lg">
               {filteredSession.year} {filteredSession.country_name}
             </div>
-            <div className="ext-sm sm:text-md opacity-80 mt-1">
+            <div className="hidden sm:block text-sm lg:text-md opacity-80">
               <span>Date: </span>
               {new Date(filteredSession.date_start).toLocaleDateString(
                 "en-US",
@@ -31,23 +31,25 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
                 }
               )}
             </div>
-            <div className="ext-sm sm:text-md opacity-80 mt-1">
+            <div className="hidden sm:block text-sm lg:text-md opacity-80">
               <span>Session Type: </span>
               {filteredSession.session_type}
             </div>
           </div>
           
           {/* Flag and Country Acronym */}
-          <div className="flex flex-col items-center justify-center mt-4">
-            <div className="w-[120px] h-[80px] sm:w-[210px] sm:h-[140px] rounded-md overflow-hidden transition-transform duration-200 hover:scale-105">
-              <Image
-                src={`/country-flags/${filteredSession.country_code}.svg`}
-                width={210}
-                height={140}
-                alt={`${filteredSession.country_code} Flag`}
-                className="object-cover w-full h-full"
-                priority
-              />
+          <div className="flex flex-col items-center mt-4">
+            <div className="w-full flex">
+              <div className="w-[100px] h-[60px] sm:w-[165px] sm:h-[100px] lg:w-[180px] lg:h-[120px] rounded overflow-hidden transition-transform duration-200 hover:scale-105">
+                <Image
+                  src={`/country-flags/${filteredSession.country_code}.svg`}
+                  width={100}
+                  height={60}
+                  alt={`${filteredSession.country_code} Flag`}
+                  className="object-cover w-full h-full"
+                  priority
+                />
+              </div>
             </div>
             <span className="text-xs font-medium mt-2 text-gray-700 dark:text-gray-300 tracking-wide">
               {filteredSession.country_code}
