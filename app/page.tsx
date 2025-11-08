@@ -170,12 +170,12 @@ const HomePage = () => {
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:overflow-hidden">
         {/* Session Info */}
-        <div className="bg-primary-foreground p-4 rounded-lg grid-cols-1 border border-border dark:border-border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 sm:col-span-1 border border-border dark:border-border h-full overflow-hidden">
           <SessionInfo filteredSession={filteredSession} />
         </div>
 
         {/* Weather Info */}
-        <div className="bg-primary-foreground p-4 rounded-lg grid-cols-1 border border-border dark:border-border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 sm:col-span-1 border border-border dark:border-border h-full overflow-hidden">
           <WeatherInfo filteredSession={filteredSession} />
         </div>
 
