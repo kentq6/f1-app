@@ -10,10 +10,10 @@ interface SessionInfoProp {
 const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
   return (
     <div className="flex flex-col h-full">
-      <h1 className="text-md font-bold pb-1">Session Info</h1>
+      <h1 className="text-md font-bold pb-1">Session</h1>
       <Separator className="mb-1" />
       {filteredSession ? (
-        <div className="bg-gray-50 dark:bg-background mt-2 py-2 sm:py-4 rounded-sm sm:rounded-md border border-border dark:border-border flex flex-col items-center justify-center h-full w-full">
+        <div className="bg-background mt-2 py-2 sm:py-4 rounded-sm sm:rounded-md border border-border dark:border-border flex flex-col items-center justify-center h-full w-full gap-3">
 
           {/* Session Info */}
           <div className="flex flex-col items-center">
@@ -38,9 +38,9 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
           </div>
           
           {/* Flag and Country Acronym */}
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center">
             <div className="w-full flex">
-              <div className="w-[100px] h-[60px] sm:w-[165px] sm:h-[100px] lg:w-[180px] lg:h-[120px] rounded overflow-hidden transition-transform duration-200 hover:scale-105">
+              <div className="w-[100px] h-[60px] sm:w-[165px] sm:h-[100px] lg:w-[180px] lg:h-[120px] rounded-md overflow-hidden transition-transform duration-200 hover:scale-105">
                 <Image
                   src={`/country-flags/${filteredSession.country_code}.svg`}
                   width={100}
