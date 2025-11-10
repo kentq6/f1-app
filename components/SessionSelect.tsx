@@ -45,7 +45,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
         onValueChange={val => onYearChange(val === "" ? "" : Number(val))}
       >
         <SelectTrigger
-          className="h-7 text-[9px]"
+          className="h-7 text-[11px]"
           aria-label="Select Year"
         >
           <SelectValue placeholder="Year" />
@@ -67,7 +67,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
         onValueChange={val => onTrackChange(val)}
       >
         <SelectTrigger
-          className="h-7 text-[9px]"
+          className="h-7 text-[11px]"
           aria-label="Select Track"
         >
           <SelectValue placeholder="Track" />
@@ -89,7 +89,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
         onValueChange={val => onSessionChange(val)}
       >
         <SelectTrigger
-          className="h-7 text-[9px]"
+          className="h-7 text-[11px]"
           aria-label="Select Session"
         >
           <SelectValue placeholder="Session" />

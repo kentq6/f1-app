@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <div className="hidden md:block">
               <SignedOut>
                 <SignInButton>
-                  <button className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
+                  <button className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
                     <div className="relative z-10 flex items-center gap-1">
                       <span>Sign In</span>
                       <LogIn size={18} />
@@ -172,7 +172,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <SignedOut>
                 <SignInButton>
                   <button 
-                    className="w-full bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+                    className="w-full bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-md text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
                     onClick={closeMobileMenu}
                   >
                     <div className="relative z-10 flex items-center gap-1">
