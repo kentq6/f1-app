@@ -48,14 +48,14 @@ const Navbar: React.FC<NavbarProps> = ({
     // Nav and Sidebar Trigger (if user is signed in)
     <nav>
       <div className="mx-auto px-2">
-        <div className="flex items-center justify-between h-15">
+        <div className="flex items-center justify-between h-12">
           {/* Left: Sidebar Toggle + Logo */}
           <div className="flex items-center">
             <SignedIn>
               <SidebarTrigger />
             </SignedIn>
             {/* Logo */}
-            <Logo height={150} width={150} />
+            <Logo height={120} width={120} />
           </div>
 
           {/* Center: Search Functionality */}
@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <SignedOut>
                 <SignInButton>
                   <button className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
-                    <div className="relative z-10 flex items-center gap-1">
+                    <div className="relative flex items-center gap-1">
                       <span>Sign In</span>
                       <LogIn size={18} />
                     </div>
@@ -94,13 +94,13 @@ const Navbar: React.FC<NavbarProps> = ({
               </SignedOut>
 
               <SignedIn>
-                <div className="p-0.5 sm:p-1 rounded-lg sm:rounded-xl bg-linear-to-r from-emerald-100/50 to-green-100/50 dark:from-emerald-900/20 dark:to-green-900/20 backdrop-blur-sm border border-emerald-200/30 dark:border-emerald-700/30">
+                <div className="flex items-center justify-center p-0.5 sm:p-1 w-8 h-8 sm:w-10 sm:h-10 rounded-full border">
                   <UserButton
                     appearance={{
                       elements: {
                         avatarBox:
                           "w-6 h-6 sm:w-8 sm:h-8 hover:scale-110 transition-transform duration-200",
-                        userButtonBox: "flex items-center justify-center",
+                        // userButtonBox: "flex items-center justify-center",
                       },
                     }}
                   />
@@ -184,7 +184,7 @@ const Navbar: React.FC<NavbarProps> = ({
               </SignedOut>
 
               <SignedIn>
-                <div className="flex items-center justify-center w-full p-3 rounded-xl bg-linear-to-r from-emerald-100/50 to-green-100/50 dark:from-emerald-900/20 dark:to-green-900/20 backdrop-blur-sm border border-emerald-200/30 dark:border-emerald-700/30">
+                <div className="flex items-center justify-center w-full p-3 rounded-xl">
                   <UserButton
                     appearance={{
                       elements: {

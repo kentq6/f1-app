@@ -56,12 +56,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="flex min-h-screen w-full overflow-hidden">
-              <SidebarProvider defaultOpen>
+              <SidebarProvider>
                 <SignedIn>
                   <AppSidebar />
                 </SignedIn>
                 <main className="flex-1 overflow-x-hidden">
-                  {/* <Navbar /> */}
                   <div className="w-full">{children}</div>
                 </main>
               </SidebarProvider>

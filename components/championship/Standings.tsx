@@ -252,7 +252,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 pb-1">
+      <div className="flex items-center gap-2 pb-2">
         <Select
           value={
             showChampionship === "Constructors"
@@ -267,7 +267,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           }}
         >
           <SelectTrigger
-            className="text-sm font-bold pb-1"
+            className="text-xs font-bold"
             aria-label="championshipSelector"
           >
             <SelectValue placeholder="Select Championship" />
@@ -282,13 +282,12 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           </SelectContent>
         </Select>
         <span
-          className="text-[11px] px-2 py-0.5 rounded border bg-gray-50 dark:bg-background font-semibold"
-          title="Session averages are calculated using all available measurements for this session."
+          className="text-[11px] px-1 rounded border bg-gray-50 dark:bg-background font-semibold"
         >
           Standings
         </span>
       </div>
-      <Separator className="mt-2 mb-1" />
+      <Separator />
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         {showChampionship === "Constructors" ? (
           <ConstructorsStandingsTable

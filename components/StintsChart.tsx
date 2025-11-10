@@ -60,11 +60,11 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
 
     const fetchedStints = async () => {
       try {
-        const response = await axios.get(
+        const res = await axios.get(
           `https://api.openf1.org/v1/stints?session_key=${filteredSession.session_key}`
         );
 
-        const stints = response.data;
+        const stints = res.data;
 
         // Create a quick lookup map from driversData (props)
         const driversMap = new Map<number, Driver>(
@@ -378,7 +378,7 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
     // Show a message if required session data not provided
     return (
       <div className="flex flex-col h-full">
-        <h1 className="text-md font-bold pb-1">Stint Chart</h1>
+        <h1 className="text-md font-bold pb-1">Stints Chart</h1>
         <Separator className="mb-1" />
         <div className="flex items-center justify-center h-full font-medium text-center">
           <p>Select a session to view tire stint data.</p>
@@ -389,8 +389,8 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
 
   return (
     <div className="flex flex-col h-full">
-      <h1 className="text-md font-bold pb-1">Stint Chart</h1>
-      <Separator className="mb-1" />
+      <h1 className="text-sm font-bold pb-1">Stint Chart</h1>
+      <Separator />
       {/* Table */}
       <div className="flex justify-between items-center mt-2">
         {/* Left side is now empty but can be used for future controls or just spacing */}
@@ -471,7 +471,7 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
           <Bar
             data={chartData}
             options={options}
-            className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-background"
+            className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-border dark:border-primary-border bg-gray-50 dark:bg-background"
           />
         ) : (
           <div className="flex items-center justify-center h-full text-gray-500">

@@ -32,7 +32,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
   onSessionChange,
 }) => {
   return (
-    <div className="flex items-center gap-2 w-full overflow-x-auto">
+    <div className="flex items-center gap-2 w-full">
       <span className="hidden md:block font-bold text-lg">
         Select Session:
       </span>
