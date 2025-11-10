@@ -51,9 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-12">
           {/* Left: Sidebar Toggle + Logo */}
           <div className="flex items-center">
-            <SignedIn>
-              <SidebarTrigger />
-            </SignedIn>
+            <SidebarTrigger />
             {/* Logo */}
             <Logo height={120} width={120} />
           </div>
@@ -171,7 +169,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <Separator className="w-full my-2" />
               <SignedOut>
                 <SignInButton>
-                  <button 
+                  <button
                     className="w-full bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-md text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
                     onClick={closeMobileMenu}
                   >

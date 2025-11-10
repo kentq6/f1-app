@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider, SignedIn } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar/AppSidebar";
@@ -17,25 +17,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://f1-app-blond.vercel.app/'),
+  metadataBase: new URL("https://f1-app-blond.vercel.app/"),
   title: "F1 Stats Dashboard",
-  description: "An unofficial Formula 1 dashboard which tracks historical stats and performances.",
-  authors: [{ name: "Kent Quach "}],
+  description:
+    "An unofficial Formula 1 dashboard which tracks historical stats and performances.",
+  authors: [{ name: "Kent Quach " }],
   creator: "Kent Quach",
   openGraph: {
-		url: 'https://f1-app-blond.vercel.app/',
-		siteName: 'F1 Stats Dashboard',
-		images: [
-			{
-				url: '/F1-logo.svg',
-				width: 1200,
-				height: 630,
-				alt: 'F1 Stats Dashboard',
-			},
-		],
-		locale: 'en_US',
-		type: 'website',
-	},
+    url: "https://f1-app-blond.vercel.app/",
+    siteName: "F1 Stats Dashboard",
+    images: [
+      {
+        url: "/F1-logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "F1 Stats Dashboard",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -57,9 +58,7 @@ export default function RootLayout({
           >
             <div className="flex min-h-screen w-full overflow-hidden">
               <SidebarProvider>
-                <SignedIn>
-                  <AppSidebar />
-                </SignedIn>
+                <AppSidebar />
                 <main className="flex-1 overflow-x-hidden">
                   <div className="w-full">{children}</div>
                 </main>
