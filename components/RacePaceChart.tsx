@@ -57,6 +57,7 @@ const RacePaceChart = ({
 
         // Filter valid laps
         const validLaps = res.data.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (lap: any) => lap.lap_duration && lap.lap_duration > 0
         );
 
@@ -114,6 +115,7 @@ const RacePaceChart = ({
 
   const chartData = {
     labels: lapNumbers,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     datasets: datasets as any[],
   };
 
@@ -128,6 +130,7 @@ const RacePaceChart = ({
       },
       tooltip: {
         callbacks: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           label: (ctx: any) => `${ctx.dataset.label}: ${ctx.formattedValue}s`,
         },
       },
@@ -158,6 +161,6 @@ const RacePaceChart = ({
       )}
     </div>
   );
-}
+};
 
 export default RacePaceChart;
