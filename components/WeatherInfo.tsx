@@ -3,8 +3,8 @@ import axios from "axios";
 import {
   CloudDrizzle,
   CloudRain,
+  Snowflake,
   Sun,
-  ThermometerSnowflake,
   ThermometerSun,
 } from "lucide-react";
 import React, { useEffect, useState, useMemo } from "react";
@@ -108,21 +108,21 @@ function computeAveragesByDay(weatherData: Weather[]) {
 const getWeatherIcon = (temp: number, rainValue: number) => {
   if (rainValue > 0 && rainValue < 2.5) {
     // Light Drizzle, blueish
-    return <CloudDrizzle size={50} strokeWidth={2} color="#38bdf8" />;
+    return <CloudDrizzle size={60} strokeWidth={2} color="#38bdf8" />;
   } else if (rainValue >= 2.5) {
     // Heavy Rain, deeper blue
-    return <CloudRain size={50} strokeWidth={2} color="#0ea5e9" />;
+    return <CloudRain size={60} strokeWidth={2} color="#0ea5e9" />;
   } else {
     // No Rain
     if (temp >= 31) {
       // Hot, orange-red
-      return <ThermometerSun size={50} strokeWidth={2} color="#fb923c" />;
+      return <ThermometerSun size={60} strokeWidth={2} color="#fb923c" />;
     } else if (temp <= 20) {
       // Cold, light blue
-      return <ThermometerSnowflake size={50} strokeWidth={2} color="#60a5fa" />;
+      return <Snowflake size={60} strokeWidth={2} color="#60a5fa" />;
     } else {
       // Warm/mild, yellow
-      return <Sun size={50} strokeWidth={2} color="#facc15" />;
+      return <Sun size={60} strokeWidth={2} color="#facc15" />;
     }
   }
 };
@@ -166,23 +166,26 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
       <div className="flex items-center gap-2 pb-1">
         <h1 className="text-md font-bold">Weather</h1>
         <span
-          className="text-[11px] px-2 py-0.5 rounded border border-border dark:border-border bg-gray-50 dark:bg-background font-semibold"
+          className="hidden sm:block text-[11px] px-2 py-0.5 rounded border bg-gray-50 dark:bg-background font-semibold"
           title="Session averages are calculated using all available measurements for this session."
         >
           Session Averages
         </span>
       </div>
       <Separator className="mb-1" />
-      <div className="flex flex-col items-center">
+      <div className="mt-2 flex flex-col items-center justify-center flex-1 w-full gap-3 overflow-auto max-h-full">
         {/* Icon & Air Temp */}
-        <div className="flex flex-col items-center justify-center gap-2 grow">
-          <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow-md border border-border dark:border-border flex items-center justify-center mt-2 w-[72px] h-[72px]">
+        <div className="flex flex-col items-center gap-2">
+          {/* Icon */}
+          <div className="rounded-full bg-gray-50 dark:bg-gray-900/60 p-3 shadow-md border flex items-center justify-center w-[72px] h-[72px]">
             {firstDay ? (
               getWeatherIcon(firstDay.air_temperature, firstDay.rainfall)
             ) : (
               <span className="text-lg">—</span>
             )}
           </div>
+
+          {/* Air Temperature */}
           <div className="flex flex-col items-center text-xs font-medium text-center min-h-[32px]">
             {typeof firstDay?.air_temperature === "number" &&
             typeof firstDay?.track_temperature === "number" ? (
@@ -201,14 +204,17 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
                 <span className="opacity-80">°F</span>
               </span>
             ) : (
-              <span className="mt-4 h-full font-medium text-center">No weather data</span>
+              <span className="mt-4 h-full font-medium text-center">
+                No weather data
+              </span>
             )}
           </div>
         </div>
+
         {/* Weather Averages Table */}
         <div className="flex-1 min-h-0 flex flex-col">
-          {/* // Table Container */}
-          <div className="container rounded-lg border border-border dark:border-border flex flex-col items-stretch overflow-y-auto">
+          {/* Table Container */}
+          <div className="flex flex-col flex-1 items-stretch min-h-0 rounded-md border overflow-auto ">
             <Table className="text-xs">
               <TableBody>
                 {/* Loop for each day or just single, depending on use-case */}
