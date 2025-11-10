@@ -13,7 +13,7 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
       <h1 className="text-md font-bold pb-1">Session</h1>
       <Separator className="mb-1" />
       {filteredSession ? (
-        <div className="bg-background mt-2 py-2 sm:py-4 rounded-sm sm:rounded-md border border-border dark:border-border flex flex-col items-center justify-center h-full w-full gap-3">
+        <div className="bg-background mt-2 py-2 sm:py-4 rounded-sm sm:rounded-md border flex flex-col items-center justify-center h-full w-full gap-3">
 
           {/* Session Info */}
           <div className="flex flex-col items-center">

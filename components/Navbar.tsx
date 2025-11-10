@@ -150,7 +150,7 @@ const Navbar: React.FC<NavbarProps> = ({
               : "max-h-0 opacity-0 overflow-hidden"
           }`}
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 rounded-xl mt-2 border bg-primary-foreground border-border dark:border-border flex flex-col items-stretch">
+          <div className="px-2 pt-2 pb-3 space-y-1 rounded-xl mt-2 border bg-primary-foreground flex flex-col items-stretch">
             {/* Mobile Search Session */}
             <div className="flex items-center justify-center w-full max-w-xs self-center">
               <SessionSelect

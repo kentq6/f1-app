@@ -153,7 +153,7 @@ const HomePage = () => {
 
   return (
     <main className="lg:h-screen text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300 overflow-hidden flex flex-col px-4 pb-4">
-      <header className="fixed top-0 left-0 w-full z-50 bg-primary-foreground border-b border-border dark:border-border">
+      <header className="fixed top-0 left-0 w-full z-50 bg-primary-foreground border-b">
         {/* Navbar */}
         <Navbar
           selectedYear={selectedYear}
@@ -174,25 +174,25 @@ const HomePage = () => {
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:overflow-hidden">
         {/* Session Info */}
-        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 sm:col-span-1 border border-border dark:border-border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden">
           <SessionInfo filteredSession={filteredSession} />
         </div>
 
         {/* Weather Info */}
-        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 sm:col-span-1 border border-border dark:border-border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden">
           <WeatherInfo filteredSession={filteredSession} />
         </div>
 
         {/* Session Results OR Starting Grid */}
         {filteredSession?.session_type === "Qualifying" ? (
-          <div className="bg-primary-foreground p-4 rounded-lg col-span-2 border border-border dark:border-border flex flex-col overflow-hidden h-full">
+          <div className="bg-primary-foreground p-4 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
             <StartingGridTable
               filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
         ) : (
-          <div className="bg-primary-foreground p-4 rounded-lg col-span-2 border border-border dark:border-border flex flex-col overflow-hidden h-full">
+          <div className="bg-primary-foreground p-4 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
             <SessionResultsTable
               filteredSession={filteredSession}
               driversData={driversData}
@@ -201,12 +201,12 @@ const HomePage = () => {
         )}
 
         {/* EMPTY */}
-        <div className="bg-primary-foreground p-4 col-span-2 lg:col-span-1 rounded-lg border border-border dark:border-border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-4 col-span-2 lg:col-span-1 rounded-lg border h-full overflow-hidden">
           Test
         </div>
 
         {/* Stints Chart */}
-        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 border border-border dark:border-border flex flex-col overflow-hidden h-full">
+        <div className="bg-primary-foreground p-4 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
           <StintsChart
             key="TireStintChart"
             filteredSession={filteredSession}
@@ -215,7 +215,7 @@ const HomePage = () => {
         </div>
 
         {/* Drivers'/Constructors' Standings */}
-        <div className="bg-primary-foreground p-4 col-span-2 lg:col-span-1 rounded-lg border border-border dark:border-border h-full overflow-hidden flex flex-col">
+        <div className="bg-primary-foreground p-4 col-span-2 lg:col-span-1 rounded-lg border h-full overflow-hidden flex flex-col">
           <Standings
             filteredSession={filteredSession}
             driversData={driversData}

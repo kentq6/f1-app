@@ -282,7 +282,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           </SelectContent>
         </Select>
         <span
-          className="text-[11px] px-2 py-0.5 rounded border border-border dark:border-border bg-gray-50 dark:bg-background font-semibold"
+          className="text-[11px] px-2 py-0.5 rounded border bg-gray-50 dark:bg-background font-semibold"
           title="Session averages are calculated using all available measurements for this session."
         >
           Standings
