@@ -172,27 +172,30 @@ const HomePage = () => {
       {/* Add padding top so content is not hidden behind navbar */}
 
       {/* Grid Layout */}
-      <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+      <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 lg:grid-cols-5 gap-4 p-4">
         {/* Session Info */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden transition-transform duration-300 hover:scale-102">
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden">
           <SessionInfo filteredSession={filteredSession} />
         </div>
 
-        {/* Weather Info */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden transition-transform duration-300 hover:scale-102">
-          <WeatherInfo filteredSession={filteredSession} />
+        {/* Race Pace Chart */}
+        <div className="bg-primary-foreground p-3 col-span-2 lg:col-span-2 rounded-lg border h-full overflow-hidden">
+          <RacePaceChart
+            filteredSession={filteredSession}
+            driversData={driversData}
+          />
         </div>
 
         {/* Session Results OR Starting Grid */}
         {filteredSession?.session_type === "Qualifying" ? (
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full transition-transform duration-300 hover:scale-102">
+          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
             <StartingGridTable
               filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
         ) : (
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full transition-transform duration-300 hover:scale-102">
+          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
             <SessionResultsTable
               filteredSession={filteredSession}
               driversData={driversData}
@@ -200,16 +203,13 @@ const HomePage = () => {
           </div>
         )}
 
-        {/* Race Pace Chart */}
-        <div className="bg-primary-foreground p-3 col-span-2 lg:col-span-1 rounded-lg border h-full overflow-hidden transition-transform duration-300 hover:scale-102">
-          <RacePaceChart
-            filteredSession={filteredSession}
-            driversData={driversData}
-          />
+        {/* Weather Info */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden">
+          <WeatherInfo filteredSession={filteredSession} />
         </div>
 
         {/* Stints Chart */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full transition-transform duration-300 hover:scale-102">
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
           <StintsChart
             filteredSession={filteredSession}
             driversData={driversData}
@@ -217,7 +217,7 @@ const HomePage = () => {
         </div>
 
         {/* Drivers'/Constructors' Standings */}
-        <div className="bg-primary-foreground p-3 col-span-2 lg:col-span-1 rounded-lg border h-full overflow-hidden flex flex-col transition-transform duration-300 hover:scale-102">
+        <div className="bg-primary-foreground p-3 col-span-2 rounded-lg border h-full overflow-hidden flex flex-col">
           <Standings
             filteredSession={filteredSession}
             driversData={driversData}

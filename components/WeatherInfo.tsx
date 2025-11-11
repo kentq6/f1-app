@@ -183,25 +183,21 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
           </div>
 
           {/* Air Temperature */}
-          <div className="flex flex-col items-center text-xs font-medium min-h-[32px]">
+          <div className="flex flex-col items-center justify-center text-xs font-medium min-h-[32px] text-center">
             {typeof firstDay?.air_temperature === "number" &&
             typeof firstDay?.track_temperature === "number" ? (
-              <span className="whitespace-nowrap">
-                <span>
-                  Air Temp: <br />
-                </span>
-                <span className="font-semibold tracking-tight">
-                  {firstDay.air_temperature.toFixed(1)}
-                </span>
-                <span className="opacity-80">°C</span>
-                <span className="mx-1 opacity-40">/</span>
-                <span className="font-semibold tracking-tight">
-                  {toFahrenheit(firstDay.air_temperature).toFixed(1)}
-                </span>
-                <span className="opacity-80">°F</span>
-              </span>
+              <div className="flex flex-col items-center justify-center">
+                <span className="mb-0.5">Air Temp:</span>
+                <div className="flex items-center justify-center gap-1">
+                  <span className="font-semibold tracking-tight">{firstDay.air_temperature.toFixed(1)}</span>
+                  <span className="opacity-80">°C</span>
+                  <span className="mx-1 opacity-40">/</span>
+                  <span className="font-semibold tracking-tight">{toFahrenheit(firstDay.air_temperature).toFixed(1)}</span>
+                  <span className="opacity-80">°F</span>
+                </div>
+              </div>
             ) : (
-              <span className="mt-4">No weather data</span>
+              <span className="mt-4 text-center w-full">No weather data</span>
             )}
           </div>
         </div>

@@ -115,8 +115,8 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
     ) {
       // Pick 5 random, unique drivers from the drivers array
       if (drivers.length >= 5) {
-        const shuffled = [...drivers].sort(() => 0.5 - Math.random());
-        setSelectedDrivers(shuffled.slice(0, 5));
+        // const shuffled = [...drivers].sort(() => 0.5 - Math.random());
+        setSelectedDrivers(drivers.slice(0, 5));
       } else {
         setSelectedDrivers(drivers);
       }
@@ -391,7 +391,6 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
     <div className="flex flex-col h-full">
       <h1 className="text-sm font-bold pb-1">Stint Chart</h1>
       <Separator />
-      {/* Table */}
       <div className="flex justify-between items-center mt-2">
         {/* Left side is now empty but can be used for future controls or just spacing */}
         <div></div>
@@ -438,9 +437,9 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
                 </button>
               </div>
               <SelectGroup>
-                {drivers.map((driverNumber) => (
+                {drivers.map((driverNumber, index) => (
                   <div
-                    key={driverNumber}
+                    key={`driver-${driverNumber}-stints-${index}`}
                     className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();

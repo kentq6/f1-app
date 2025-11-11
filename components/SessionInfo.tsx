@@ -21,7 +21,6 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
               {filteredSession.year} {filteredSession.country_name}
             </div>
             <div className="hidden sm:block text-sm lg:text-md opacity-80">
-              <span>Date: </span>
               {new Date(filteredSession.date_start).toLocaleDateString(
                 "en-US",
                 {
@@ -31,16 +30,12 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
                 }
               )}
             </div>
-            <div className="hidden sm:block text-sm lg:text-md opacity-80">
-              <span>Session Type: </span>
-              {filteredSession.session_type}
-            </div>
           </div>
           
           {/* Flag and Country Acronym */}
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center overflow-hidden">
             <div className="w-full flex">
-              <div className="w-[100px] h-[60px] sm:w-[165px] sm:h-[100px] lg:w-[180px] lg:h-[120px] rounded-md overflow-hidden transition-transform duration-200 hover:scale-105">
+              <div className="w-[100px] h-[60px] sm:w-[165px] sm:h-[100px] lg:w-[180px] lg:h-[120px] rounded-md overflow-hidden">
                 <Image
                   src={`/country-flags/${filteredSession.country_code}.svg`}
                   width={100}

@@ -274,10 +274,8 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="constructors-championship">
-                Constructors
-              </SelectItem>
               <SelectItem value="drivers-championship">Drivers</SelectItem>
+              <SelectItem value="constructors-championship">Constructors</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
