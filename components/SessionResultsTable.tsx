@@ -144,28 +144,26 @@ const SessionResults = ({
               <TableRow key={result.position + "-" + result.driver_number}>
                 <TableCell className="font-medium">{result.position}</TableCell>
                 <TableCell>{result.driver_number}</TableCell>
-                <TableCell>
-                  <div className="inline-flex items-center gap-2 rounded-full">
-                    {result.headshot_url && (
-                      <span
-                        className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
-                        style={{
-                          backgroundColor: result.team_colour?.startsWith("#")
-                            ? result.team_colour
-                            : `#${result.team_colour}`,
-                        }}
-                      >
-                        <Image
-                          src={result.headshot_url}
-                          height={40}
-                          width={40}
-                          alt=""
-                          className="object-cover w-full h-full rounded-full "
-                        />
-                      </span>
-                    )}
-                    {result.name_acronym}
-                  </div>
+                <TableCell className="inline-flex items-center gap-2">
+                  {result.headshot_url && (
+                    <span
+                      className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
+                      style={{
+                        backgroundColor: result.team_colour?.startsWith("#")
+                          ? result.team_colour
+                          : `#${result.team_colour}`,
+                      }}
+                    >
+                      <Image
+                        src={result.headshot_url}
+                        height={40}
+                        width={40}
+                        alt=""
+                        className="object-cover w-full h-full rounded-full "
+                      />
+                    </span>
+                  )}
+                  {result.name_acronym}
                 </TableCell>
                 <TableCell>
                   <div className="inline-flex items-center gap-2 rounded-full">

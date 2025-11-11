@@ -169,7 +169,6 @@ const HomePage = () => {
           onSessionChange={setSelectedSession}
         />
       </header>
-      {/* Add padding top so content is not hidden behind navbar */}
 
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
