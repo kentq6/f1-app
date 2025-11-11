@@ -28,7 +28,7 @@ const DriversStandingsTable = ({
   driversStandings,
 }: DriversStandingsTableProps) => {
   return (
-    <Table>
+    <Table className="text-xs">
       <TableHeader>
         <TableRow>
           <TableHead>Pos.</TableHead>
@@ -48,7 +48,7 @@ const DriversStandingsTable = ({
               <div className="inline-flex items-center gap-2 rounded-full">
                 {driver.headshot_url && (
                   <span
-                    className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
+                    className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
                     style={{
                       backgroundColor: driver.team_colour?.startsWith("#")
                         ? driver.team_colour

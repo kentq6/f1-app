@@ -124,10 +124,10 @@ const SessionResults = ({
       <Separator />
       {/* Table */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-        <Table>
+        <Table className="text-xs">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-15">Pos.</TableHead>
+              <TableHead>Pos.</TableHead>
               <TableHead>No.</TableHead>
               <TableHead>Driver</TableHead>
               <TableHead>Team</TableHead>
@@ -148,7 +148,7 @@ const SessionResults = ({
                   <div className="inline-flex items-center gap-2 rounded-full">
                     {result.headshot_url && (
                       <span
-                        className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
+                        className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-foreground dark:border-foreground overflow-hidden transition-transform duration-200 hover:scale-120"
                         style={{
                           backgroundColor: result.team_colour?.startsWith("#")
                             ? result.team_colour

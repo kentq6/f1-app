@@ -172,30 +172,27 @@ const HomePage = () => {
       {/* Add padding top so content is not hidden behind navbar */}
 
       {/* Grid Layout */}
-      <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 lg:grid-cols-5 gap-4 p-4">
+      <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
         {/* Session Info */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
           <SessionInfo filteredSession={filteredSession} />
         </div>
 
-        {/* Race Pace Chart */}
-        <div className="bg-primary-foreground p-3 col-span-2 lg:col-span-2 rounded-lg border h-full overflow-hidden">
-          <RacePaceChart
-            filteredSession={filteredSession}
-            driversData={driversData}
-          />
+         {/* Weather Info */}
+         <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+          <WeatherInfo filteredSession={filteredSession} />
         </div>
 
         {/* Session Results OR Starting Grid */}
         {filteredSession?.session_type === "Qualifying" ? (
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
+          <div className="bg-primary-foreground p-3 rounded-lg col-span-1 lg:col-span-3 border flex flex-col overflow-hidden h-full">
             <StartingGridTable
               filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
         ) : (
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
+          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
             <SessionResultsTable
               filteredSession={filteredSession}
               driversData={driversData}
@@ -203,25 +200,33 @@ const HomePage = () => {
           </div>
         )}
 
-        {/* Weather Info */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-1 border h-full overflow-hidden">
-          <WeatherInfo filteredSession={filteredSession} />
+        {/* Drivers'/Constructors' Standings */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
+          <Standings
+            filteredSession={filteredSession}
+            driversData={driversData}
+          />
+        </div>
+
+        {/* Race Pace Chart */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
+          <RacePaceChart
+            filteredSession={filteredSession}
+            driversData={driversData}
+          />
         </div>
 
         {/* Stints Chart */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 border flex flex-col overflow-hidden h-full">
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
           <StintsChart
             filteredSession={filteredSession}
             driversData={driversData}
           />
         </div>
-
-        {/* Drivers'/Constructors' Standings */}
-        <div className="bg-primary-foreground p-3 col-span-2 rounded-lg border h-full overflow-hidden flex flex-col">
-          <Standings
-            filteredSession={filteredSession}
-            driversData={driversData}
-          />
+        
+        {/* Test */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-2 border h-full overflow-hidden">
+          Test
         </div>
       </div>
     </div>

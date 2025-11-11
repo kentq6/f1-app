@@ -20,7 +20,7 @@ const ConstructorsStandingsTable = ({
   constructorsStandings
 }: ConstructorsStandingsTableProps) => {
   return (
-    <Table>
+    <Table className="text-xs">
       <TableHeader>
         <TableRow>
           <TableHead>Pos.</TableHead>
