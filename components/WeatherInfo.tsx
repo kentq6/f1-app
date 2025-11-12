@@ -1,5 +1,4 @@
 import { Session } from "@/types/session";
-import axios from "axios";
 import {
   CloudDrizzle,
   CloudRain,
@@ -10,6 +9,7 @@ import {
 import React, { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
+import getWeatherBySession from "@/lib/external/getWeatherBySession";
 
 type Weather = {
   air_temperature: number;
@@ -137,10 +137,8 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
     }
     const fetchedWeather = async () => {
       try {
-        const response = await axios.get(
-          `https://api.openf1.org/v1/weather?session_key=${filteredSession.session_key}`
-        );
-        setWeatherData(response.data ?? []);
+        const weather = await getWeatherBySession(filteredSession.session_key);
+        setWeatherData(weather ?? []);
       } catch (err) {
         console.error("Error fetching weather data: ", err);
       }

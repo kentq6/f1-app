@@ -13,7 +13,8 @@ import DriversStandingsTable from "./DriversStandingsTable";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import { SessionResult } from "@/types/sessionResult";
-import axios from "axios";
+import getRaceSessionsByYear from "@/lib/external/getRaceSessionsByYear";
+import getSessionResultsBySession from "@/lib/external/getSessionResultsBySession";
 
 interface StandingsProps {
   filteredSession: Session | null;
@@ -102,10 +103,11 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
 
     const fetchData = async () => {
       try {
-        const raceSessionsRes = await axios.get(
-          `https://api.openf1.org/v1/sessions?year=${filteredSession.year}&session_type=Race`
-        );
-        const raceSessions: Session[] = raceSessionsRes.data;
+        // const raceSessionsRes = await axios.get(
+        //   `https://api.openf1.org/v1/sessions?year=${filteredSession.year}&session_type=Race`
+        // );
+        // const raceSessions: Session[] = raceSessionsRes.data;
+        const raceSessions: Session[] = await getRaceSessionsByYear(filteredSession.year);
         const sessionKeys = raceSessions.map((s) => s.session_key);
 
         const sessionResults: SessionResult[] = [];
@@ -117,10 +119,11 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           }
 
           try {
-            const res = await axios.get(
-              `https://api.openf1.org/v1/session_result?session_key=${sessionKey}`
-            );
-            const data = res.data;
+            // const res = await axios.get(
+            //   `https://api.openf1.org/v1/session_result?session_key=${sessionKey}`
+            // );
+            // const data = res.data;
+            const data = await getSessionResultsBySession(sessionKey);
             sessionResults.push(...data);
             setCachedSession(sessionKey, data);
 
@@ -282,7 +285,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
         <span
           className="text-[11px] px-1 rounded border bg-gray-50 dark:bg-background font-semibold"
         >
-          Standings
+          Current Standings
         </span>
       </div>
       <Separator />

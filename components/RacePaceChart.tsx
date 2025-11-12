@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo } from "react";
-import axios from "axios";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -23,6 +22,7 @@ import {
   SelectContent,
   SelectGroup,
 } from "./ui/select";
+import getLapTimesBySession from "@/lib/external/getLapTimesBySession";
 
 type LapTime = {
   driver_number: number;
@@ -79,12 +79,10 @@ const RacePaceChart = ({
 
     const fetchLapTimes = async () => {
       try {
-        const res = await axios.get(
-          `https://api.openf1.org/v1/laps?session_key=${filteredSession.session_key}`
-        );
+        const lapTimes = await getLapTimesBySession(filteredSession.session_key);
 
         // Filter valid laps
-        const validLaps = res.data.filter(
+        const validLaps = lapTimes.filter(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (lap: any) => lap.lap_duration && lap.lap_duration > 0
         );

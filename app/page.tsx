@@ -173,18 +173,18 @@ const HomePage = () => {
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
         {/* Session Info */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-2 border h-full overflow-hidden">
           <SessionInfo filteredSession={filteredSession} />
         </div>
 
          {/* Weather Info */}
-         <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-2 border h-full overflow-hidden">
           <WeatherInfo filteredSession={filteredSession} />
         </div>
 
         {/* Session Results OR Starting Grid */}
         {filteredSession?.session_type === "Qualifying" ? (
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-1 lg:col-span-3 border flex flex-col overflow-hidden h-full">
+          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
             <StartingGridTable
               filteredSession={filteredSession}
               driversData={driversData}

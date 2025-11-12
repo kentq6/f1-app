@@ -10,8 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import axios from "axios";
 import Image from "next/image";
+import getStartingGridBySession from "@/lib/external/getStartingGridBySession";
 
 type StartingGrid = {
   position: number;
@@ -48,11 +48,7 @@ const StartingGridTable = ({
 
     const fetchedStartingGrid = async () => {
       try {
-        const response = await axios.get(
-          `https://api.openf1.org/v1/starting_grid?session_key=${filteredSession.session_key}`
-        );
-
-        const results = response.data;
+        const results = await getStartingGridBySession(filteredSession.session_key);
 
         // Create a quick lookup map from driversData (props)
         const driversMap = new Map<number, Driver>(
@@ -135,7 +131,7 @@ const StartingGridTable = ({
       <Separator />
       {/* Starting Grid Table */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-        <Table>
+        <Table className="text-xs">
           <TableHeader>
             <TableRow>
               <TableHead>Pos.</TableHead>

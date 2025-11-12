@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
-import axios from "axios";
 import Image from "next/image";
 import {
   Table,
@@ -13,6 +12,7 @@ import {
   TableRow,
 } from "./ui/table";
 import { SessionResult } from "@/types/sessionResult";
+import getSessionResultsBySession from "@/lib/external/getSessionResultsBySession";
 
 interface DriverData extends SessionResult {
   name_acronym?: string;
@@ -41,11 +41,7 @@ const SessionResults = ({
 
     const fetchedResults = async () => {
       try {
-        const response = await axios.get(
-          `https://api.openf1.org/v1/session_result?session_key=${filteredSession.session_key}`
-        );
-
-        const results = response.data;
+        const results = await getSessionResultsBySession(filteredSession.session_key);
 
         // Create a quick lookup map from driversData (props)
         const driversMap = new Map<number, Driver>(
