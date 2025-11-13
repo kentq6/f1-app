@@ -13,6 +13,7 @@ import Navbar from "@/components/Navbar";
 import StintsChart from "@/components/StintsChart";
 import Standings from "@/components/championship/Standings";
 import RacePaceChart from "@/components/RacePaceChart";
+import AISessionSummary from "@/components/AISessionSummary";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 // import SessionTable from "@/components/SessionTable";
@@ -153,7 +154,7 @@ const HomePage = () => {
   }
 
   return (
-    <div className="lg:h-screen text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300 overflow-hidden flex flex-col">
+    <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
       <header className="top-0 left-0 w-full bg-primary-foreground border-b">
         {/* Navbar */}
         <Navbar
@@ -223,9 +224,12 @@ const HomePage = () => {
           />
         </div>
         
-        {/* Test */}
+        {/* AI Session Summary */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
-          Test
+          <AISessionSummary
+            filteredSession={filteredSession}
+            driversData={driversData}
+          />
         </div>
       </div>
     </div>
