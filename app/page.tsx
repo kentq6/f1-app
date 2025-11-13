@@ -224,7 +224,7 @@ const HomePage = () => {
         </div>
         
         {/* Test */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 sm:col-span-2 border h-full overflow-hidden">
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
           Test
         </div>
       </div>
