@@ -2,7 +2,7 @@
 
 This is a [Next.js](https://nextjs.org) project for exploring and analyzing F1 race results and championship standings. The application is being built with TypeScript and features interactive components for session and standings selection.
 
-**NOTE: It is notable that this uses the free version of an open-source API, which is limited to historical data and does not provide live updates.
+**NOTE: This dashboard is limited to historical data and does not provide live updates (see Known Issues & Limitations section).
 
 ## Project Progress
 
@@ -41,6 +41,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the c
 - Core editing is taking place in the `components/` and `app/` directories.
 - The UI and functionality are subject to frequent updates as features are being flushed out.
 - The focus is currently on championship standings selection, table rendering, and robust state management.
+
+## Known Issues & Limitations
+
+- I am currently using the free version of OpenF1 API, which has rate limiting and does not provide live updates without purchasing a paid account (the rate limiting will be address in the future as I am focusing on completing the dashboard components as of Nov. 2025).
+- The Login/Register function serves no purpose as of Nov. 2025—it is merely there for implementation sake but I do plan to use it in the future.
+- Specific API endpoints are still in beta (i.e., Session Result, Starting Grid), so some of the components may end up breaking as the OpenF1 devs continue to work.
 
 ## Resources
 
