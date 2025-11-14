@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import axios from "axios";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -20,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import getTireStintsBySession from "@/lib/external/getTireStintsBySession";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -60,11 +60,7 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
 
     const fetchedStints = async () => {
       try {
-        const res = await axios.get(
-          `https://api.openf1.org/v1/stints?session_key=${filteredSession.session_key}`
-        );
-
-        const stints = res.data;
+        const stints = await getTireStintsBySession(filteredSession.session_key);
 
         // Create a quick lookup map from driversData (props)
         const driversMap = new Map<number, Driver>(

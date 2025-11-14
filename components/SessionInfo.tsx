@@ -33,7 +33,7 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
 
           {/* Flag and Country Acronym */}
           <div className="flex flex-col items-center overflow-hidden">
-            <div className="w-36 h-24 md:w-48 md:h-32 lg:w-36 lg:h-24 rounded-md overflow-hidden">
+            <div className="w-24 h-16 md:w-48 md:h-32 lg:w-36 lg:h-24 rounded-md overflow-hidden">
               <Image
                 src={`/country-flags/${filteredSession.country_code}.svg`}
                 width={100}
@@ -43,7 +43,7 @@ const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
                 priority
               />
             </div>
-            <span className="text-xs font-medium mt-2 text-gray-700 dark:text-gray-300 tracking-wide">
+            <span className="text-xs font-medium mt-2 tracking-wide">
               {filteredSession.country_code}
             </span>
           </div>
