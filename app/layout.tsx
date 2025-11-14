@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar/AppSidebar";
+import { SessionFiltersProvider } from "./providers/SessionFiltersProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,12 +58,14 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="flex min-h-screen w-full overflow-hidden">
-              <SidebarProvider defaultOpen={false}>
-                <AppSidebar />
-                <main className="flex-1 overflow-x-hidden">
-                  <div className="w-full">{children}</div>
-                </main>
-              </SidebarProvider>
+              <SessionFiltersProvider>
+                <SidebarProvider defaultOpen={false}>
+                  <AppSidebar />
+                  <main className="flex-1 overflow-x-hidden">
+                    <div className="w-full">{children}</div>
+                  </main>
+                </SidebarProvider>
+              </SessionFiltersProvider>
             </div>
           </ThemeProvider>
         </body>

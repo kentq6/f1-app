@@ -5,35 +5,21 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { SidebarTrigger } from "./ui/sidebar";
 import Logo from "./Logo";
 import React, { useState } from "react";
-import { Session } from "@/types/session";
 import SessionSelect from "./SessionSelect";
 import { LogIn } from "lucide-react";
 import { Separator } from "./ui/separator";
 
 interface NavbarProps {
-  selectedYear: number | "";
-  selectedTrack: string;
-  selectedSession: string;
-  filteredSession: Session | null;
   yearOptions: number[];
   trackOptions: string[];
   sessionOptions: string[];
-  onYearChange: (val: number | "") => void;
-  onTrackChange: (val: string) => void;
-  onSessionChange: (val: string) => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
-  selectedYear,
-  selectedTrack,
-  selectedSession,
   yearOptions,
   trackOptions,
   sessionOptions,
-  onYearChange,
-  onTrackChange,
-  onSessionChange,
-}) => {
+  }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -59,15 +45,9 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* Center: Search Functionality */}
           <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
             <SessionSelect
-              selectedYear={selectedYear}
-              selectedTrack={selectedTrack}
-              selectedSession={selectedSession}
               yearOptions={yearOptions}
               trackOptions={trackOptions}
               sessionOptions={sessionOptions}
-              onYearChange={onYearChange}
-              onTrackChange={onTrackChange}
-              onSessionChange={onSessionChange}
             />
           </div>
 
@@ -152,15 +132,9 @@ const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile Search Session */}
             <div className="flex items-center justify-center w-full max-w-xs self-center">
               <SessionSelect
-                selectedYear={selectedYear}
-                selectedTrack={selectedTrack}
-                selectedSession={selectedSession}
                 yearOptions={yearOptions}
                 trackOptions={trackOptions}
                 sessionOptions={sessionOptions}
-                onYearChange={onYearChange}
-                onTrackChange={onTrackChange}
-                onSessionChange={onSessionChange}
               />
             </div>
 

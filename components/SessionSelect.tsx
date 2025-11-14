@@ -7,30 +7,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 
 interface SessionSelectProps {
-  selectedYear: number | "";
-  selectedTrack: string;
-  selectedSession: string;
   yearOptions: number[];
   trackOptions: string[];
   sessionOptions: string[];
-  onYearChange: (val: number | "") => void;
-  onTrackChange: (val: string) => void;
-  onSessionChange: (val: string) => void;
 }
 
 const SessionSelect: React.FC<SessionSelectProps> = ({
-  selectedYear,
-  selectedTrack,
-  selectedSession,
   yearOptions,
   trackOptions,
   sessionOptions,
-  onYearChange,
-  onTrackChange,
-  onSessionChange,
 }) => {
+  const { selectedYear, setSelectedYear, selectedTrack, setSelectedTrack, selectedSession, setSelectedSession } = useSessionFilters();
+
   return (
     <div className="flex items-center gap-2 w-full">
       <span className="hidden md:block font-bold text-md">
@@ -42,7 +33,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
       {/* Year */}
       <Select
         value={selectedYear === "" ? "" : String(selectedYear)}
-        onValueChange={val => onYearChange(val === "" ? "" : Number(val))}
+        onValueChange={val => setSelectedYear(val === "" ? "" : Number(val))}
       >
         <SelectTrigger
           className="h-7 text-[11px]"
@@ -64,7 +55,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
       {/* Track */}
       <Select
         value={selectedTrack}
-        onValueChange={val => onTrackChange(val)}
+        onValueChange={val => setSelectedTrack(val)}
       >
         <SelectTrigger
           className="h-7 text-[11px]"
@@ -86,7 +77,7 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
       {/* Session */}
       <Select
         value={selectedSession}
-        onValueChange={val => onSessionChange(val)}
+        onValueChange={val => setSelectedSession(val)}
       >
         <SelectTrigger
           className="h-7 text-[11px]"

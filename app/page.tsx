@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import axios from "axios";
@@ -14,15 +14,15 @@ import StintsChart from "@/components/StintsChart";
 import Standings from "@/components/championship/Standings";
 import RacePaceChart from "@/components/RacePaceChart";
 import AISessionSummary from "@/components/AISessionSummary";
+import { useSessionFilters } from "./providers/SessionFiltersProvider";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 // import SessionTable from "@/components/SessionTable";
 
 const HomePage = () => {
+  const { selectedYear, setSelectedYear, selectedTrack, setSelectedTrack, selectedSession, setSelectedSession } = useSessionFilters();
+
   // Filter select
-  const [selectedYear, setSelectedYear] = useState<number | "">("");
-  const [selectedTrack, setSelectedTrack] = useState<string>("");
-  const [selectedSession, setSelectedSession] = useState<string>("");
   const [initializedFilters, setInitializedFilters] = useState(false);
 
   // Sessions
@@ -63,15 +63,15 @@ const HomePage = () => {
     fetchedData();
   }, []);
 
-  // Memo useful reference: Find latest session for default
-  const latestSession =
-    sessionsData.length > 0
-      ? sessionsData.reduce((latest, curr) =>
-          new Date(curr.date_start) > new Date(latest.date_start)
-            ? curr
-            : latest
-        )
-      : undefined;
+  // Find the latest session by start date as default (returns undefined if no sessions exist)
+  const latestSession = useMemo(() => {
+    if (sessionsData.length === 0) return undefined;
+    return sessionsData.reduce((latest, curr) =>
+      new Date(curr.date_start).getTime() > new Date(latest.date_start).getTime()
+        ? curr
+        : latest
+    );
+  }, [sessionsData]);
 
   // On first load, set filters to latest session and set it as the currently active session (if available)
   useEffect(() => {
@@ -82,7 +82,7 @@ const HomePage = () => {
       setFilteredSession(latestSession); // <--- Fetch & show latest session initially
       setInitializedFilters(true);
     }
-  }, [sessionsData, initializedFilters, latestSession]);
+  }, [setSelectedSession, setSelectedYear, setSelectedTrack, sessionsData, initializedFilters, latestSession]);
 
   // Compute options for select fields
   const yearOptions = Array.from(new Set(sessionsData.map((s) => s.year))).sort(
@@ -158,16 +158,9 @@ const HomePage = () => {
       <header className="top-0 left-0 w-full bg-primary-foreground border-b">
         {/* Navbar */}
         <Navbar
-          selectedYear={selectedYear}
-          selectedTrack={selectedTrack}
-          selectedSession={selectedSession}
-          filteredSession={filteredSession}
           yearOptions={yearOptions}
           trackOptions={trackOptions}
           sessionOptions={sessionOptions}
-          onYearChange={setSelectedYear}
-          onTrackChange={setSelectedTrack}
-          onSessionChange={setSelectedSession}
         />
       </header>
 
