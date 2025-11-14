@@ -1,3 +1,5 @@
+"use client";
+
 import { Session } from "@/types/session";
 import {
   CloudDrizzle,

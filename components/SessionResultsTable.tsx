@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
 import { Session } from "@/types/session";
