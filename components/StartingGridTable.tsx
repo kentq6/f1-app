@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "./ui/table";
 import Image from "next/image";
-import getStartingGridBySession from "@/lib/external/getStartingGridBySession";
+// import getStartingGridBySession from "@/lib/external/getStartingGridBySession";
 
 type StartingGrid = {
   position: number;
@@ -48,9 +48,20 @@ const StartingGridTable = ({
       return;
     }
 
-    const fetchedStartingGrid = async () => {
+    const fetchStartingGrid = async () => {
       try {
-        const results = await getStartingGridBySession(filteredSession.session_key);
+        // const results = await getStartingGridBySession(filteredSession.session_key);
+
+        const res = await fetch(
+          `/api/starting_grid?session_key=${encodeURIComponent(
+            filteredSession.session_key
+          )}`
+        );
+        if (!res.ok) {
+          const details = await res.json().catch(() => ({}));
+          throw new Error(details?.error || "Failed to fetch session result");
+        }
+        const startingGridRaw: StartingGrid[] = await res.json();
 
         // Create a quick lookup map from driversData (props)
         const driversMap = new Map<number, Driver>(
@@ -58,7 +69,7 @@ const StartingGridTable = ({
         );
 
         // Merge driver info into starting grid results
-        const mergedData: DriverData[] = results.map((result: StartingGrid) => {
+        const mergedData: DriverData[] = startingGridRaw.map((result: StartingGrid) => {
           const driver = driversMap.get(result.driver_number);
           return {
             ...result,
@@ -75,7 +86,7 @@ const StartingGridTable = ({
       }
     };
 
-    fetchedStartingGrid();
+    fetchStartingGrid();
   }, [filteredSession, driversData]);
 
   /**

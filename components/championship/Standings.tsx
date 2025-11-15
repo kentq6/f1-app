@@ -15,8 +15,6 @@ import DriversStandingsTable from "./DriversStandingsTable";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import { SessionResult } from "@/types/sessionResult";
-import getRaceSessionsByYear from "@/lib/external/getRaceSessionsByYear";
-import getSessionResultsBySession from "@/lib/external/getSessionResultsBySession";
 
 interface StandingsProps {
   filteredSession: Session | null;
@@ -103,14 +101,19 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
       return;
     }
 
-    const fetchData = async () => {
+    const fetchStandings = async () => {
       try {
-        // const raceSessionsRes = await axios.get(
-        //   `https://api.openf1.org/v1/sessions?year=${filteredSession.year}&session_type=Race`
-        // );
-        // const raceSessions: Session[] = raceSessionsRes.data;
-        const raceSessions: Session[] = await getRaceSessionsByYear(filteredSession.year);
-        const sessionKeys = raceSessions.map((s) => s.session_key);
+        // const raceSessions: Session[] = await getRaceSessionsByYear(filteredSession.year);
+        // sessions?year=${year}&session_type=Race
+        const res = await fetch(
+          `/api/sessions?year=${filteredSession.year}&session_type=Race`
+        );
+        if (!res.ok) {
+          const details = await res.json().catch(() => ({}));
+          throw new Error(details?.error || "Failed to fetch tire stints");
+        }
+        const raceSessionsRaw: Session[] = await res.json();
+        const sessionKeys = raceSessionsRaw.map((s) => s.session_key);
 
         const sessionResults: SessionResult[] = [];
         for (const sessionKey of sessionKeys) {
@@ -121,13 +124,20 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           }
 
           try {
-            // const res = await axios.get(
-            //   `https://api.openf1.org/v1/session_result?session_key=${sessionKey}`
-            // );
-            // const data = res.data;
-            const data = await getSessionResultsBySession(sessionKey);
-            sessionResults.push(...data);
-            setCachedSession(sessionKey, data);
+            const res = await fetch(
+              `/api/session_result?session_key=${encodeURIComponent(
+                filteredSession.session_key
+              )}`
+            );
+            if (!res.ok) {
+              const details = await res.json().catch(() => ({}));
+              throw new Error(
+                details?.error || "Failed to fetch session result"
+              );
+            }
+            const sessionResultsRaw: SessionResult[] = await res.json();
+            sessionResults.push(...sessionResultsRaw);
+            setCachedSession(sessionKey, sessionResultsRaw);
 
             // tiny delay to stay safe with rate limits
             await new Promise((r) => setTimeout(r, 150));
@@ -252,7 +262,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
       }
     };
 
-    fetchData();
+    fetchStandings();
   }, [filteredSession, driversData]);
 
   return (
@@ -280,13 +290,13 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
           <SelectContent>
             <SelectGroup>
               <SelectItem value="drivers-championship">Drivers</SelectItem>
-              <SelectItem value="constructors-championship">Constructors</SelectItem>
+              <SelectItem value="constructors-championship">
+                Constructors
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
-        <span
-          className="text-[11px] px-1 rounded border bg-gray-50 dark:bg-background font-semibold"
-        >
+        <span className="text-[11px] px-1 rounded border bg-gray-50 dark:bg-background font-semibold">
           Current Standings
         </span>
       </div>

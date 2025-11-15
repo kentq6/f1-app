@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import getTireStintsBySession from "@/lib/external/getTireStintsBySession";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -60,31 +59,43 @@ const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
       return;
     }
 
-    const fetchedStints = async () => {
+    const fetchStints = async () => {
       try {
-        const stints = await getTireStintsBySession(filteredSession.session_key);
+        const res = await fetch(
+          `/api/stints?session_key=${encodeURIComponent(
+            filteredSession.session_key
+          )}`
+        );
+        if (!res.ok) {
+          const details = await res.json().catch(() => ({}));
+          throw new Error(details?.error || "Failed to fetch tire stints");
+        }
+        const tireStintsRaw = await res.json();
+        const tireStints: Stint[] = Array.isArray(tireStintsRaw)
+          ? tireStintsRaw
+          : [];
 
-        // Create a quick lookup map from driversData (props)
-        const driversMap = new Map<number, Driver>(
-          driversData.map((d) => [d.driver_number, d])
+        // Map driver_number to driver for quick lookup
+        const driverNumberMap = new Map<number, Driver>(
+          driversData.map((driver) => [driver.driver_number, driver])
         );
 
-        // Merge driver info into stints
-        const mergedData: DriverData[] = stints.map((stint: Stint) => {
-          const driver = driversMap.get(stint.driver_number);
+        // Merge driver name_acronym into tire stints
+        const mappedTireStints: DriverData[] = tireStints.map((stint) => {
+          const driver = driverNumberMap.get(stint.driver_number);
           return {
             ...stint,
             name_acronym: driver?.name_acronym ?? "UNK",
           };
         });
 
-        setTireStintsData(mergedData);
-      } catch (err) {
-        console.error("Error fetching tire stints data: ", err);
+        setTireStintsData(mappedTireStints);
+      } catch (error) {
+        console.error("Error fetching tire stints data: ", error);
       }
     };
 
-    fetchedStints();
+    fetchStints();
   }, [filteredSession, driversData]);
 
   // Extract unique driver numbers

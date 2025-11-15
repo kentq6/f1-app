@@ -11,7 +11,6 @@ import {
 import React, { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
-import getWeatherBySession from "@/lib/external/getWeatherBySession";
 
 type Weather = {
   air_temperature: number;
@@ -137,15 +136,26 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
       setWeatherData([]);
       return;
     }
-    const fetchedWeather = async () => {
+    const fetchWeather = async () => {
       try {
-        const weather = await getWeatherBySession(filteredSession.session_key);
-        setWeatherData(weather ?? []);
+        const res = await fetch(
+          `/api/weather?session_key=${encodeURIComponent(
+            filteredSession.session_key
+          )}`
+        );
+        if (!res.ok) {
+          const details = await res.json().catch(() => ({}));
+          throw new Error(details?.error || "Failed to fetch weather");
+        }
+        const weather = await res.json();
+        setWeatherData(Array.isArray(weather) ? weather : []);
       } catch (err) {
+        setWeatherData([]);
         console.error("Error fetching weather data: ", err);
       }
     };
-    fetchedWeather();
+
+    fetchWeather();
   }, [filteredSession]);
 
   // Compute daily averages OUTSIDE return so it can be reused in return JSX
@@ -157,9 +167,6 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
   // Show the first day's icon as a representative for the session if available
   const firstDay = dailyAverages.length > 0 ? dailyAverages[0] : null;
 
-  if (WeatherInfo.length === 0) {
-    return <div>No weather data available.</div>;
-  }
 
   return (
     <div className="flex flex-col h-full">
@@ -189,10 +196,14 @@ const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
               <div className="flex flex-col items-center justify-center">
                 <span className="mb-0.5">Air Temp:</span>
                 <div className="flex items-center justify-center gap-1">
-                  <span className="font-semibold tracking-tight">{firstDay.air_temperature.toFixed(1)}</span>
+                  <span className="font-semibold tracking-tight">
+                    {firstDay.air_temperature.toFixed(1)}
+                  </span>
                   <span className="opacity-80">°C</span>
                   <span className="mx-1 opacity-40">/</span>
-                  <span className="font-semibold tracking-tight">{toFahrenheit(firstDay.air_temperature).toFixed(1)}</span>
+                  <span className="font-semibold tracking-tight">
+                    {toFahrenheit(firstDay.air_temperature).toFixed(1)}
+                  </span>
                   <span className="opacity-80">°F</span>
                 </div>
               </div>

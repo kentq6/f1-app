@@ -6,8 +6,6 @@ import { Driver } from "@/types/driver";
 import { SessionResult } from "@/types/sessionResult";
 import { Separator } from "./ui/separator";
 import { StartingGrid } from "@/types/startingGrid";
-import getStartingGridBySession from "@/lib/external/getStartingGridBySession";
-import getSessionResultsBySession from "@/lib/external/getSessionResultsBySession";
 import {
   AIInsight,
   SessionData,
@@ -37,15 +35,29 @@ const AISessionSummary = ({
       setInsight(null);
 
       try {
-        let sessionResults: SessionResult[] | StartingGrid[];
+        let sessionResultsRaw: SessionResult[] | StartingGrid[];
         if (filteredSession.session_type === "Qualifying") {
-          sessionResults = await getStartingGridBySession(
-            filteredSession.session_key
+          const res = await fetch(
+            `/api/sessions?starting_grid=${encodeURIComponent(
+              filteredSession.session_key
+            )}`
           );
+          if (!res.ok) {
+            const details = await res.json().catch(() => ({}));
+            throw new Error(details?.error || "Failed to fetch starting grid");
+          }
+          sessionResultsRaw = await res.json();
         } else {
-          sessionResults = await getSessionResultsBySession(
-            filteredSession.session_key
+          const res = await fetch(
+            `/api/sessions?session_result=${encodeURIComponent(
+              filteredSession.session_key
+            )}`
           );
+          if (!res.ok) {
+            const details = await res.json().catch(() => ({}));
+            throw new Error(details?.error || "Failed to fetch session result");
+          }
+          sessionResultsRaw = await res.json();
         }
 
         // Build a Map for fast driver lookups
@@ -56,7 +68,7 @@ const AISessionSummary = ({
         let resultsData: QualifyingSummary[] | SessionSummary[];
         if (filteredSession.session_type === "Qualifying") {
           // results is StartingGrid[] -> QualifyingSummary[]
-          resultsData = (sessionResults as StartingGrid[]).map((r) => {
+          resultsData = (sessionResultsRaw as StartingGrid[]).map((r) => {
             const driver = driversMap.get(r.driver_number);
             return {
               driver: driver?.name_acronym,
@@ -67,7 +79,7 @@ const AISessionSummary = ({
           });
         } else {
           // results is SessionResult[] -> SessionSummary[]
-          resultsData = (sessionResults as SessionResult[]).map((r) => {
+          resultsData = (sessionResultsRaw as SessionResult[]).map((r) => {
             const driver = driversMap.get(r.driver_number);
             return {
               driver: driver?.name_acronym,

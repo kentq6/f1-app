@@ -24,7 +24,7 @@ import {
   SelectContent,
   SelectGroup,
 } from "./ui/select";
-import getLapTimesBySession from "@/lib/external/getLapTimesBySession";
+// import getLapTimesBySession from "@/lib/external/getLapTimesBySession";
 
 type LapTime = {
   driver_number: number;
@@ -81,10 +81,19 @@ const RacePaceChart = ({
 
     const fetchLapTimes = async () => {
       try {
-        const lapTimes = await getLapTimesBySession(filteredSession.session_key);
+        const res = await fetch(
+          `/api/laps?session_key=${encodeURIComponent(
+            filteredSession.session_key
+          )}`
+        );
+        if (!res.ok) {
+          const details = await res.json().catch(() => ({}));
+          throw new Error(details?.error || "Failed to fetch tire stints");
+        }
+        const lapTimesRaw = await res.json();
 
         // Filter valid laps
-        const validLaps = lapTimes.filter(
+        const validLaps = lapTimesRaw.filter(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (lap: any) => lap.lap_duration && lap.lap_duration > 0
         );
@@ -262,7 +271,7 @@ const RacePaceChart = ({
 
   return (
     <div className="flex flex-col h-full">
-      <h1 className="text-sm font-bold pb-1">Session Pace</h1>
+      <h1 className="text-sm font-bold pb-1">Pace Chart</h1>
       <Separator />
       <div className="flex justify-between items-center mt-2">
         {/* Left side is now empty but can be used for future controls or just spacing */}

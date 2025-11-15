@@ -14,7 +14,6 @@ import {
   TableRow,
 } from "./ui/table";
 import { SessionResult } from "@/types/sessionResult";
-import getSessionResultsBySession from "@/lib/external/getSessionResultsBySession";
 
 interface DriverData extends SessionResult {
   name_acronym?: string;
@@ -43,7 +42,16 @@ const SessionResults = ({
 
     const fetchedResults = async () => {
       try {
-        const results = await getSessionResultsBySession(filteredSession.session_key);
+        const res = await fetch(
+          `/api/session_result?session_key=${encodeURIComponent(
+            filteredSession.session_key
+          )}`
+        );
+        if (!res.ok) {
+          const details = await res.json().catch(() => ({}));
+          throw new Error(details?.error || "Failed to fetch session result");
+        }
+        const sessionResultsRaw: SessionResult[] = await res.json();
 
         // Create a quick lookup map from driversData (props)
         const driversMap = new Map<number, Driver>(
@@ -53,7 +61,7 @@ const SessionResults = ({
         // console.log(driversMap);
 
         // Merge driver info into session results
-        const mergedData: DriverData[] = results.map(
+        const mergedData: DriverData[] = sessionResultsRaw.map(
           (result: SessionResult) => {
             const driver = driversMap.get(result.driver_number);
             return {
