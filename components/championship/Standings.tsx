@@ -162,7 +162,7 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
         // We need ordered list per driver of when their total matches their "final" total
 
         // 1. Compute final driver points, but also map the session result idx where they reached that number
-        //    For tie-break, later achiever ranks higher: so, for equal points, the driver who got there first is behind
+        // For tie-break, later achiever ranks higher: so, for equal points, the driver who got there first is behind
         // Build: want to know, per driver, where in the results list they reached their final points total
         // So keep running total, and for every event, note the last index where total equals their FINAL total
 
