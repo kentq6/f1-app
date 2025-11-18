@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
+import { useSessionDrivers } from "@/app/providers/SessionDriversProvider";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -44,6 +45,7 @@ interface StintChartProps {
 
 const StintsChart = ({ driversData }: StintChartProps) => {
   const { filteredSession } = useFilteredSession();
+  const filteredDrivers = useSessionDrivers();
 
   const [tireStintsData, setTireStintsData] = useState<DriverData[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
@@ -77,13 +79,15 @@ const StintsChart = ({ driversData }: StintChartProps) => {
           : [];
 
         // Map driver_number to driver for quick lookup
-        const driverNumberMap = new Map<number, Driver>(
-          driversData.map((driver) => [driver.driver_number, driver])
-        );
+        // const driverNumberMap = new Map<number, Driver>(
+        //   filteredDrivers.map((driver) => [driver.driver_number, driver])
+        // );
 
         // Merge driver name_acronym into tire stints
         const mappedTireStints: DriverData[] = tireStints.map((stint) => {
-          const driver = driverNumberMap.get(stint.driver_number);
+          const driver = filteredDrivers.find(
+            (driver) => driver.driver_number === stint.driver_number
+          );
           return {
             ...stint,
             name_acronym: driver?.name_acronym ?? "UNK",
@@ -97,7 +101,7 @@ const StintsChart = ({ driversData }: StintChartProps) => {
     };
 
     fetchStints();
-  }, [filteredSession, driversData]);
+  }, [filteredSession, driversData, filteredDrivers]);
 
   // Extract unique driver numbers
   const drivers = useMemo(
