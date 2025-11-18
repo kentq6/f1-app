@@ -11,7 +11,6 @@ import {
   Tooltip,
   Title,
 } from "chart.js";
-import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import { Separator } from "./ui/separator";
 import { useTheme } from "next-themes";
@@ -24,6 +23,7 @@ import {
   SelectContent,
   SelectGroup,
 } from "./ui/select";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 // import getLapTimesBySession from "@/lib/external/getLapTimesBySession";
 
 type LapTime = {
@@ -41,15 +41,15 @@ ChartJS.register(
   Title
 );
 
-interface RacePaceChartProps {
-  filteredSession: Session | null;
+interface PaceChartProps {
   driversData: Driver[];
 }
 
-const RacePaceChart = ({
-  filteredSession,
+const PaceChart = ({
   driversData,
-}: RacePaceChartProps) => {
+}: PaceChartProps) => {
+  const { filteredSession } = useFilteredSession();
+
   const [lapData, setLapData] = useState<LapTime[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -366,4 +366,4 @@ const RacePaceChart = ({
   );
 };
 
-export default RacePaceChart;
+export default PaceChart;

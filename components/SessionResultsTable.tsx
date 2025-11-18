@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
-import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import Image from "next/image";
 import {
@@ -14,6 +13,7 @@ import {
   TableRow,
 } from "./ui/table";
 import { SessionResult } from "@/types/sessionResult";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
 interface DriverData extends SessionResult {
   name_acronym?: string;
@@ -23,14 +23,14 @@ interface DriverData extends SessionResult {
 }
 
 interface SessionResultsProps {
-  filteredSession: Session | null;
   driversData: Driver[];
 }
 
 const SessionResults = ({
-  filteredSession,
   driversData,
 }: SessionResultsProps) => {
+  const { filteredSession } = useFilteredSession();
+
   const [sessionResults, setSessionResultsData] = useState<DriverData[]>([]);
 
   // Safely load stint data only if filteredSession is not null

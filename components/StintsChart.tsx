@@ -12,7 +12,6 @@ import {
 } from "chart.js";
 import { useTheme } from "next-themes";
 import { Driver } from "@/types/driver";
-import { Session } from "@/types/session";
 import { Separator } from "./ui/separator";
 import {
   Select,
@@ -21,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -39,11 +39,12 @@ interface DriverData extends Stint {
 }
 
 interface StintChartProps {
-  filteredSession: Session | null;
   driversData: Driver[];
 }
 
-const StintsChart = ({ filteredSession, driversData }: StintChartProps) => {
+const StintsChart = ({ driversData }: StintChartProps) => {
+  const { filteredSession } = useFilteredSession();
+
   const [tireStintsData, setTireStintsData] = useState<DriverData[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

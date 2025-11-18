@@ -1,6 +1,5 @@
 "use client";
 
-import { Session } from "@/types/session";
 import {
   CloudDrizzle,
   CloudRain,
@@ -11,6 +10,7 @@ import {
 import React, { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
 type Weather = {
   air_temperature: number;
@@ -24,10 +24,6 @@ type Weather = {
   wind_direction: number;
   wind_speed: number;
 };
-
-interface WeatherInfoProp {
-  filteredSession: Session | null;
-}
 
 // Helper: Get YYYY-MM-DD string from ISO date
 const getDateString = (date: string) => {
@@ -128,7 +124,9 @@ const getWeatherIcon = (temp: number, rainValue: number) => {
   }
 };
 
-const WeatherInfo = ({ filteredSession }: WeatherInfoProp) => {
+const WeatherInfo = () => {
+  const { filteredSession } = useFilteredSession();
+
   const [weatherData, setWeatherData] = useState<Weather[]>([]);
 
   useEffect(() => {

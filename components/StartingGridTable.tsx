@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
-import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import {
   Table,
@@ -13,7 +12,7 @@ import {
   TableRow,
 } from "./ui/table";
 import Image from "next/image";
-// import getStartingGridBySession from "@/lib/external/getStartingGridBySession";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
 type StartingGrid = {
   position: number;
@@ -31,14 +30,14 @@ interface DriverData extends StartingGrid {
 }
 
 interface StartingGridTableProps {
-  filteredSession: Session | null;
   driversData: Driver[];
 }
 
 const StartingGridTable = ({
-  filteredSession,
   driversData,
 }: StartingGridTableProps) => {
+  const { filteredSession } = useFilteredSession();
+
   const [startingGridData, setStartingGridData] = useState<DriverData[]>([]);
 
   // Safely load stint data only if filteredSession is not null

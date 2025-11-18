@@ -15,9 +15,9 @@ import DriversStandingsTable from "./DriversStandingsTable";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import { SessionResult } from "@/types/sessionResult";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
 interface StandingsProps {
-  filteredSession: Session | null;
   driversData: Driver[];
 }
 
@@ -59,7 +59,9 @@ function setCachedSession(sessionKey: number, data: SessionResult[]) {
   );
 }
 
-const Standings = ({ filteredSession, driversData }: StandingsProps) => {
+const Standings = ({ driversData }: StandingsProps) => {
+  const { filteredSession } = useFilteredSession();
+
   const [showChampionship, setShowChampionship] = useState<
     "Constructors" | "Drivers"
   >("Drivers");
@@ -103,8 +105,6 @@ const Standings = ({ filteredSession, driversData }: StandingsProps) => {
 
     const fetchStandings = async () => {
       try {
-        // const raceSessions: Session[] = await getRaceSessionsByYear(filteredSession.year);
-        // sessions?year=${year}&session_type=Race
         const res = await fetch(
           `/api/sessions?year=${filteredSession.year}&session_type=Race`
         );

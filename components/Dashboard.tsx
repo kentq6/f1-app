@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
-// import Loading from "@/components/Loading";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
 import StartingGridTable from "@/components/StartingGridTable";
@@ -11,12 +10,12 @@ import SessionResultsTable from "@/components/SessionResultsTable";
 import Navbar from "@/components/Navbar";
 import StintsChart from "@/components/StintsChart";
 import Standings from "@/components/championship/Standings";
-import RacePaceChart from "@/components/PaceChart";
+import PaceChart from "@/components/PaceChart";
 import AISessionSummary from "@/components/AISessionSummary";
 import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
-// import SessionTable from "@/components/SessionTable";
 
 interface DashboardProps {
   sessionsData: Session[];
@@ -33,11 +32,11 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
     setSelectedSession,
   } = useSessionFilters();
 
+  // This session is the currently "active" one whose data should show on the page
+  const { filteredSession, setFilteredSession } = useFilteredSession();
+
   // Filter select
   const [initializedFilters, setInitializedFilters] = useState(false);
-
-  // This session is the currently "active" one whose data should show on the page (for TireStintChart)
-  const [filteredSession, setFilteredSession] = useState<Session | null>(null);
 
   // const fetchUser = async () => {
   //   const { user } = currentUser();
@@ -71,6 +70,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
     sessionsData,
     initializedFilters,
     latestSession,
+    setFilteredSession
   ]);
 
   // Compute options for select fields
@@ -136,7 +136,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
     } else {
       setFilteredSession(null);
     }
-  }, [selectedYear, selectedTrack, selectedSession, sessionsData]);
+  }, [selectedYear, selectedTrack, selectedSession, sessionsData, setFilteredSession]);
 
   return (
     <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
@@ -153,26 +153,24 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
         {/* Session Info */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
-          <SessionInfo filteredSession={filteredSession} />
+          <SessionInfo />
         </div>
 
         {/* Weather Info */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
-          <WeatherInfo filteredSession={filteredSession} />
+          <WeatherInfo />
         </div>
 
         {/* Session Results OR Starting Grid */}
         {filteredSession?.session_type === "Qualifying" ? (
           <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
             <StartingGridTable
-              filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
         ) : (
           <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
             <SessionResultsTable
-              filteredSession={filteredSession}
               driversData={driversData}
             />
           </div>
@@ -181,15 +179,13 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
         {/* Drivers'/Constructors' Standings */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
           <Standings
-            filteredSession={filteredSession}
             driversData={driversData}
           />
         </div>
 
         {/* Race Pace Chart */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
-          <RacePaceChart
-            filteredSession={filteredSession}
+          <PaceChart
             driversData={driversData}
           />
         </div>
@@ -197,7 +193,6 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
         {/* Stints Chart */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
           <StintsChart
-            filteredSession={filteredSession}
             driversData={driversData}
           />
         </div>
@@ -205,7 +200,6 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
         {/* AI Session Summary */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
           <AISessionSummary
-            filteredSession={filteredSession}
             driversData={driversData}
           />
         </div>

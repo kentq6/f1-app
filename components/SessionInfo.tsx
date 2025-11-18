@@ -1,13 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { Session } from "@/types/session";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
-interface SessionInfoProp {
-  filteredSession: Session | null;
-}
+const SessionInfo = () => {
+  const { filteredSession } = useFilteredSession();
 
-const SessionInfo = ({ filteredSession }: SessionInfoProp) => {
   return (
     <div className="flex flex-col h-full">
       <h1 className="text-sm font-bold pb-1">Session</h1>

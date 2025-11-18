@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import { SessionResult } from "@/types/sessionResult";
 import { Separator } from "./ui/separator";
@@ -14,16 +13,17 @@ import {
 } from "@/lib/ai";
 import getSessionInsight from "@/app/actions/getSessionInsight";
 import { ThreeDot } from "react-loading-indicators";
+import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
 interface AIInsightsProps {
-  filteredSession: Session | null;
   driversData: Driver[];
 }
 
 const AISessionSummary = ({
-  filteredSession,
   driversData,
 }: AIInsightsProps) => {
+  const { filteredSession } = useFilteredSession();
+
   const [insight, setInsight] = useState<AIInsight | null>(null);
   const [loading, setLoading] = useState(true);
 
