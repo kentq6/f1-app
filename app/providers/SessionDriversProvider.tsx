@@ -86,7 +86,6 @@ export const SessionDriversProvider: React.FC<SessionDriversProviderProps> = ({
           : [];
 
         setFilteredDrivers(sortedDrivers);
-        console.log(sortedDrivers);
       } catch (err) {
         console.error("Could not load session driver list: ", err);
         setFilteredDrivers([]); // fallback to empty on error
