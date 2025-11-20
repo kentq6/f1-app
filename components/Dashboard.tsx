@@ -147,7 +147,6 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
           <header className="top-0 left-0 w-full bg-primary-foreground border-b">
             {/* Navbar */}
             <Navbar
-              driversData={driversData}
               yearOptions={yearOptions}
               trackOptions={trackOptions}
               sessionOptions={sessionOptions}

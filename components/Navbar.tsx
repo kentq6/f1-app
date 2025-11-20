@@ -4,7 +4,7 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { SidebarTrigger } from "./ui/sidebar";
 import Logo from "./Logo";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import SessionSelect from "./SessionSelect";
 import { LogIn } from "lucide-react";
 import { Separator } from "./ui/separator";
@@ -23,14 +23,12 @@ import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 import { Driver } from "@/types/driver";
 
 interface NavbarProps {
-  driversData: Driver[];
   yearOptions: number[];
   trackOptions: string[];
   sessionOptions: string[];
 }
 
 const Navbar: React.FC<NavbarProps> = ({
-  driversData,
   yearOptions,
   trackOptions,
   sessionOptions,
@@ -39,14 +37,6 @@ const Navbar: React.FC<NavbarProps> = ({
   const { selectedDrivers, setSelectedDrivers } = useSelectedDrivers();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const driverAcronymMap = useMemo(
-    () =>
-      Object.fromEntries(
-        driversData.map((d) => [d.driver_number, d.name_acronym])
-      ),
-    [driversData]
-  );
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -147,8 +137,8 @@ const Navbar: React.FC<NavbarProps> = ({
                         className="text-xs font-medium text-foreground"
 
                       >
-                        {driverAcronymMap[driver.driver_number]
-                          ? `${driverAcronymMap[driver.driver_number]} ${driver.driver_number}`
+                        {driver.name_acronym
+                          ? `${driver.name_acronym} ${driver.driver_number}`
                           : `Driver ${driver.driver_number}`}
                       </Label>
                     </div>

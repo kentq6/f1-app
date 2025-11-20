@@ -56,33 +56,46 @@ export const SessionDriversProvider: React.FC<SessionDriversProviderProps> = ({
     }
 
     // Fetch relevant driver numbers from the API for the current session
-    const fetchDriversInSession = async () => {
+    const fetchSessionDrivers = async () => {
       try {
-        let endpoint = "";
+        const endpoint =
+          filteredSession.session_type === "Qualifying"
+            ? `/api/starting_grid?session_key=${encodeURIComponent(
+                filteredSession.session_key
+              )}`
+            : `/api/session_result?session_key=${encodeURIComponent(
+                filteredSession.session_key
+              )}`;
 
-        if (filteredSession.session_type === "Qualifying") {
-          endpoint = `/api/starting_grid?session_key=${encodeURIComponent(
-            filteredSession.session_key
-          )}`;
-        } else {
-          endpoint = `/api/session_result?session_key=${encodeURIComponent(
-            filteredSession.session_key
-          )}`;
-        }
-
-        const res = await fetch(endpoint);
-        if (!res.ok) {
-          // Try to get detailed error message
-          const details = await res.json().catch(() => ({}));
+        const initialRes = await fetch(endpoint);
+        if (!initialRes.ok) {
+          const details = await initialRes.json().catch(() => ({}));
           throw new Error(
             details?.error || "Failed to fetch session driver list"
           );
         }
-        const data = await res.json();
+        const initialData = await initialRes.json();
+        if (!Array.isArray(initialData) || !initialData[0]?.session_key) {
+          throw new Error("Session data missing or unexpected format");
+        }
+        const sessionKey = initialData[0].session_key;
+
+        const driversRes = await fetch(
+          `/api/drivers?session_key=${encodeURIComponent(sessionKey)}`
+        );
+        if (!driversRes.ok) {
+          const details = await driversRes.json().catch(() => ({}));
+          throw new Error(
+            details?.error || "Failed to fetch drivers for session"
+          );
+        }
+        const driversDataList = await driversRes.json();
 
         // Ensure data is a list of drivers; sort by driver_number ascending
-        const sortedDrivers = Array.isArray(data)
-          ? [...data].sort((a, b) => a.driver_number - b.driver_number)
+        const sortedDrivers = Array.isArray(driversDataList)
+          ? [...driversDataList].sort(
+              (a, b) => a.driver_number - b.driver_number
+            )
           : [];
 
         setFilteredDrivers(sortedDrivers);
@@ -92,7 +105,7 @@ export const SessionDriversProvider: React.FC<SessionDriversProviderProps> = ({
       }
     };
 
-    fetchDriversInSession();
+    fetchSessionDrivers();
   }, [filteredSession, driversData]);
 
   return (
