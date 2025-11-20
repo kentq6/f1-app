@@ -39,7 +39,7 @@ interface SessionDriversProviderProps {
  * - Gets current session from useFilteredSession
  * - Fetches the relevant driver numbers for this session from the API
  * - Filters driversData so it only contains drivers present in the session (from API)
- * - Provides this filtered list to children via context
+ * - Provides this filtered list to children via context, sorted by driver_number
  */
 export const SessionDriversProvider: React.FC<SessionDriversProviderProps> = ({
   driversData,
@@ -59,7 +59,6 @@ export const SessionDriversProvider: React.FC<SessionDriversProviderProps> = ({
     const fetchDriversInSession = async () => {
       try {
         let endpoint = "";
-        // let driverNumbers: number[] = [];
 
         if (filteredSession.session_type === "Qualifying") {
           endpoint = `/api/starting_grid?session_key=${encodeURIComponent(
@@ -81,9 +80,13 @@ export const SessionDriversProvider: React.FC<SessionDriversProviderProps> = ({
         }
         const data = await res.json();
 
-        setFilteredDrivers(data);
-        // console.log(data);
-        // console.log(filteredDrivers);
+        // Ensure data is a list of drivers; sort by driver_number ascending
+        const sortedDrivers = Array.isArray(data)
+          ? [...data].sort((a, b) => a.driver_number - b.driver_number)
+          : [];
+
+        setFilteredDrivers(sortedDrivers);
+        console.log(sortedDrivers);
       } catch (err) {
         console.error("Could not load session driver list: ", err);
         setFilteredDrivers([]); // fallback to empty on error
