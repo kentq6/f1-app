@@ -11,20 +11,10 @@ import {
   Tooltip,
   Title,
 } from "chart.js";
-import { Driver } from "@/types/driver";
 import { Separator } from "./ui/separator";
 import { useTheme } from "next-themes";
-
-// UI Select controls - you may need to update import path as per your project
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-} from "./ui/select";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-// import getLapTimesBySession from "@/lib/external/getLapTimesBySession";
+import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 
 type LapTime = {
   driver_number: number;
@@ -41,38 +31,16 @@ ChartJS.register(
   Title
 );
 
-interface PaceChartProps {
-  driversData: Driver[];
-}
-
-const PaceChart = ({
-  driversData,
-}: PaceChartProps) => {
+const PaceChart = () => {
   const { filteredSession } = useFilteredSession();
+  const { selectedDrivers } = useSelectedDrivers();
 
   const [lapData, setLapData] = useState<LapTime[]>([]);
-  const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
 
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  // Build lists for driver selection and acronyms
-  const drivers = useMemo(
-    () => Array.from(new Set(driversData.map((d) => d.driver_number))).sort((a, b) => a - b),
-    [driversData]
-  );
-
-  const driverAcronymMap = useMemo(() => {
-    const map: Record<number, string> = {};
-    for (const d of driversData) {
-      map[d.driver_number] = d.name_acronym ?? "";
-    }
-    return map;
-  }, [driversData]);
-
-  // --- DATA LOADING ---
+  // Safely load lap data only if filteredSession is not null
   useEffect(() => {
     if (!filteredSession) {
       setLapData([]);
@@ -115,23 +83,15 @@ const PaceChart = ({
     fetchLapTimes();
   }, [filteredSession]);
 
-  // When filteredSession or driversData changes, select 5 by default unless user cleared manually
-  useEffect(() => {
-    if (!hasManuallyCleared && drivers.length > 0) {
-      setSelectedDrivers(drivers.slice(0, 5));
-    }
-    // Don't include hasManuallyCleared in deps intentionally to avoid infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drivers.join(",")]);
-
-  // ==========================
-  //    Data Processing
-  // ==========================
-
   // Only show data for selected drivers
   const visibleLapData = useMemo(() => {
     if (!selectedDrivers.length) return [];
-    return lapData.filter((lap) => selectedDrivers.includes(lap.driver_number));
+    // selectedDrivers is likely Driver[] not number[], so map to driver_number for comparison
+    const selectedNumbers = selectedDrivers.map(
+      (d: { driver_number: number } | number) =>
+        typeof d === "number" ? d : d.driver_number
+    );
+    return lapData.filter((lap) => selectedNumbers.includes(lap.driver_number));
   }, [lapData, selectedDrivers]);
 
   // Group laps per driver
@@ -155,7 +115,7 @@ const PaceChart = ({
   const datasets = useMemo(() => {
     return Object.entries(grouped)
       .map(([driverNumber, laps]) => {
-        const driver = driversData.find(
+        const driver = selectedDrivers.find(
           (d) => d.driver_number === Number(driverNumber)
         );
         if (!driver) return null;
@@ -184,7 +144,7 @@ const PaceChart = ({
         };
       })
       .filter(Boolean);
-  }, [grouped, driversData, lapNumbers]);
+  }, [grouped, selectedDrivers, lapNumbers]);
 
   const chartData = useMemo(
     () => ({
@@ -204,8 +164,7 @@ const PaceChart = ({
         tooltip: {
           callbacks: {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            label: (ctx: any) =>
-              `${ctx.dataset.label}: ${ctx.formattedValue}s`,
+            label: (ctx: any) => `${ctx.dataset.label}: ${ctx.formattedValue}s`,
           },
         },
       },
@@ -231,31 +190,6 @@ const PaceChart = ({
     [isDark]
   );
 
-  // ========================
-  // Selection Controls
-  // ========================
-  const handleDriverToggle = (driverNumber: number) => {
-    setSelectedDrivers((prev) => {
-      if (prev.includes(driverNumber)) {
-        return prev.filter((d) => d !== driverNumber);
-      } else {
-        return [...prev, driverNumber].sort((a, b) => a - b);
-      }
-    });
-  };
-
-  const handleSelectAll = () => {
-    setSelectedDrivers(drivers);
-    setHasManuallyCleared(false);
-  };
-
-  const handleClearAll = () => {
-    setSelectedDrivers([]);
-    setHasManuallyCleared(true);
-  };
-
-  // ==========================
-
   if (!filteredSession) {
     // Show a message if required session data not provided
     return (
@@ -271,96 +205,21 @@ const PaceChart = ({
 
   return (
     <div className="flex flex-col h-full">
-      <h1 className="text-sm font-bold pb-1">Pace Chart</h1>
-      <Separator />
-      <div className="flex justify-between items-center mt-2">
-        {/* Left side is now empty but can be used for future controls or just spacing */}
-        <div></div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-600">
-            {selectedDrivers.length} driver
-            {selectedDrivers.length !== 1 ? "s" : ""} selected
+      <div className="flex items-center gap-3 pb-1">
+        <h1 className="text-sm font-bold">Pace Chart</h1>
+        {selectedDrivers.length === 0 && (
+          <span className="hidden sm:block text-sm text-gray-500">
+            Select a driver to view lap data
           </span>
-          {/* Driver Selection Dropdown */}
-          <Select
-            open={isDropdownOpen}
-            onOpenChange={setIsDropdownOpen}
-            value=""
-            onValueChange={() => {}}
-          >
-            <SelectTrigger className="text-xs">
-              <SelectValue placeholder="Drivers" />
-            </SelectTrigger>
-            <SelectContent align="end" className="w-44">
-              <div className="p-2 border-b flex gap-2 bg-muted/60">
-                {/* Select All Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelectAll();
-                  }}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  type="button"
-                  tabIndex={-1}
-                >
-                  Select All
-                </button>
-                {/* Clear All Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClearAll();
-                  }}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-muted text-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-muted/70 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  type="button"
-                  tabIndex={-1}
-                >
-                  Clear All
-                </button>
-              </div>
-              <SelectGroup>
-                {drivers.map((driverNumber, index) => (
-                  <div
-                    key={`driver-${driverNumber}-race-pace-${index}`}
-                    className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDriverToggle(driverNumber);
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedDrivers.includes(driverNumber)}
-                      readOnly
-                      className="h-4 w-4 border-gray-300 rounded accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      tabIndex={-1}
-                    />
-                    <span className="text-xs font-medium text-foreground">
-                      {driverAcronymMap[driverNumber]
-                        ? `${driverAcronymMap[driverNumber]} ${driverNumber}`
-                        : `Driver ${driverNumber}`}
-                    </span>
-                  </div>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div className="flex-1 min-h-0 mt-2">
-        {selectedDrivers.length > 0 ? (
-          <div className="flex flex-col h-full">
-            <Line
-              data={chartData}
-              options={chartOptions}
-              className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-border dark:border-primary-border bg-gray-50 dark:bg-background"
-            />
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-500 text-sm">
-            <p>Please select at least one driver to view lap data</p>
-          </div>
         )}
+      </div>
+      <Separator />
+      <div className="flex-1 min-h-0 mt-2">
+        <Line
+          data={chartData}
+          options={chartOptions}
+          className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-border dark:border-primary-border bg-gray-50 dark:bg-background"
+        />
       </div>
     </div>
   );

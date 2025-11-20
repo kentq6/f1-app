@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -16,6 +16,16 @@ import { Label } from "./ui/label";
 const DriverSelector = () => {
   const sessionDrivers = useSessionDrivers();
   const { selectedDrivers, setSelectedDrivers } = useSelectedDrivers();
+
+  // Select the first five drivers *only* on first mount (initial load), never again.
+  // This ensures setSelectedDrivers only runs once, so user can clear selection indefinitely.
+  const hasInitialized = React.useRef(false);
+  useEffect(() => {
+    if (!hasInitialized.current && sessionDrivers.length > 0 && selectedDrivers.length === 0) {
+      setSelectedDrivers(sessionDrivers.slice(0, 5));
+      hasInitialized.current = true;
+    }
+  }, [sessionDrivers, selectedDrivers.length, setSelectedDrivers]);
 
   // Driver selection handlers
   const handleDriverToggle = (driver: Driver) => {

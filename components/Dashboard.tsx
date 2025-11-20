@@ -190,7 +190,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
 
             {/* Race Pace Chart */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
-              <PaceChart driversData={driversData} />
+              <PaceChart />
             </div>
 
             {/* Stints Chart */}

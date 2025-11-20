@@ -35,7 +35,7 @@ interface DriverNameAcronym extends Stint {
 const StintsChart = () => {
   const { filteredSession } = useFilteredSession();
   const sessionDrivers = useSessionDrivers();
-  const { selectedDrivers, setSelectedDrivers } = useSelectedDrivers();
+  const { selectedDrivers } = useSelectedDrivers();
 
   const [tireStintsData, setTireStintsData] = useState<DriverNameAcronym[]>([]);
 
@@ -66,15 +66,17 @@ const StintsChart = () => {
           : [];
 
         // Merge driver name_acronym into tire stints
-        const mappedTireStints: DriverNameAcronym[] = tireStints.map((stint) => {
-          const driver = sessionDrivers.find(
-            (driver) => driver.driver_number === stint.driver_number
-          );
-          return {
-            ...stint,
-            name_acronym: driver?.name_acronym ?? "UNK",
-          };
-        });
+        const mappedTireStints: DriverNameAcronym[] = tireStints.map(
+          (stint) => {
+            const driver = sessionDrivers.find(
+              (driver) => driver.driver_number === stint.driver_number
+            );
+            return {
+              ...stint,
+              name_acronym: driver?.name_acronym ?? "UNK",
+            };
+          }
+        );
 
         setTireStintsData(mappedTireStints);
       } catch (error) {
@@ -84,41 +86,6 @@ const StintsChart = () => {
 
     fetchStints();
   }, [filteredSession, sessionDrivers]);
-
-  // Extract unique driver numbers
-  // const drivers = useMemo(
-  //   () =>
-  //     Array.from(new Set(tireStintsData.map((s) => s.driver_number))).sort(
-  //       (a, b) => a - b
-  //     ),
-  //   [tireStintsData]
-  // );
-
-  // const driverAcronymMap = useMemo(
-  //   () =>
-  //     Object.fromEntries(
-  //       driversData.map((d) => [d.driver_number, d.name_acronym])
-  //     ),
-  //   [driversData]
-  // );
-
-  // Initialize with all 20 drivers when data loads
-  useEffect(() => {
-    if (
-      sessionDrivers.length > 0 &&
-      selectedDrivers.length === 0 
-      // &&
-      // !hasManuallyCleared
-    ) {
-      // Pick 5 random, unique drivers from the drivers array
-      if (sessionDrivers.length >= 5) {
-        // const shuffled = [...drivers].sort(() => 0.5 - Math.random());
-        setSelectedDrivers(sessionDrivers.slice(0, 5));
-      } else {
-        setSelectedDrivers(sessionDrivers);
-      }
-    }
-  }, [sessionDrivers, selectedDrivers.length, setSelectedDrivers]);
 
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
@@ -350,27 +317,6 @@ const StintsChart = () => {
     },
   };
 
-  // Driver selection handlers
-  // const handleDriverToggle = (driverNumber: number) => {
-  //   setSelectedDrivers((prev) => {
-  //     if (prev.includes(driverNumber)) {
-  //       return prev.filter((d) => d !== driverNumber);
-  //     } else {
-  //       return [...prev, driverNumber].sort((a, b) => a - b);
-  //     }
-  //   });
-  // };
-
-  // const handleSelectAll = () => {
-  //   setSelectedDrivers(drivers);
-  //   setHasManuallyCleared(false);
-  // };
-
-  // const handleClearAll = () => {
-  //   setSelectedDrivers([]);
-  //   setHasManuallyCleared(true);
-  // };
-
   if (!filteredSession) {
     // Show a message if required session data not provided
     return (
@@ -386,20 +332,21 @@ const StintsChart = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <h1 className="text-sm font-bold pb-1">Stint Chart</h1>
+      <div className="flex items-center gap-3 pb-1">
+        <h1 className="text-sm font-bold">Stints Chart</h1>
+        {selectedDrivers.length === 0 && (
+          <span className="hidden sm:block text-sm text-gray-500">
+            Select a driver to view stint data
+          </span>
+        )}
+      </div>
       <Separator />
       <div className="flex-1 min-h-0 mt-2">
-        {selectedDrivers.length > 0 ? (
-          <Bar
-            data={chartData}
-            options={options}
-            className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-border dark:border-primary-border bg-gray-50 dark:bg-background"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            <p>Please select at least one driver to view stint data</p>
-          </div>
-        )}
+        <Bar
+          data={chartData}
+          options={options}
+          className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-border dark:border-primary-border bg-gray-50 dark:bg-background"
+        />
       </div>
     </div>
   );
