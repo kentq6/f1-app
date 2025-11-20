@@ -11,17 +11,10 @@ import {
   Legend,
 } from "chart.js";
 import { useTheme } from "next-themes";
-import { Driver } from "@/types/driver";
 import { Separator } from "./ui/separator";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useSessionDrivers } from "@/app/providers/SessionDriversProvider";
+import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -35,22 +28,16 @@ type Stint = {
   tyre_age_at_start: number;
 };
 
-interface DriverData extends Stint {
+interface DriverNameAcronym extends Stint {
   name_acronym?: string;
 }
 
-interface StintChartProps {
-  driversData: Driver[];
-}
-
-const StintsChart = ({ driversData }: StintChartProps) => {
+const StintsChart = () => {
   const { filteredSession } = useFilteredSession();
-  const filteredDrivers = useSessionDrivers();
+  const sessionDrivers = useSessionDrivers();
+  const { selectedDrivers, setSelectedDrivers } = useSelectedDrivers();
 
-  const [tireStintsData, setTireStintsData] = useState<DriverData[]>([]);
-  const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
+  const [tireStintsData, setTireStintsData] = useState<DriverNameAcronym[]>([]);
 
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -78,14 +65,9 @@ const StintsChart = ({ driversData }: StintChartProps) => {
           ? tireStintsRaw
           : [];
 
-        // Map driver_number to driver for quick lookup
-        // const driverNumberMap = new Map<number, Driver>(
-        //   filteredDrivers.map((driver) => [driver.driver_number, driver])
-        // );
-
         // Merge driver name_acronym into tire stints
-        const mappedTireStints: DriverData[] = tireStints.map((stint) => {
-          const driver = filteredDrivers.find(
+        const mappedTireStints: DriverNameAcronym[] = tireStints.map((stint) => {
+          const driver = sessionDrivers.find(
             (driver) => driver.driver_number === stint.driver_number
           );
           return {
@@ -101,41 +83,42 @@ const StintsChart = ({ driversData }: StintChartProps) => {
     };
 
     fetchStints();
-  }, [filteredSession, driversData, filteredDrivers]);
+  }, [filteredSession, sessionDrivers]);
 
   // Extract unique driver numbers
-  const drivers = useMemo(
-    () =>
-      Array.from(new Set(tireStintsData.map((s) => s.driver_number))).sort(
-        (a, b) => a - b
-      ),
-    [tireStintsData]
-  );
+  // const drivers = useMemo(
+  //   () =>
+  //     Array.from(new Set(tireStintsData.map((s) => s.driver_number))).sort(
+  //       (a, b) => a - b
+  //     ),
+  //   [tireStintsData]
+  // );
 
-  const driverAcronymMap = useMemo(
-    () =>
-      Object.fromEntries(
-        driversData.map((d) => [d.driver_number, d.name_acronym])
-      ),
-    [driversData]
-  );
+  // const driverAcronymMap = useMemo(
+  //   () =>
+  //     Object.fromEntries(
+  //       driversData.map((d) => [d.driver_number, d.name_acronym])
+  //     ),
+  //   [driversData]
+  // );
 
   // Initialize with all 20 drivers when data loads
   useEffect(() => {
     if (
-      drivers.length > 0 &&
-      selectedDrivers.length === 0 &&
-      !hasManuallyCleared
+      sessionDrivers.length > 0 &&
+      selectedDrivers.length === 0 
+      // &&
+      // !hasManuallyCleared
     ) {
       // Pick 5 random, unique drivers from the drivers array
-      if (drivers.length >= 5) {
+      if (sessionDrivers.length >= 5) {
         // const shuffled = [...drivers].sort(() => 0.5 - Math.random());
-        setSelectedDrivers(drivers.slice(0, 5));
+        setSelectedDrivers(sessionDrivers.slice(0, 5));
       } else {
-        setSelectedDrivers(drivers);
+        setSelectedDrivers(sessionDrivers);
       }
     }
-  }, [drivers, selectedDrivers.length, hasManuallyCleared]);
+  }, [sessionDrivers, selectedDrivers.length, setSelectedDrivers]);
 
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
@@ -218,11 +201,11 @@ const StintsChart = ({ driversData }: StintChartProps) => {
     const bgColors: string[] = [];
     const borderColors: string[] = [];
 
-    selectedDrivers.forEach((driverNumber) => {
+    selectedDrivers.forEach((driver) => {
       const driverLabel =
-        `${driverAcronymMap[driverNumber]} ${driverNumber}` ||
-        `Driver ${driverNumber}`;
-      const arr = driverStintsMap.get(driverNumber) || [];
+        `${driver.name_acronym} ${driver.driver_number}` ||
+        `Driver ${driver.driver_number}`;
+      const arr = driverStintsMap.get(driver.driver_number) || [];
       arr.forEach((stint) => {
         // For openF1, lap_start/lap_end are inclusive stints
         // Chart.js expects [start, end] as the bar value.
@@ -265,7 +248,7 @@ const StintsChart = ({ driversData }: StintChartProps) => {
         },
       ],
     };
-  }, [selectedDrivers, driverStintsMap, driverAcronymMap, getCompoundColor]);
+  }, [selectedDrivers, driverStintsMap, getCompoundColor]);
 
   // Get min and max lap numbers for scaling
   const [lapMin, lapMax] = useMemo(() => {
@@ -342,9 +325,9 @@ const StintsChart = ({ driversData }: StintChartProps) => {
       y: {
         type: "category" as const,
         labels: selectedDrivers.map(
-          (driverNumber) =>
-            `${driverAcronymMap[driverNumber]} ${driverNumber}` ||
-            `Driver ${driverNumber}`
+          (driver) =>
+            `${driver.name_acronym} ${driver.driver_number}` ||
+            `Driver ${driver.driver_number}`
         ),
         title: {
           display: true,
@@ -368,25 +351,25 @@ const StintsChart = ({ driversData }: StintChartProps) => {
   };
 
   // Driver selection handlers
-  const handleDriverToggle = (driverNumber: number) => {
-    setSelectedDrivers((prev) => {
-      if (prev.includes(driverNumber)) {
-        return prev.filter((d) => d !== driverNumber);
-      } else {
-        return [...prev, driverNumber].sort((a, b) => a - b);
-      }
-    });
-  };
+  // const handleDriverToggle = (driverNumber: number) => {
+  //   setSelectedDrivers((prev) => {
+  //     if (prev.includes(driverNumber)) {
+  //       return prev.filter((d) => d !== driverNumber);
+  //     } else {
+  //       return [...prev, driverNumber].sort((a, b) => a - b);
+  //     }
+  //   });
+  // };
 
-  const handleSelectAll = () => {
-    setSelectedDrivers(drivers);
-    setHasManuallyCleared(false);
-  };
+  // const handleSelectAll = () => {
+  //   setSelectedDrivers(drivers);
+  //   setHasManuallyCleared(false);
+  // };
 
-  const handleClearAll = () => {
-    setSelectedDrivers([]);
-    setHasManuallyCleared(true);
-  };
+  // const handleClearAll = () => {
+  //   setSelectedDrivers([]);
+  //   setHasManuallyCleared(true);
+  // };
 
   if (!filteredSession) {
     // Show a message if required session data not provided
@@ -405,80 +388,6 @@ const StintsChart = ({ driversData }: StintChartProps) => {
     <div className="flex flex-col h-full">
       <h1 className="text-sm font-bold pb-1">Stint Chart</h1>
       <Separator />
-      <div className="flex justify-between items-center mt-2">
-        {/* Left side is now empty but can be used for future controls or just spacing */}
-        <div></div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-600">
-            {selectedDrivers.length} driver
-            {selectedDrivers.length !== 1 ? "s" : ""} selected
-          </span>
-          {/* Driver Selection Dropdown */}
-          <Select
-            open={isDropdownOpen}
-            onOpenChange={setIsDropdownOpen}
-            value=""
-            onValueChange={() => {}}
-          >
-            <SelectTrigger className="text-xs">
-              <SelectValue placeholder="Drivers" />
-            </SelectTrigger>
-            <SelectContent align="end" className="w-44">
-              <div className="p-2 border-b flex gap-2 bg-muted/60">
-                {/* Select All Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelectAll();
-                  }}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  type="button"
-                  tabIndex={-1}
-                >
-                  Select All
-                </button>
-                {/* Clear All Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClearAll();
-                  }}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-muted text-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-muted/70 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  type="button"
-                  tabIndex={-1}
-                >
-                  Clear All
-                </button>
-              </div>
-              <SelectGroup>
-                {drivers.map((driverNumber, index) => (
-                  <div
-                    key={`driver-${driverNumber}-stints-${index}`}
-                    className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDriverToggle(driverNumber);
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedDrivers.includes(driverNumber)}
-                      readOnly
-                      className="h-4 w-4 border-gray-300 rounded accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      tabIndex={-1}
-                    />
-                    <span className="text-xs font-medium text-foreground">
-                      {driverAcronymMap[driverNumber]
-                        ? `${driverAcronymMap[driverNumber]} ${driverNumber}`
-                        : `Driver ${driverNumber}`}
-                    </span>
-                  </div>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
       <div className="flex-1 min-h-0 mt-2">
         {selectedDrivers.length > 0 ? (
           <Bar

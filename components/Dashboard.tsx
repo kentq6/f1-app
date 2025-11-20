@@ -5,8 +5,6 @@ import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
-import StartingGridTable from "@/components/StartingGridTable";
-import SessionResultsTable from "@/components/SessionResultsTable";
 import Navbar from "@/components/Navbar";
 import StintsChart from "@/components/StintsChart";
 import Standings from "@/components/championship/Standings";
@@ -16,6 +14,9 @@ import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionDriversProvider } from "@/app/providers/SessionDriversProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
+import StartingGrid from "./classification/StartingGrid";
+import SessionResults from "./classification/SessionResults";
+// import ClassificationTable from "./classification/ClassificationTable";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 
@@ -72,7 +73,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
     sessionsData,
     initializedFilters,
     latestSession,
-    setFilteredSession
+    setFilteredSession,
   ]);
 
   // Compute options for select fields
@@ -138,7 +139,13 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
     } else {
       setFilteredSession(null);
     }
-  }, [selectedYear, selectedTrack, selectedSession, sessionsData, setFilteredSession]);
+  }, [
+    selectedYear,
+    selectedTrack,
+    selectedSession,
+    sessionsData,
+    setFilteredSession,
+  ]);
 
   return (
     <SessionDriversProvider driversData={driversData}>
@@ -168,50 +175,37 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
             {/* Session Results OR Starting Grid */}
             {filteredSession?.session_type === "Qualifying" ? (
               <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-                <StartingGridTable
-                  driversData={driversData}
-                />
+                <StartingGrid driversData={driversData} />
               </div>
             ) : (
               <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-                <SessionResultsTable
-                  driversData={driversData}
-                />
+                <SessionResults driversData={driversData} />
               </div>
             )}
 
             {/* Drivers'/Constructors' Standings */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
-              <Standings
-                driversData={driversData}
-              />
+              <Standings driversData={driversData} />
             </div>
 
             {/* Race Pace Chart */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
-              <PaceChart
-                driversData={driversData}
-              />
+              <PaceChart driversData={driversData} />
             </div>
 
             {/* Stints Chart */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
-              <StintsChart
-                driversData={driversData}
-              />
+              <StintsChart />
             </div>
 
             {/* AI Session Summary */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
-              <AISessionSummary
-                driversData={driversData}
-              />
+              <AISessionSummary driversData={driversData} />
             </div>
           </div>
         </div>
       </SelectedDriversProvider>
     </SessionDriversProvider>
-
   );
 };
 
