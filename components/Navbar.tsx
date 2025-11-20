@@ -4,23 +4,49 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { SidebarTrigger } from "./ui/sidebar";
 import Logo from "./Logo";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import SessionSelect from "./SessionSelect";
 import { LogIn } from "lucide-react";
 import { Separator } from "./ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useSessionDrivers } from "@/app/providers/SessionDriversProvider";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
+import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
+import { Driver } from "@/types/driver";
 
 interface NavbarProps {
+  driversData: Driver[];
   yearOptions: number[];
   trackOptions: string[];
   sessionOptions: string[];
 }
 
 const Navbar: React.FC<NavbarProps> = ({
+  driversData,
   yearOptions,
   trackOptions,
   sessionOptions,
-  }) => {
+}) => {
+  const sessionDrivers = useSessionDrivers();
+  const { selectedDrivers, setSelectedDrivers } = useSelectedDrivers();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const driverAcronymMap = useMemo(
+    () =>
+      Object.fromEntries(
+        driversData.map((d) => [d.driver_number, d.name_acronym])
+      ),
+    [driversData]
+  );
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -28,6 +54,25 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  // Driver selection handlers
+  const handleDriverToggle = (driver: Driver) => {
+    setSelectedDrivers([...selectedDrivers, driver]);
+  };
+
+  const handleSelectAll = () => {
+    // Avoid redundant updates if all drivers already selected
+    if (selectedDrivers.length !== sessionDrivers.length) {
+      setSelectedDrivers(sessionDrivers);
+    }
+  };
+
+  const handleClearAll = () => {
+    // Only clear if any drivers are selected
+    if (selectedDrivers.length > 0) {
+      setSelectedDrivers([]);
+    }
   };
 
   return (
@@ -49,12 +94,74 @@ const Navbar: React.FC<NavbarProps> = ({
               trackOptions={trackOptions}
               sessionOptions={sessionOptions}
             />
+
+            {/* Driver Selection Dropdown */}
+            <Select>
+              <SelectTrigger 
+                className="h-7 text-[11px]"
+                aria-label="Select Drivers"
+              >
+                <SelectValue placeholder="Drivers" />
+              </SelectTrigger>
+              <SelectContent>
+                <div className="p-2 flex gap-2">
+                  {/* Select All Button */}
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectAll();
+                    }}
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-1 focus:ring-offset-1"
+                    type="button"
+                  >
+                    Select All
+                  </Button>
+                  {/* Clear All Button */}
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClearAll();
+                    }}
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-muted text-foreground px-2 py-1 text-xs font-medium shadow-sm transition-colors hover:bg-muted/70 focus:outline-none focus:ring-1 focus:ring-offset-1"
+                    type="button"
+                  >
+                    Clear All
+                  </Button>
+                </div>
+                <SelectGroup>
+                  {sessionDrivers.map((driver, index) => (
+                    <div
+                      key={`driver-select-${index}`}
+                      className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDriverToggle(driver);
+                      }}
+                    >
+                      <Checkbox
+                        id={`driver-select-${driver.driver_number}`}
+                        checked={selectedDrivers.some((d) => d.driver_number === driver.driver_number)}
+                        className="h-4 w-4 border-gray-300 rounded accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                      />
+                      <Label 
+                        className="text-xs font-medium text-foreground"
+
+                      >
+                        {driverAcronymMap[driver.driver_number]
+                          ? `${driverAcronymMap[driver.driver_number]} ${driver.driver_number}`
+                          : `Driver ${driver.driver_number}`}
+                      </Label>
+                    </div>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Right: Auth and Toggle Light/Dark Mode Buttoms */}
-          <div className="flex items-center space-x-1 sm:space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 gap-2">
             {/* Theme Toggle */}
-            <div className="mr-5">
+            <div>
               <ThemeToggle />
             </div>
 
@@ -62,12 +169,12 @@ const Navbar: React.FC<NavbarProps> = ({
             <div className="hidden md:block">
               <SignedOut>
                 <SignInButton>
-                  <button className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
+                  <Button className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
                     <div className="relative flex items-center gap-1">
                       <span>Sign In</span>
                       <LogIn size={18} />
                     </div>
-                  </button>
+                  </Button>
                 </SignInButton>
               </SignedOut>
 
@@ -78,7 +185,6 @@ const Navbar: React.FC<NavbarProps> = ({
                       elements: {
                         avatarBox:
                           "w-6 h-6 sm:w-8 sm:h-8 hover:scale-110 transition-transform duration-200",
-                        // userButtonBox: "flex items-center justify-center",
                       },
                     }}
                   />
@@ -87,7 +193,7 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Mobile Menu Button */}
-            <button
+            <Button
               onClick={toggleMobileMenu}
               className="md:hidden p-1.5 sm:p-2 rounded-lg sm:rounded-xl hover:text-formula-one-primary hover:bg-primary-foreground dark:hover:bg-primary-foreground transition-all duration-200 active:scale-95"
               aria-label="Toggle mobile menu"
@@ -116,7 +222,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   />
                 )}
               </svg>
-            </button>
+            </Button>
           </div>
         </div>
 

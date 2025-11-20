@@ -15,6 +15,7 @@ import AISessionSummary from "@/components/AISessionSummary";
 import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionDriversProvider } from "@/app/providers/SessionDriversProvider";
+import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 
@@ -141,72 +142,75 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
 
   return (
     <SessionDriversProvider driversData={driversData}>
-      <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
-        <header className="top-0 left-0 w-full bg-primary-foreground border-b">
-          {/* Navbar */}
-          <Navbar
-            yearOptions={yearOptions}
-            trackOptions={trackOptions}
-            sessionOptions={sessionOptions}
-          />
-        </header>
+      <SelectedDriversProvider>
+        <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
+          <header className="top-0 left-0 w-full bg-primary-foreground border-b">
+            {/* Navbar */}
+            <Navbar
+              driversData={driversData}
+              yearOptions={yearOptions}
+              trackOptions={trackOptions}
+              sessionOptions={sessionOptions}
+            />
+          </header>
 
-        {/* Grid Layout */}
-        <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
-          {/* Session Info */}
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
-            <SessionInfo />
-          </div>
+          {/* Grid Layout */}
+          <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
+            {/* Session Info */}
+            <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+              <SessionInfo />
+            </div>
 
-          {/* Weather Info */}
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
-            <WeatherInfo />
-          </div>
+            {/* Weather Info */}
+            <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+              <WeatherInfo />
+            </div>
 
-          {/* Session Results OR Starting Grid */}
-          {filteredSession?.session_type === "Qualifying" ? (
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-              <StartingGridTable
+            {/* Session Results OR Starting Grid */}
+            {filteredSession?.session_type === "Qualifying" ? (
+              <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
+                <StartingGridTable
+                  driversData={driversData}
+                />
+              </div>
+            ) : (
+              <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
+                <SessionResultsTable
+                  driversData={driversData}
+                />
+              </div>
+            )}
+
+            {/* Drivers'/Constructors' Standings */}
+            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
+              <Standings
                 driversData={driversData}
               />
             </div>
-          ) : (
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-              <SessionResultsTable
+
+            {/* Race Pace Chart */}
+            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
+              <PaceChart
                 driversData={driversData}
               />
             </div>
-          )}
 
-          {/* Drivers'/Constructors' Standings */}
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
-            <Standings
-              driversData={driversData}
-            />
-          </div>
+            {/* Stints Chart */}
+            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
+              <StintsChart
+                driversData={driversData}
+              />
+            </div>
 
-          {/* Race Pace Chart */}
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
-            <PaceChart
-              driversData={driversData}
-            />
-          </div>
-
-          {/* Stints Chart */}
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
-            <StintsChart
-              driversData={driversData}
-            />
-          </div>
-
-          {/* AI Session Summary */}
-          <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
-            <AISessionSummary
-              driversData={driversData}
-            />
+            {/* AI Session Summary */}
+            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
+              <AISessionSummary
+                driversData={driversData}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </SelectedDriversProvider>
     </SessionDriversProvider>
 
   );
