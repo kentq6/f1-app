@@ -171,15 +171,6 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
             </div>
 
             {/* Session Results OR Starting Grid */}
-            {/* {filteredSession?.session_type === "Qualifying" ? (
-              <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-                <StartingGrid driversData={driversData} />
-              </div>
-            ) : (
-              <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-                <SessionResults />
-              </div>
-            )} */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
               <ClassificationTable />
             </div>
