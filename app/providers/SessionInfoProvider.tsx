@@ -12,24 +12,33 @@ import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionResult } from "@/types/sessionResult";
 import { StartingGrid } from "@/types/startingGrid";
 
+// Discriminated union type for classification results
+type ClassificationResult =
+  | {
+      type: "result";
+      data: SessionResult[];
+    }
+  | {
+      type: "grid";
+      data: StartingGrid[];
+    };
+
 // Context type: contains drivers and sessionResults/startingGrid for the current session
 type SessionInfoContextType = {
   drivers: Driver[];
-  sessionResults: SessionResult[] | StartingGrid[];
+  classificationResults: ClassificationResult | null;
 };
 
 // Context and hook
-const SessionInfoContext = createContext<
-  SessionInfoContextType | undefined
->(undefined);
+const SessionInfoContext = createContext<SessionInfoContextType | undefined>(
+  undefined
+);
 
 // Custom hook to consume the filtered drivers and session results/starting grid
 export const useSessionInfo = (): SessionInfoContextType => {
   const context = useContext(SessionInfoContext);
   if (context === undefined) {
-    throw new Error(
-      "useSessionInfo must be used within a SessionInfoProvider"
-    );
+    throw new Error("useSessionInfo must be used within a SessionInfoProvider");
   }
   return context;
 };
@@ -44,48 +53,56 @@ interface SessionInfoProviderProps {
  * - Gets current session from useFilteredSession
  * - Fetches both sessionResults/startingGrid and relevant drivers for this session from the API
  * - Filters driversData so it only contains drivers present in the session (from API)
- * - Provides { drivers, sessionResults } object via context
+ * - Provides { drivers, classificationResults } object via context
  */
 export const SessionInfoProvider: React.FC<SessionInfoProviderProps> = ({
   driversData,
   children,
 }) => {
   const { filteredSession } = useFilteredSession();
+
   const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [sessionResults, setSessionResults] = useState<SessionResult[] | StartingGrid[]>([]);
+  const [classificationResults, setClassificationResults] =
+    useState<ClassificationResult | null>(null);
 
   useEffect(() => {
     // If there's no session or no drivers data, reset and do nothing
     if (!filteredSession || driversData.length === 0) {
       setDrivers([]);
-      setSessionResults([]);
+      setClassificationResults(null);
       return;
     }
 
     const fetchSessionInfo = async () => {
       try {
-        const endpoint =
-          filteredSession.session_type === "Qualifying"
-            ? `/api/starting_grid?session_key=${encodeURIComponent(
-                filteredSession.session_key
-              )}`
-            : `/api/session_result?session_key=${encodeURIComponent(
-                filteredSession.session_key
-              )}`;
+        const isQuali = filteredSession.session_type === "Qualifying";
+        const endpoint = isQuali
+          ? `/api/starting_grid?session_key=${encodeURIComponent(
+              filteredSession.session_key
+            )}`
+          : `/api/session_result?session_key=${encodeURIComponent(
+              filteredSession.session_key
+            )}`;
 
         // Fetch starting grid or session results
         const initialRes = await fetch(endpoint);
         if (!initialRes.ok) {
           const details = await initialRes.json().catch(() => ({}));
           throw new Error(
-            details?.error || "Failed to fetch session driver list"
+            details?.error || "Failed to fetch classification results list"
           );
         }
         const initialData = await initialRes.json();
         if (!Array.isArray(initialData) || !initialData[0]?.session_key) {
           throw new Error("Session data missing or unexpected format");
         }
-        setSessionResults(initialData);
+
+        // Set the discriminated union here
+        setClassificationResults(
+          isQuali
+            ? { type: "grid", data: initialData }
+            : { type: "result", data: initialData }
+        );
 
         const sessionKey = initialData[0].session_key;
 
@@ -112,7 +129,7 @@ export const SessionInfoProvider: React.FC<SessionInfoProviderProps> = ({
       } catch (err) {
         console.error("Could not load session driver list: ", err);
         setDrivers([]); // fallback to empty on error
-        setSessionResults([]); // and empty session results
+        setClassificationResults(null); // and empty session results
       }
     };
 
@@ -120,7 +137,7 @@ export const SessionInfoProvider: React.FC<SessionInfoProviderProps> = ({
   }, [filteredSession, driversData]);
 
   return (
-    <SessionInfoContext.Provider value={{ drivers, sessionResults }}>
+    <SessionInfoContext.Provider value={{ drivers, classificationResults }}>
       {children}
     </SessionInfoContext.Provider>
   );
