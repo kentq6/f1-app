@@ -24,11 +24,8 @@ const SessionSelect: React.FC<SessionSelectProps> = ({
 
   return (
     <div className="flex items-center gap-2 w-full">
-      <span className="hidden md:block font-bold text-md">
+      <span className="hidden lg:block font-bold text-md">
         Select Session:
-      </span>
-      <span className="md:hidden font-bold text-sm">
-        Session:
       </span>
       {/* Year */}
       <Select

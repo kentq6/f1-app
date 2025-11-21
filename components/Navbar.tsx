@@ -134,7 +134,7 @@ const Navbar: React.FC<NavbarProps> = ({
         >
           <div className="px-2 pt-2 pb-3 space-y-1 rounded-xl mt-2 border bg-primary-foreground flex flex-col items-stretch">
             {/* Mobile Search Session & Driver Selector */}
-            <div className="flex items-center justify-center w-full max-w-xs self-center gap-6">
+            <div className="flex items-center justify-center w-full max-w-xs self-center gap-2 md:gap-6">
               <SessionSelect
                 yearOptions={yearOptions}
                 trackOptions={trackOptions}
