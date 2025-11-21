@@ -13,7 +13,7 @@ import {
 import { useTheme } from "next-themes";
 import { Separator } from "./ui/separator";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-import { useSessionDrivers } from "@/app/providers/SessionDriversProvider";
+import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -34,7 +34,7 @@ interface DriverNameAcronym extends Stint {
 
 const StintsChart = () => {
   const { filteredSession } = useFilteredSession();
-  const sessionDrivers = useSessionDrivers();
+  const { drivers } = useSessionInfo();
   const { selectedDrivers } = useSelectedDrivers();
 
   const [tireStintsData, setTireStintsData] = useState<DriverNameAcronym[]>([]);
@@ -68,7 +68,7 @@ const StintsChart = () => {
         // Merge driver name_acronym into tire stints
         const mappedTireStints: DriverNameAcronym[] = tireStints.map(
           (stint) => {
-            const driver = sessionDrivers.find(
+            const driver = drivers.find(
               (driver) => driver.driver_number === stint.driver_number
             );
             return {
@@ -85,7 +85,7 @@ const StintsChart = () => {
     };
 
     fetchStints();
-  }, [filteredSession, sessionDrivers]);
+  }, [filteredSession, drivers]);
 
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
