@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
-import { Driver } from "@/types/driver";
 import Image from "next/image";
 import {
   Table,
@@ -14,8 +13,9 @@ import {
 } from "../ui/table";
 import { SessionResult } from "@/types/sessionResult";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
+import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 
-interface DriverData extends SessionResult {
+interface ClassificationData extends SessionResult {
   name_acronym?: string;
   team_colour?: string;
   team_name?: string;
@@ -23,15 +23,16 @@ interface DriverData extends SessionResult {
 }
 
 interface SessionResultsProps {
-  driversData: Driver[];
+  classificationData: ClassificationData[];
 }
 
-const SessionResults = ({
-  driversData,
-}: SessionResultsProps) => {
+const SessionResults = ({ classificationData }: SessionResultsProps) => {
   const { filteredSession } = useFilteredSession();
+  const { drivers } = useSessionInfo();
 
-  const [sessionResults, setSessionResultsData] = useState<DriverData[]>([]);
+  const [sessionResults, setSessionResultsData] = useState<
+    ClassificationData[]
+  >([]);
 
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
@@ -42,26 +43,12 @@ const SessionResults = ({
 
     const fetchedResults = async () => {
       try {
-        const res = await fetch(
-          `/api/session_result?session_key=${encodeURIComponent(
-            filteredSession.session_key
-          )}`
-        );
-        if (!res.ok) {
-          const details = await res.json().catch(() => ({}));
-          throw new Error(details?.error || "Failed to fetch session result");
-        }
-        const sessionResultsRaw: SessionResult[] = await res.json();
-
-        // Create a quick lookup map from driversData (props)
-        const driversMap = new Map<number, Driver>(
-          driversData.map((d) => [d.driver_number, d])
-        );
-
         // Merge driver info into session results
-        const mergedData: DriverData[] = sessionResultsRaw.map(
+        const mergedData: ClassificationData[] = classificationData.map(
           (result: SessionResult) => {
-            const driver = driversMap.get(result.driver_number);
+            const driver = drivers.find(
+              (d) => d.driver_number === result.driver_number
+            );
             return {
               ...result,
               name_acronym: driver?.name_acronym ?? "UNK",
@@ -79,13 +66,13 @@ const SessionResults = ({
     };
 
     fetchedResults();
-  }, [filteredSession, driversData]);
+  }, [filteredSession, classificationData, drivers]);
 
   /**
    * Returns the display string for the "Time / Retired" column,
    * depending on DNF, DNS, DSQ flags, else fallback to duration/gap.
    */
-  function getResultStatus(result: DriverData) {
+  function getResultStatus(result: ClassificationData) {
     if (result.dsq) return "DSQ";
     if (result.dns) return "DNS";
     if (result.dnf) return "DNF";

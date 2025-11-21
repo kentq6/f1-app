@@ -14,9 +14,7 @@ import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
-import StartingGrid from "./classification/StartingGrid";
-import SessionResults from "./classification/SessionResults";
-// import ClassificationTable from "./classification/ClassificationTable";
+import ClassificationTable from "./classification/ClassificationTable";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 
@@ -36,7 +34,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
   } = useSessionFilters();
 
   // This session is the currently "active" one whose data should show on the page
-  const { filteredSession, setFilteredSession } = useFilteredSession();
+  const { setFilteredSession } = useFilteredSession();
 
   // Filter select
   const [initializedFilters, setInitializedFilters] = useState(false);
@@ -173,15 +171,18 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
             </div>
 
             {/* Session Results OR Starting Grid */}
-            {filteredSession?.session_type === "Qualifying" ? (
+            {/* {filteredSession?.session_type === "Qualifying" ? (
               <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
                 <StartingGrid driversData={driversData} />
               </div>
             ) : (
               <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-                <SessionResults driversData={driversData} />
+                <SessionResults />
               </div>
-            )}
+            )} */}
+            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
+              <ClassificationTable />
+            </div>
 
             {/* Drivers'/Constructors' Standings */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">

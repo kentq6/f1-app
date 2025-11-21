@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
-import { Driver } from "@/types/driver";
 import {
   Table,
   TableBody,
@@ -13,32 +12,27 @@ import {
 } from "../ui/table";
 import Image from "next/image";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
+import { StartingGrid } from "@/types/startingGrid";
+import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 
-type StartingGrid = {
-  position: number;
-  driver_number: number;
-  lap_duration: number;
-  meeting_key: number;
-  session_key: number;
-};
-
-interface DriverData extends StartingGrid {
+interface ClassificationData extends StartingGrid {
   name_acronym?: string;
   team_colour?: string;
   team_name?: string;
   headshot_url?: string;
 }
 
-interface StartingGridTableProps {
-  driversData: Driver[];
+interface StartingGridProps {
+  classificationData: ClassificationData[];
 }
 
-const StartingGridTable = ({
-  driversData,
-}: StartingGridTableProps) => {
+const StartingGridTable = ({ classificationData }: StartingGridProps) => {
   const { filteredSession } = useFilteredSession();
+  const { drivers } = useSessionInfo();
 
-  const [startingGridData, setStartingGridData] = useState<DriverData[]>([]);
+  const [startingGridData, setStartingGridData] = useState<
+    ClassificationData[]
+  >([]);
 
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
@@ -49,35 +43,21 @@ const StartingGridTable = ({
 
     const fetchStartingGrid = async () => {
       try {
-        // const results = await getStartingGridBySession(filteredSession.session_key);
-
-        const res = await fetch(
-          `/api/starting_grid?session_key=${encodeURIComponent(
-            filteredSession.session_key
-          )}`
-        );
-        if (!res.ok) {
-          const details = await res.json().catch(() => ({}));
-          throw new Error(details?.error || "Failed to fetch session result");
-        }
-        const startingGridRaw: StartingGrid[] = await res.json();
-
-        // Create a quick lookup map from driversData (props)
-        const driversMap = new Map<number, Driver>(
-          driversData.map((d) => [d.driver_number, d])
-        );
-
         // Merge driver info into starting grid results
-        const mergedData: DriverData[] = startingGridRaw.map((result: StartingGrid) => {
-          const driver = driversMap.get(result.driver_number);
-          return {
-            ...result,
-            name_acronym: driver?.name_acronym ?? "UNK",
-            team_colour: driver?.team_colour ?? "",
-            team_name: driver?.team_name ?? "",
-            headshot_url: driver?.headshot_url ?? "",
-          };
-        });
+        const mergedData: ClassificationData[] = classificationData.map(
+          (result: StartingGrid) => {
+            const driver = drivers.find(
+              (d) => d.driver_number === result.driver_number
+            );
+            return {
+              ...result,
+              name_acronym: driver?.name_acronym ?? "UNK",
+              team_colour: driver?.team_colour ?? "",
+              team_name: driver?.team_name ?? "",
+              headshot_url: driver?.headshot_url ?? "",
+            };
+          }
+        );
 
         setStartingGridData(mergedData);
       } catch (err) {
@@ -86,7 +66,7 @@ const StartingGridTable = ({
     };
 
     fetchStartingGrid();
-  }, [filteredSession, driversData]);
+  }, [filteredSession, classificationData, drivers]);
 
   /**
    * Returns the display string for the "Lap Duration" column,
@@ -111,7 +91,7 @@ const StartingGridTable = ({
    * Returns the display string for the "Gap to Leader" column in seconds.
    * If leader, returns "0.000"; else, difference to leader's lap_duration in seconds (3 decimals).
    */
-  function getGapToLeader(result: DriverData) {
+  function getGapToLeader(result: ClassificationData) {
     // If missing data, return "--"
     if (
       typeof result.lap_duration !== "number" ||
