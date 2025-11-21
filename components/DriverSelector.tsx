@@ -8,24 +8,24 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import { useSessionDrivers } from "@/app/providers/SessionDriversProvider";
+import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 import { Driver } from "@/types/driver";
 import { Label } from "./ui/label";
 
 const DriverSelector = () => {
-  const sessionDrivers = useSessionDrivers();
+  const { drivers } = useSessionInfo();
   const { selectedDrivers, setSelectedDrivers } = useSelectedDrivers();
 
   // Select the first five drivers *only* on first mount (initial load), never again.
   // This ensures setSelectedDrivers only runs once, so user can clear selection indefinitely.
   const hasInitialized = React.useRef(false);
   useEffect(() => {
-    if (!hasInitialized.current && sessionDrivers.length > 0 && selectedDrivers.length === 0) {
-      setSelectedDrivers(sessionDrivers.slice(0, 5));
+    if (!hasInitialized.current && drivers.length > 0 && selectedDrivers.length === 0) {
+      setSelectedDrivers(drivers.slice(0, 5));
       hasInitialized.current = true;
     }
-  }, [sessionDrivers, selectedDrivers.length, setSelectedDrivers]);
+  }, [drivers, selectedDrivers.length, setSelectedDrivers]);
 
   // Driver selection handlers
   const handleDriverToggle = (driver: Driver) => {
@@ -45,8 +45,8 @@ const DriverSelector = () => {
 
   const handleSelectAll = () => {
     // Avoid redundant updates if all drivers already selected
-    if (selectedDrivers.length !== sessionDrivers.length) {
-      setSelectedDrivers(sessionDrivers);
+    if (selectedDrivers.length !== drivers.length) {
+      setSelectedDrivers(drivers);
     }
   };
 
@@ -89,7 +89,7 @@ const DriverSelector = () => {
           </Button>
         </div>
         <SelectGroup>
-          {sessionDrivers.map((driver, index) => (
+          {drivers.map((driver, index) => (
             <div
               key={`driver-select-${index}`}
               className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"

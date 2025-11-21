@@ -12,7 +12,7 @@ import PaceChart from "@/components/PaceChart";
 import AISessionSummary from "@/components/AISessionSummary";
 import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-import { SessionDriversProvider } from "@/app/providers/SessionDriversProvider";
+import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
 import StartingGrid from "./classification/StartingGrid";
 import SessionResults from "./classification/SessionResults";
@@ -148,7 +148,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
   ]);
 
   return (
-    <SessionDriversProvider driversData={driversData}>
+    <SessionInfoProvider driversData={driversData}>
       <SelectedDriversProvider>
         <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
           <header className="top-0 left-0 w-full bg-primary-foreground border-b">
@@ -205,7 +205,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
           </div>
         </div>
       </SelectedDriversProvider>
-    </SessionDriversProvider>
+    </SessionInfoProvider>
   );
 };
 
