@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 import { Driver } from "@/types/driver";
 import Image from "next/image";
 import {
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "../ui/table";
 import { SessionResult } from "@/types/sessionResult";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
@@ -57,8 +57,6 @@ const SessionResults = ({
         const driversMap = new Map<number, Driver>(
           driversData.map((d) => [d.driver_number, d])
         );
-
-        // console.log(driversMap);
 
         // Merge driver info into session results
         const mergedData: DriverData[] = sessionResultsRaw.map(

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 import { Driver } from "@/types/driver";
 import {
   Table,
@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "../ui/table";
 import Image from "next/image";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 
