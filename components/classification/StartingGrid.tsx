@@ -126,11 +126,11 @@ const StartingGridTable = ({ classificationData }: StartingGridProps) => {
         <Table className="text-xs">
           <TableHeader>
             <TableRow>
-              <TableHead>Pos.</TableHead>
-              <TableHead>Driver</TableHead>
-              <TableHead>Team</TableHead>
-              <TableHead>Lap Duration</TableHead>
-              <TableHead>Gap to Leader</TableHead>
+              <TableHead>POS.</TableHead>
+              <TableHead>DRIVER</TableHead>
+              <TableHead>TEAM</TableHead>
+              <TableHead>LAP</TableHead>
+              <TableHead>GAP</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

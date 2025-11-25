@@ -23,9 +23,9 @@ const ConstructorsStandingsTable = ({
     <Table className="text-xs">
       <TableHeader>
         <TableRow>
-          <TableHead>Pos.</TableHead>
-          <TableHead>Team</TableHead>
-          <TableHead className="text-right">Points</TableHead>
+          <TableHead>POS.</TableHead>
+          <TableHead>TEAM</TableHead>
+          <TableHead className="text-right">PTS</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

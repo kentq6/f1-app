@@ -31,11 +31,11 @@ const DriversStandingsTable = ({
     <Table className="text-xs">
       <TableHeader>
         <TableRow>
-          <TableHead>Pos.</TableHead>
-          <TableHead>Driver</TableHead>
+          <TableHead>POS.</TableHead>
+          <TableHead>DRIVER</TableHead>
           {/* <TableHead>Nationality</TableHead> */}
-          <TableHead>Team</TableHead>
-          <TableHead className="text-right">Points</TableHead>
+          <TableHead>TEAM</TableHead>
+          <TableHead className="text-right">PTS</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

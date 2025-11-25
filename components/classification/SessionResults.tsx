@@ -118,12 +118,12 @@ const SessionResults = ({ classificationData }: SessionResultsProps) => {
         <Table className="text-xs">
           <TableHeader>
             <TableRow>
-              <TableHead>Pos.</TableHead>
-              <TableHead>No.</TableHead>
-              <TableHead>Driver</TableHead>
-              <TableHead>Team</TableHead>
-              <TableHead>Laps</TableHead>
-              <TableHead>Time</TableHead>
+              <TableHead>POS.</TableHead>
+              <TableHead>NO.</TableHead>
+              <TableHead>DRIVER</TableHead>
+              <TableHead>TEAM</TableHead>
+              <TableHead>LAPS</TableHead>
+              <TableHead>TIME</TableHead>
               {(filteredSession?.session_type === "Race" ||
                 filteredSession?.session_type === "Sprint") && (
                 <TableHead>PTS</TableHead>
