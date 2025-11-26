@@ -14,7 +14,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="mt-10 relative overflow-hidden bg-white border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <footer className="mt-10 relative overflow-hidden border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Logo */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
@@ -57,7 +57,7 @@ const Footer = () => {
                 >
                   <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400 text-sm">
                     <span className="text-white text-xs">
-                      <social.icon color="black" />
+                      <social.icon color="#d1d5db" />
                     </span>
                     {social.name}
                   </div>
@@ -68,13 +68,13 @@ const Footer = () => {
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-linear-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent mb-8"></div>
+        <div className="w-full h-px bg-linear-to-r from-transparent via-gray-200 dark:via-formula-one-primary to-transparent mb-8"></div>
 
         {/* Copyright and Disclaimer */}
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="text-center md:text-left mb-4 md:mb-0">
             <p className="text-gray-500 dark:text-gray-400 text-sm">
-              © {new Date().getFullYear()} F1 Historical Stat Tracker
+              © {new Date().getFullYear()} F1 Dashboard
             </p>
           </div>
 

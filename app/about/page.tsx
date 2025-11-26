@@ -1,23 +1,21 @@
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 import { CircleCheck } from "lucide-react";
 
 const AboutPage = () => {
   return (
     <div>
-      <section className="w-full px-4 py-12 flex flex-col items-center justify-center min-h-[60vh] dark:bg-gray-800 dark:border-gray-700">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-100 text-center">
-          F1 Stat Tracker
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 text-center">
-          This is an unofficial Formula One fan project. My goal is to build a
-          beautiful and fast resource for F1 enthusiasts, powered by modern
+      <section className="w-full flex flex-col items-center justify-center min-h-[60vh]">
+        <Logo height={300} width={300}/>
+        <p className="text-lg mb-6 text-center">
+          This is an unofficial Formula One fan project. The goal is to build an clean and intuitive resource for F1 enthusiasts, powered by modern
           technologies like Next.js, React, and Tailwind CSS.
         </p>
-        <ul className="text-base text-gray-700 dark:text-gray-300 mb-8 space-y-1 text-left">
+        <ul className="mb-8 space-y-1 text-left">
           <li>
             <span className="inline-flex items-center gap-2">
               <CircleCheck />
-              <span className="font-semibold">F1 Historical Statistics</span> — Track driver and constructor statistics.
+              <span className="font-semibold">F1 Historical Statistics</span> — View driver/constructor information, race statistics, and telemetry data.
             </span>
           </li>
           <li>

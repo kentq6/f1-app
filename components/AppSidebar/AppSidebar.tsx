@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Home, Inbox } from "lucide-react";
+import { Calendar, Home, Inbox, Info } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +18,11 @@ const AppSidebar = () => {
       title: "Home",
       url: "/",
       icon: Home,
+    },
+    {
+      title: "About",
+      url: "/about",
+      icon: Info,
     },
     {
       title: "Drivers",
