@@ -14,15 +14,11 @@ import {
 import getSessionInsight from "@/app/actions/getSessionInsight";
 import { ThreeDot } from "react-loading-indicators";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
+import { useDrivers } from "@/app/providers/DriversProvider";
 
-interface AIInsightsProps {
-  driversData: Driver[];
-}
-
-const AISessionSummary = ({
-  driversData,
-}: AIInsightsProps) => {
+const AISessionSummary = () => {
   const { filteredSession } = useFilteredSession();
+  const { driversData } = useDrivers();
 
   const [insight, setInsight] = useState<AIInsight | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,7 +34,7 @@ const AISessionSummary = ({
         let sessionResultsRaw: SessionResult[] | StartingGrid[];
         if (filteredSession.session_type === "Qualifying") {
           const res = await fetch(
-            `/api/sessions?starting_grid=${encodeURIComponent(
+            `/api/starting_grid?session_key=${encodeURIComponent(
               filteredSession.session_key
             )}`
           );
@@ -49,7 +45,7 @@ const AISessionSummary = ({
           sessionResultsRaw = await res.json();
         } else {
           const res = await fetch(
-            `/api/sessions?session_result=${encodeURIComponent(
+            `/api/session_result?session_key=${encodeURIComponent(
               filteredSession.session_key
             )}`
           );
@@ -111,7 +107,7 @@ const AISessionSummary = ({
 
   return (
     <div className="flex flex-col h-full flex-1">
-      <h1 className="text-sm font-bold pb-1">Session Analysis</h1>
+      <h1 className="text-sm font-bold pb-1">Session Summary</h1>
       <Separator />
       <div className="bg-background mt-2 p-4 rounded-sm sm:rounded-md border flex flex-col items-center justify-center flex-1 w-full gap-3">
         {loading ? (
