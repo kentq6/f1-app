@@ -11,7 +11,7 @@ import { Driver } from "@/types/driver";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionResult } from "@/types/sessionResult";
 import { StartingGrid } from "@/types/startingGrid";
-import { useDrivers } from "./DriversProvider";
+import { useDriversData } from "./DriversProvider";
 
 // Discriminated union type for classification results
 type ClassificationResult =
@@ -59,7 +59,7 @@ export const SessionInfoProvider: React.FC<SessionInfoProviderProps> = ({
   children,
 }) => {
   const { filteredSession } = useFilteredSession();
-  const { driversData } = useDrivers();
+  const { driversData } = useDriversData();
 
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [classificationResults, setClassificationResults] =

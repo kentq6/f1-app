@@ -11,17 +11,13 @@ import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import DriverSelector from "./DriverSelector";
 
-interface NavbarProps {
-  yearOptions: number[];
-  trackOptions: string[];
-  sessionOptions: string[];
-}
+// interface NavbarProps {
+//   yearOptions: number[];
+//   trackOptions: string[];
+//   sessionOptions: string[];
+// }
 
-const Navbar: React.FC<NavbarProps> = ({
-  yearOptions,
-  trackOptions,
-  sessionOptions,
-}) => {
+const Navbar = () => {
   const { open } = useSidebar();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -49,11 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* Center: Search Functionality */}
           {!open && (
             <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
-              <SessionSelect
-                yearOptions={yearOptions}
-                trackOptions={trackOptions}
-                sessionOptions={sessionOptions}
-              />
+              <SessionSelect />
 
               {/* Driver Selection Dropdown */}
               <DriverSelector />
@@ -139,11 +131,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="px-2 pt-2 pb-3 space-y-1 rounded-xl mt-2 border bg-primary-foreground flex flex-col items-stretch">
             {/* Mobile Search Session & Driver Selector */}
             <div className="flex items-center justify-center w-full max-w-xs self-center gap-2 md:gap-6">
-              <SessionSelect
-                yearOptions={yearOptions}
-                trackOptions={trackOptions}
-                sessionOptions={sessionOptions}
-              />
+              <SessionSelect />
 
               <DriverSelector />
             </div>

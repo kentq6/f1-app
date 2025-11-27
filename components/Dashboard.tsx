@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Session } from "@/types/session";
-// import { Driver } from "@/types/driver";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
 import Navbar from "@/components/Navbar";
@@ -15,15 +13,11 @@ import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
 import ClassificationTable from "./classification/ClassificationTable";
+import { useSessionsData } from "@/app/providers/SessionsProvider";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 
-interface DashboardProps {
-  sessionsData: Session[];
-  // driversData: Driver[];
-}
-
-const Dashboard = ({ sessionsData }: DashboardProps) => {
+const Dashboard = () => {
   const {
     selectedYear,
     setSelectedYear,
@@ -35,6 +29,7 @@ const Dashboard = ({ sessionsData }: DashboardProps) => {
 
   // This session is the currently "active" one whose data should show on the page
   const { setFilteredSession } = useFilteredSession();
+  const { sessionsData } = useSessionsData();
 
   // Filter select
   const [initializedFilters, setInitializedFilters] = useState(false);
@@ -74,54 +69,6 @@ const Dashboard = ({ sessionsData }: DashboardProps) => {
     setFilteredSession,
   ]);
 
-  // Compute options for select fields
-  const yearOptions = Array.from(new Set(sessionsData.map((s) => s.year))).sort(
-    (a, b) => b - a
-  );
-
-  const trackOptions = Array.from(
-    new Set(
-      sessionsData
-        .filter((s) => (selectedYear ? s.year === selectedYear : true))
-        .map((s) => s.circuit_short_name)
-    )
-  ).sort((a, b) => {
-    // Find the earliest session for each circuit to compare their first date
-    const getFirstSessionDate = (track: string) => {
-      const session = sessionsData
-        .filter(
-          (s) =>
-            s.circuit_short_name === track &&
-            (selectedYear ? s.year === selectedYear : true)
-        )
-        .sort(
-          (a, b) =>
-            new Date(a.date_start).getTime() - new Date(b.date_start).getTime()
-        )[0];
-      return session
-        ? new Date(session.date_start).getTime()
-        : Number.MAX_SAFE_INTEGER;
-    };
-    return getFirstSessionDate(a) - getFirstSessionDate(b);
-  });
-
-  const sessionOptions = Array.from(
-    new Set(
-      sessionsData
-        .filter(
-          (s) =>
-            (selectedYear ? s.year === selectedYear : true) &&
-            (selectedTrack ? s.circuit_short_name === selectedTrack : true)
-        )
-        // Sort by date_start (oldest to newest) before mapping to names
-        .sort(
-          (a, b) =>
-            new Date(a.date_start).getTime() - new Date(b.date_start).getTime()
-        )
-        .map((s) => s.session_name)
-    )
-  );
-
   // When all three filters (year, track, session type) are set, show updated session
   // Only set filteredSession when the session actually changes due to filter interaction
   useEffect(() => {
@@ -151,11 +98,7 @@ const Dashboard = ({ sessionsData }: DashboardProps) => {
         <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
           <header className="top-0 left-0 w-full bg-primary-foreground border-b">
             {/* Navbar */}
-            <Navbar
-              yearOptions={yearOptions}
-              trackOptions={trackOptions}
-              sessionOptions={sessionOptions}
-            />
+            <Navbar />
           </header>
 
           {/* Grid Layout */}

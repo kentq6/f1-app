@@ -15,7 +15,7 @@ import DriversStandingsTable from "./DriversStandingsTable";
 import { Session } from "@/types/session";
 import { SessionResult } from "@/types/sessionResult";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-import { useDrivers } from "@/app/providers/DriversProvider";
+import { useDriversData } from "@/app/providers/DriversProvider";
 
 type Constructors = {
   position?: number;
@@ -57,7 +57,7 @@ function setCachedSession(sessionKey: number, data: SessionResult[]) {
 
 const Standings = () => {
   const { filteredSession } = useFilteredSession();
-  const { driversData } = useDrivers();
+  const { driversData } = useDriversData();
 
   const [showChampionship, setShowChampionship] = useState<
     "Constructors" | "Drivers"

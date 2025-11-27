@@ -14,12 +14,16 @@ interface SessionFiltersContextType extends SessionFilters {
   setSelectedSession: (session: string) => void;
 }
 
-const SessionFiltersContext = createContext<SessionFiltersContextType | undefined>(undefined);
+const SessionFiltersContext = createContext<
+  SessionFiltersContextType | undefined
+>(undefined);
 
 export const useSessionFilters = (): SessionFiltersContextType => {
   const context = useContext(SessionFiltersContext);
   if (context === undefined) {
-    throw new Error("useSessionFilters must be used within a SessionFiltersProvider");
+    throw new Error(
+      "useSessionFilters must be used within a SessionFiltersProvider"
+    );
   }
   return context;
 };
@@ -28,7 +32,10 @@ interface SessionFiltersProviderProps {
   children: ReactNode;
 }
 
-export const SessionFiltersProvider: React.FC<SessionFiltersProviderProps> = ({ children }) => {
+export const SessionFiltersProvider: React.FC<SessionFiltersProviderProps> = ({
+  // sessionsData,
+  children,
+}) => {
   const [selectedYear, setSelectedYear] = useState<number | "">("");
   const [selectedTrack, setSelectedTrack] = useState<string>("");
   const [selectedSession, setSelectedSession] = useState<string>("");
