@@ -1,5 +1,6 @@
 import Dashboard from "@/components/Dashboard";
 import { headers } from "next/headers";
+import { DriversProvider } from "./providers/DriversProvider";
 
 export default async function HomePage() {
   // Get the base URL from headers or use a fallback
@@ -8,15 +9,15 @@ export default async function HomePage() {
   const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
   const baseUrl = `${protocol}://${host}`;
 
-  const [sessionsRes, driversRes] = await Promise.all([
+  const [sessionsRes] = await Promise.all([
     fetch(`${baseUrl}/api/sessions`, { cache: "no-store" }),
-    fetch(`${baseUrl}/api/drivers`, { cache: "no-store" })
   ]);
 
   const sessionsData = await sessionsRes.json();
-  const driversData = await driversRes.json();
 
   return (
-    <Dashboard sessionsData={sessionsData} driversData={driversData} />
+    <DriversProvider>
+      <Dashboard sessionsData={sessionsData} />
+    </DriversProvider>
   );
 }

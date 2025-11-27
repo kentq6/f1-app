@@ -11,6 +11,7 @@ import { Driver } from "@/types/driver";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionResult } from "@/types/sessionResult";
 import { StartingGrid } from "@/types/startingGrid";
+import { useDrivers } from "./DriversProvider";
 
 // Discriminated union type for classification results
 type ClassificationResult =
@@ -44,7 +45,6 @@ export const useSessionInfo = (): SessionInfoContextType => {
 };
 
 interface SessionInfoProviderProps {
-  driversData: Driver[];
   children: ReactNode;
 }
 
@@ -56,10 +56,10 @@ interface SessionInfoProviderProps {
  * - Provides { drivers, classificationResults } object via context
  */
 export const SessionInfoProvider: React.FC<SessionInfoProviderProps> = ({
-  driversData,
   children,
 }) => {
   const { filteredSession } = useFilteredSession();
+  const { driversData } = useDrivers();
 
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [classificationResults, setClassificationResults] =
@@ -107,16 +107,7 @@ export const SessionInfoProvider: React.FC<SessionInfoProviderProps> = ({
         const sessionKey = initialData[0].session_key;
 
         // Fetch driver details for the session
-        const driversRes = await fetch(
-          `/api/drivers?session_key=${encodeURIComponent(sessionKey)}`
-        );
-        if (!driversRes.ok) {
-          const details = await driversRes.json().catch(() => ({}));
-          throw new Error(
-            details?.error || "Failed to fetch drivers for session"
-          );
-        }
-        const driversDataList = await driversRes.json();
+        const driversDataList = driversData.filter((drivers) => drivers.session_key === sessionKey)
 
         // Ensure data is a list of drivers; sort by driver_number ascending
         const sortedDrivers = Array.isArray(driversDataList)

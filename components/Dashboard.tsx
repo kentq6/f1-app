@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Session } from "@/types/session";
-import { Driver } from "@/types/driver";
+// import { Driver } from "@/types/driver";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
 import Navbar from "@/components/Navbar";
@@ -20,10 +20,10 @@ import ClassificationTable from "./classification/ClassificationTable";
 
 interface DashboardProps {
   sessionsData: Session[];
-  driversData: Driver[];
+  // driversData: Driver[];
 }
 
-const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
+const Dashboard = ({ sessionsData }: DashboardProps) => {
   const {
     selectedYear,
     setSelectedYear,
@@ -146,7 +146,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
   ]);
 
   return (
-    <SessionInfoProvider driversData={driversData}>
+    <SessionInfoProvider>
       <SelectedDriversProvider>
         <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
           <header className="top-0 left-0 w-full bg-primary-foreground border-b">
@@ -177,7 +177,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
 
             {/* Drivers'/Constructors' Standings */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
-              <Standings driversData={driversData} />
+              <Standings />
             </div>
 
             {/* Race Pace Chart */}
@@ -192,7 +192,7 @@ const Dashboard = ({ sessionsData, driversData }: DashboardProps) => {
 
             {/* AI Session Summary */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
-              <AISessionSummary driversData={driversData} />
+              <AISessionSummary />
             </div>
           </div>
         </div>
