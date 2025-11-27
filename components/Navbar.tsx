@@ -2,7 +2,7 @@
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { SidebarTrigger } from "./ui/sidebar";
+import { SidebarTrigger, useSidebar } from "./ui/sidebar";
 import Logo from "./Logo";
 import React, { useState } from "react";
 import SessionSelect from "./SessionSelect";
@@ -22,6 +22,8 @@ const Navbar: React.FC<NavbarProps> = ({
   trackOptions,
   sessionOptions,
 }) => {
+  const { open } = useSidebar();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -45,16 +47,18 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Center: Search Functionality */}
-          <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
-            <SessionSelect
-              yearOptions={yearOptions}
-              trackOptions={trackOptions}
-              sessionOptions={sessionOptions}
-            />
+          {!open && (
+            <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
+              <SessionSelect
+                yearOptions={yearOptions}
+                trackOptions={trackOptions}
+                sessionOptions={sessionOptions}
+              />
 
-            {/* Driver Selection Dropdown */}
-            <DriverSelector />
-          </div>
+              {/* Driver Selection Dropdown */}
+              <DriverSelector />
+            </div>
+          )}
 
           {/* Right: Auth and Toggle Light/Dark Mode Buttoms */}
           <div className="flex items-center space-x-1 sm:space-x-2 gap-2">
