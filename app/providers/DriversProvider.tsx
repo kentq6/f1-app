@@ -35,7 +35,7 @@ export const DriversProvider: React.FC<DriversProviderProps> = ({
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        // Fetch all driver details
+        // Fetch all driver data
         const driversRes = await fetch(`/api/drivers`);
         if (!driversRes.ok) {
           const details = await driversRes.json().catch(() => ({}));
