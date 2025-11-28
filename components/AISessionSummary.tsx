@@ -14,11 +14,11 @@ import {
 import getSessionInsight from "@/app/actions/getSessionInsight";
 import { ThreeDot } from "react-loading-indicators";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-import { useDrivers } from "@/app/providers/DriversProvider";
+import { useDriversData } from "@/app/providers/DriversProvider";
 
 const AISessionSummary = () => {
   const { filteredSession } = useFilteredSession();
-  const { driversData } = useDrivers();
+  const { driversData } = useDriversData();
 
   const [insight, setInsight] = useState<AIInsight | null>(null);
   const [loading, setLoading] = useState(true);
