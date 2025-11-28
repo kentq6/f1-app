@@ -14,10 +14,18 @@ import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
 import ClassificationTable from "./classification/ClassificationTable";
 import { useSessionsData } from "@/app/providers/SessionsProvider";
+import { useDriversData } from "@/app/providers/DriversProvider";
+import { Session } from "@/types/session";
+import { Driver } from "@/types/driver";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 
-const Dashboard = () => {
+interface DashboardProps {
+  sessions: Session[];
+  drivers: Driver[];
+}
+
+const Dashboard = ({ sessions, drivers }: DashboardProps) => {
   const {
     selectedYear,
     setSelectedYear,
@@ -29,7 +37,8 @@ const Dashboard = () => {
 
   // This session is the currently "active" one whose data should show on the page
   const { setFilteredSession } = useFilteredSession();
-  const { sessionsData } = useSessionsData();
+  const { sessionsData, setSessionsData } = useSessionsData();
+  const { setDriversData } = useDriversData();
 
   // Filter select
   const [initializedFilters, setInitializedFilters] = useState(false);
@@ -38,6 +47,11 @@ const Dashboard = () => {
   //   const { user } = currentUser();
 
   // };
+
+  useEffect(() => {
+    setSessionsData(sessions);
+    setDriversData(drivers);
+  }, [sessions, setSessionsData, drivers, setDriversData]);
 
   // Find the latest session by start date as default (returns undefined if no sessions exist)
   const latestSession = useMemo(() => {
