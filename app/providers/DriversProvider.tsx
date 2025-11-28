@@ -1,24 +1,21 @@
 "use client";
 
+import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Driver } from "@/types/driver";
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
 
 interface DriversContextType {
   driversData: Driver[];
+  setDriversData: (drivers: Driver[]) => void;
 }
 
+// Create the context
 const DriversContext = createContext<DriversContextType | undefined>(undefined);
 
+// Custom hook to use the context safely in descendants
 export const useDriversData = (): DriversContextType => {
   const context = useContext(DriversContext);
-  if (context === undefined) {
-    throw new Error("useDriversData must be used within a DriversProvider");
+  if (!context) {
+    throw new Error("useDrivers must be used within a DriversProvider");
   }
   return context;
 };
@@ -27,33 +24,16 @@ interface DriversProviderProps {
   children: ReactNode;
 }
 
-export const DriversProvider: React.FC<DriversProviderProps> = ({
-  children,
-}) => {
+export const DriversProvider: React.FC<DriversProviderProps> = ({ children }) => {
   const [driversData, setDriversData] = useState<Driver[]>([]);
 
-  useEffect(() => {
-    const fetchDrivers = async () => {
-      try {
-        // Fetch all driver data
-        const driversRes = await fetch(`/api/drivers`);
-        if (!driversRes.ok) {
-          const details = await driversRes.json().catch(() => ({}));
-          throw new Error(details?.error || "Failed to fetch drivers data");
-        }
-        const drivers = await driversRes.json();
-        setDriversData(drivers);
-      } catch (err) {
-        console.error("Could not fetch drivers data: ", err);
-        setDriversData([]);
-      }
-    };
-
-    fetchDrivers();
-  }, []);
+  const value: DriversContextType = {
+    driversData,
+    setDriversData,
+  };
 
   return (
-    <DriversContext.Provider value={{ driversData }}>
+    <DriversContext.Provider value={value}>
       {children}
     </DriversContext.Provider>
   );
