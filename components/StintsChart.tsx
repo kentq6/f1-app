@@ -111,37 +111,27 @@ const StintsChart = () => {
       switch (compound) {
         case "SOFT":
           return {
-            bg: isDark ? "rgba(218, 41, 28, 0.5)" : "rgba(218, 41, 28, 0.6)", // #DA291C
-            border: isDark ? "rgba(218, 41, 28, 0.8)" : "rgba(218, 41, 28, 1)",
+            bg: isDark ? "rgba(218, 41, 28, 0.8)" : "rgba(218, 41, 28, 1)",
           };
         case "MEDIUM":
           return {
-            bg: isDark ? "rgba(255, 215, 0, 0.5)" : "rgba(255, 215, 0, 0.6)", // #FFD700
-            border: isDark ? "rgba(255, 215, 0, 0.8)" : "rgba(255, 215, 0, 1)",
+            bg: isDark ? "rgba(255, 215, 0, 0.8)" : "rgba(255, 215, 0, 1)",
           };
         case "HARD":
           return {
-            bg: isDark
-              ? "rgba(255, 255, 255, 0.5)"
-              : "rgba(255, 255, 255, 0.6)", // #FFFFFF
-            border: isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(30, 30, 30, 1)",
+            bg: isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(30, 30, 30, 1)",
           };
         case "INTERMEDIATE":
           return {
-            bg: isDark ? "rgba(67, 176, 42, 0.5)" : "rgba(67, 176, 42, 0.6)", // #43B02A
-            border: isDark ? "rgba(67, 176, 42, 0.8)" : "rgba(67, 176, 42, 1)",
+            bg: isDark ? "rgba(67, 176, 42, 0.8)" : "rgba(67, 176, 42, 1)",
           };
         case "WET":
           return {
-            bg: isDark ? "rgba(0, 103, 173, 0.5)" : "rgba(0, 103, 173, 0.6)", // #0067AD
-            border: isDark ? "rgba(0, 103, 173, 0.8)" : "rgba(0, 103, 173, 1)",
+            bg: isDark ? "rgba(0, 103, 173, 0.8)" : "rgba(0, 103, 173, 1)",
           };
         default:
           return {
             bg: isDark
-              ? "rgba(128, 128, 128, 0.5)"
-              : "rgba(128, 128, 128, 0.6)", // fallback gray
-            border: isDark
               ? "rgba(128, 128, 128, 0.8)"
               : "rgba(128, 128, 128, 1)",
           };
@@ -166,7 +156,6 @@ const StintsChart = () => {
 
     const dataArray: ChartDataItem[] = [];
     const bgColors: string[] = [];
-    const borderColors: string[] = [];
 
     selectedDrivers.forEach((driver) => {
       const driverLabel =
@@ -185,7 +174,6 @@ const StintsChart = () => {
           stint,
         });
         bgColors.push(colors.bg);
-        borderColors.push(colors.border);
       });
     });
 
@@ -195,9 +183,8 @@ const StintsChart = () => {
           label: "Stints",
           data: dataArray,
           backgroundColor: bgColors,
-          borderColor: borderColors,
-          borderWidth: 0.75,
-          borderSkipped: false,
+          // borderWidth: 0.75,
+          // borderSkipped: false,
           barThickness:
             selectedDrivers.length > 15
               ? 5
@@ -252,13 +239,12 @@ const StintsChart = () => {
           label: function (ctx: import("chart.js").TooltipItem<"bar">) {
             const d = ctx.raw as {
               x: [number, number];
-              y: string;
               compound: string;
               stint: Stint;
             };
             if (!d) return "";
             const [start, end] = d.x;
-            return ` ${d.y} - ${d.compound} Laps ${start} - ${end}`;
+            return ` ${d.compound} (Laps ${start} - ${end})`;
           },
         },
       },
@@ -345,7 +331,7 @@ const StintsChart = () => {
         <Bar
           data={chartData}
           options={options}
-          className="h-full overflow-y-auto rounded-lg shadow-md px-2 border border-border dark:border-primary-border bg-gray-50 dark:bg-background"
+          className="h-full overflow-y-auto rounded-lg shadow-md px-2 border bg-gray-50 dark:bg-background"
         />
       </div>
     </div>
