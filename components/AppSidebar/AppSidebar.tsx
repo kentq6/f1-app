@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Home, Inbox, Info } from "lucide-react";
+import { Calendar, LayoutDashboard, Inbox, Info } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,9 +15,9 @@ const AppSidebar = () => {
   // Menu items.
   const items = [
     {
-      title: "Home",
-      url: "/",
-      icon: Home,
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
     },
     {
       title: "About",
