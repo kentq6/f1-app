@@ -183,8 +183,8 @@ const StintsChart = () => {
           label: "Stints",
           data: dataArray,
           backgroundColor: bgColors,
-          // borderWidth: 0.75,
-          // borderSkipped: false,
+          borderWidth: 0.25,
+          borderSkipped: false,
           barThickness:
             selectedDrivers.length > 15
               ? 5
