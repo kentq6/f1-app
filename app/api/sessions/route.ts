@@ -21,6 +21,6 @@ export async function GET(request: Request) {
     const data = await res.json();
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({ error: "sessions fetch failed", details: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Sessions fetch failed", details: String(err) }, { status: 500 });
   }
 }
