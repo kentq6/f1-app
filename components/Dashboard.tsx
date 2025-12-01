@@ -17,15 +17,22 @@ import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
 import { Session } from "@/types/session";
 import { Driver } from "@/types/driver";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "./Loading";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
 
-interface DashboardProps {
-  sessions: Session[];
-  drivers: Driver[];
+async function fetchSessions(): Promise<Session[]> {
+  const res = await fetch('/api/sessions');
+  return res.json();
 }
 
-const Dashboard = ({ sessions, drivers }: DashboardProps) => {
+async function fetchDrivers(): Promise<Driver[]> {
+  const res = await fetch('/api/drivers');
+  return res.json();
+}
+
+const Dashboard = () => {
   const {
     selectedYear,
     setSelectedYear,
@@ -48,10 +55,20 @@ const Dashboard = ({ sessions, drivers }: DashboardProps) => {
 
   // };
 
+  const { data: sessions, isLoading: isSessionsLoading } = useQuery({
+    queryKey: ["sessions"],
+    queryFn: fetchSessions,
+  })
+
+  const { data: drivers, isLoading: isDriversLoading } = useQuery({
+    queryKey: ["drivers"],
+    queryFn: fetchDrivers,
+  })
+
   useEffect(() => {
-    setSessionsData(sessions);
-    setDriversData(drivers);
-  }, [sessions, setSessionsData, drivers, setDriversData]);
+    setSessionsData(sessions ?? []);
+    setDriversData(drivers ?? []);
+  }, [setSessionsData, setDriversData, sessions, drivers]);
 
   // Find the latest session by start date as default (returns undefined if no sessions exist)
   const latestSession = useMemo(() => {
@@ -105,6 +122,10 @@ const Dashboard = ({ sessions, drivers }: DashboardProps) => {
     sessionsData,
     setFilteredSession,
   ]);
+
+  if (isSessionsLoading && isDriversLoading) {
+    return <Loading />
+  }
 
   return (
     <SessionInfoProvider>

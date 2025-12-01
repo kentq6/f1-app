@@ -2,13 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/AppSidebar/AppSidebar";
-import { SessionFiltersProvider } from "./providers/SessionFiltersProvider";
-import { FilteredSessionProvider } from "./providers/FilteredSessionProvider";
-import { DriversProvider } from "./providers/DriversProvider";
-import { SessionsProvider } from "./providers/SessionsProvider";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,29 +48,11 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            // enableSystem
-            disableTransitionOnChange
-          >
-            <div className="flex min-h-screen w-full overflow-hidden">
-              <SessionFiltersProvider>
-                <FilteredSessionProvider>
-                  <SidebarProvider defaultOpen={false}>
-                    <AppSidebar />
-                    <DriversProvider>
-                      <SessionsProvider>
-                        <main className="flex-1 overflow-x-hidden">
-                          <div className="w-full">{children}</div>
-                        </main>
-                      </SessionsProvider>
-                    </DriversProvider>
-                  </SidebarProvider>
-                </FilteredSessionProvider>
-              </SessionFiltersProvider>
-            </div>
-          </ThemeProvider>
+          <Providers>
+            <main className="flex-1 overflow-x-hidden">
+              <div className="w-full">{children}</div>
+            </main>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>
