@@ -3,18 +3,15 @@
 import React, {
   createContext,
   useContext,
-  useState,
-  useEffect,
   ReactNode,
 } from "react";
 import { Driver } from "@/types/driver";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionResult } from "@/types/sessionResult";
 import { StartingGrid } from "@/types/startingGrid";
-import { useDriversData } from "./DriversProvider";
+import useClassificationResults from "@/hooks/useSessionInfo";
 
 // Discriminated union type for classification results
-type ClassificationResult =
+export type ClassificationResult =
   | {
       type: "result";
       data: SessionResult[];
@@ -50,82 +47,13 @@ interface SessionInfoProviderProps {
 
 /**
  * SessionInfoProvider:
- * - Gets current session from useFilteredSession
- * - Fetches both sessionResults/startingGrid and relevant drivers for this session from the API
- * - Filters driversData so it only contains drivers present in the session (from API)
- * - Provides { drivers, classificationResults } object via context
+ * - Fetches drivers and classificationResults using 
+ * - Provides { drivers, SessionInfos } object via context
  */
 export const SessionInfoProvider: React.FC<SessionInfoProviderProps> = ({
   children,
 }) => {
-  const { filteredSession } = useFilteredSession();
-  const { driversData } = useDriversData();
-
-  const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [classificationResults, setClassificationResults] =
-    useState<ClassificationResult | null>(null);
-
-  useEffect(() => {
-    // If there's no session or no drivers data, reset and do nothing
-    if (!filteredSession || driversData.length === 0) {
-      setDrivers([]);
-      setClassificationResults(null);
-      return;
-    }
-
-    const fetchSessionInfo = async () => {
-      try {
-        const isQuali = filteredSession.session_type === "Qualifying";
-        const endpoint = isQuali
-          ? `/api/starting_grid?session_key=${encodeURIComponent(
-              filteredSession.session_key
-            )}`
-          : `/api/session_result?session_key=${encodeURIComponent(
-              filteredSession.session_key
-            )}`;
-
-        // Fetch starting grid or session results
-        const initialRes = await fetch(endpoint);
-        if (!initialRes.ok) {
-          const details = await initialRes.json().catch(() => ({}));
-          throw new Error(
-            details?.error || "Failed to fetch classification results list"
-          );
-        }
-        const initialData = await initialRes.json();
-        if (!Array.isArray(initialData) || !initialData[0]?.session_key) {
-          throw new Error("Session data missing or unexpected format");
-        }
-
-        // Set the discriminated union here
-        setClassificationResults(
-          isQuali
-            ? { type: "grid", data: initialData }
-            : { type: "result", data: initialData }
-        );
-
-        const sessionKey = initialData[0].session_key;
-
-        // Fetch driver details for the session
-        const driversDataList = driversData.filter((drivers) => drivers.session_key === sessionKey)
-
-        // Ensure data is a list of drivers; sort by driver_number ascending
-        const sortedDrivers = Array.isArray(driversDataList)
-          ? [...driversDataList].sort(
-              (a, b) => a.driver_number - b.driver_number
-            )
-          : [];
-
-        setDrivers(sortedDrivers);
-      } catch (err) {
-        console.error("Could not load session driver list: ", err);
-        setDrivers([]); // fallback to empty on error
-        setClassificationResults(null); // and empty session results
-      }
-    };
-
-    fetchSessionInfo();
-  }, [filteredSession, driversData]);
+  const { drivers, classificationResults } = useClassificationResults();
 
   return (
     <SessionInfoContext.Provider value={{ drivers, classificationResults }}>
