@@ -15,22 +15,12 @@ import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider
 import ClassificationTable from "./classification/ClassificationTable";
 import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
-import { Session } from "@/types/session";
-import { Driver } from "@/types/driver";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "./Loading";
+import fetchSessions from "@/lib/fetchSessions";
+import fetchDrivers from "@/lib/fetchDrivers";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
-
-async function fetchSessions(): Promise<Session[]> {
-  const res = await fetch('/api/sessions');
-  return res.json();
-}
-
-async function fetchDrivers(): Promise<Driver[]> {
-  const res = await fetch('/api/drivers');
-  return res.json();
-}
 
 const Dashboard = () => {
   const {
