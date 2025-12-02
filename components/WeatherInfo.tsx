@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Weather } from "@/types/weather";
-import computeAveragesByDay from "@/app/api/weather/route";
+import computeAveragesByDay from "@/lib/weatherUtils";
 
 // Helper: Convert degrees to cardinal wind direction
 const getCardinalDirection = (degrees: number) => {
@@ -76,6 +76,12 @@ const WeatherInfo = () => {
       const res = await fetch(
         `/api/weather?session_key=${filteredSession?.session_key}`
       );
+      if (!res.ok) {
+        const details = await res.json().catch(() => ({}));
+        throw new Error(
+          details?.error || "Failed to fetch weather data"
+        );
+      }
       return res.json();
     },
   });
