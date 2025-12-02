@@ -11,24 +11,9 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-
-type Weather = {
-  air_temperature: number;
-  date: string; // ISO string
-  humidity: number;
-  meeting_key: number;
-  pressure: number;
-  rainfall: number;
-  session_key: number;
-  track_temperature: number;
-  wind_direction: number;
-  wind_speed: number;
-};
-
-// Helper: Get YYYY-MM-DD string from ISO date
-const getDateString = (date: string) => {
-  return date.slice(0, 10);
-};
+import { useQuery } from "@tanstack/react-query";
+import { Weather } from "@/types/weather";
+import computeAveragesByDay from "@/app/api/weather/route";
 
 // Helper: Convert degrees to cardinal wind direction
 const getCardinalDirection = (degrees: number) => {
@@ -59,49 +44,6 @@ const getCardinalDirection = (degrees: number) => {
 // Celsius to Fahrenheit conversion
 const toFahrenheit = (c: number) => (c * 9) / 5 + 32;
 
-// Helper: Given an array of Wx, group by day, then get an average for each numeric property per day
-function computeAveragesByDay(weatherData: Weather[]) {
-  // Group by day
-  const byDay: { [date: string]: Weather[] } = {};
-  for (const entry of weatherData) {
-    const day = getDateString(entry.date);
-    byDay[day] ||= [];
-    byDay[day].push(entry);
-  }
-
-  // For each day, compute averages
-  const dailyAverages: {
-    date: string;
-    air_temperature: number;
-    track_temperature: number;
-    humidity: number;
-    rainfall: number;
-    wind_speed: number;
-    wind_direction: number;
-    pressure: number;
-  }[] = [];
-
-  for (const date in byDay) {
-    const items = byDay[date];
-    const n = items.length;
-    // Compute means
-    const avg = {
-      date,
-      air_temperature: items.reduce((a, b) => a + b.air_temperature, 0) / n,
-      track_temperature: items.reduce((a, b) => a + b.track_temperature, 0) / n,
-      humidity: items.reduce((a, b) => a + b.humidity, 0) / n,
-      rainfall: items.reduce((a, b) => a + b.rainfall, 0) / n,
-      wind_speed: items.reduce((a, b) => a + b.wind_speed, 0) / n,
-      wind_direction: items.reduce((a, b) => a + b.wind_direction, 0) / n,
-      pressure: items.reduce((a, b) => a + b.pressure, 0) / n,
-    };
-    dailyAverages.push(avg);
-  }
-  // Sort by date ascending
-  dailyAverages.sort((a, b) => a.date.localeCompare(b.date));
-  return dailyAverages;
-}
-
 const getWeatherIcon = (temp: number, rainValue: number) => {
   if (rainValue > 0 && rainValue < 2.5) {
     // Light Drizzle, blueish
@@ -126,35 +68,26 @@ const getWeatherIcon = (temp: number, rainValue: number) => {
 
 const WeatherInfo = () => {
   const { filteredSession } = useFilteredSession();
-
   const [weatherData, setWeatherData] = useState<Weather[]>([]);
+
+  const {data: weather} = useQuery({
+    queryKey: ["weather", filteredSession?.session_key],
+    queryFn: async () => {
+      const res = await fetch(
+        `/api/weather?session_key=${filteredSession?.session_key}`
+      );
+      return res.json();
+    },
+  });
 
   useEffect(() => {
     if (!filteredSession) {
       setWeatherData([]);
       return;
     }
-    const fetchWeather = async () => {
-      try {
-        const res = await fetch(
-          `/api/weather?session_key=${encodeURIComponent(
-            filteredSession.session_key
-          )}`
-        );
-        if (!res.ok) {
-          const details = await res.json().catch(() => ({}));
-          throw new Error(details?.error || "Failed to fetch weather");
-        }
-        const weather = await res.json();
-        setWeatherData(Array.isArray(weather) ? weather : []);
-      } catch (err) {
-        setWeatherData([]);
-        console.error("Error fetching weather data: ", err);
-      }
-    };
 
-    fetchWeather();
-  }, [filteredSession]);
+    setWeatherData(weather ?? []);
+  }, [filteredSession, weather]);
 
   // Compute daily averages OUTSIDE return so it can be reused in return JSX
   const dailyAverages = useMemo(
@@ -164,7 +97,6 @@ const WeatherInfo = () => {
 
   // Show the first day's icon as a representative for the session if available
   const firstDay = dailyAverages.length > 0 ? dailyAverages[0] : null;
-
 
   return (
     <div className="flex flex-col h-full">
