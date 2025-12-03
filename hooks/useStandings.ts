@@ -103,7 +103,6 @@ export function useStandings() {
       if (progress[r.driver_number] === driverTotals[r.driver_number]) {
         lastPointsReachedIdxMap[r.driver_number] = idx;
       }
-
     }
 
     const driverPointsArr: DriverPointsTrack[] = [];
@@ -157,11 +156,13 @@ export function useStandings() {
       }
       teamPointsMap[driver.team_name].points += driver.points ?? 0;
     }
-    return Object.entries(teamPointsMap).map(([teamName, { team_colour, points }]) => ({
-      team_name: teamName,
-      team_colour,
-      points,
-    }));
+    return Object.entries(teamPointsMap).map(
+      ([teamName, { team_colour, points }]) => ({
+        team_name: teamName,
+        team_colour,
+        points,
+      })
+    );
   }, [driverStandingsArray, driversData, filteredSession]);
 
   const constructorsStandings = useMemo(() => {
