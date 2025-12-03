@@ -48,38 +48,34 @@ export default function useSessionInfo() {
       return;
     }
 
-    const fetchSessionInfo = async () => {
-      try {
-        if (
-          !Array.isArray(classificationResultData) ||
-          !classificationResultData[0]?.session_key
-        ) {
-          throw new Error("Session data missing or unexpected format");
-        }
-
-        // Set the discriminated union here
-        setClassificationResults(
-          isQuali
-            ? { type: "grid", data: classificationResultData }
-            : { type: "result", data: classificationResultData }
-        );
-
-        // Fetch driver details for the session
-        const driversDataList = driversData
-          .filter(
-            (drivers) => drivers.session_key === filteredSession.session_key
-          )
-          .sort((a, b) => a.driver_number - b.driver_number);
-
-        setDrivers(driversDataList);
-      } catch (err) {
-        console.error("Could not load session driver list: ", err);
-        setDrivers([]); // fallback to empty on error
-        setClassificationResults(null); // and empty session results
+    try {
+      if (
+        !Array.isArray(classificationResultData) ||
+        !classificationResultData[0]?.session_key
+      ) {
+        throw new Error("Session data missing or unexpected format");
       }
-    };
 
-    fetchSessionInfo();
+      // Set the discriminated union here
+      setClassificationResults(
+        isQuali
+          ? { type: "grid", data: classificationResultData }
+          : { type: "result", data: classificationResultData }
+      );
+
+      // Fetch driver details for the session
+      const driversDataList = driversData
+        .filter(
+          (drivers) => drivers.session_key === filteredSession.session_key
+        )
+        .sort((a, b) => a.driver_number - b.driver_number);
+
+      setDrivers(driversDataList);
+    } catch (err) {
+      console.error("Could not load session driver list: ", err);
+      setDrivers([]); // fallback to empty on error
+      setClassificationResults(null); // and empty session results
+    }
   }, [filteredSession, driversData, classificationResultData, isQuali]);
 
   return { drivers, classificationResults };
