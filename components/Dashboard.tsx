@@ -33,7 +33,7 @@ const Dashboard = () => {
   } = useSessionFilters();
 
   // This session is the currently "active" one whose data should show on the page
-  const { setFilteredSession } = useFilteredSession();
+  const { filteredSession, setFilteredSession } = useFilteredSession();
   const { sessionsData, setSessionsData } = useSessionsData();
   const { setDriversData } = useDriversData();
 
@@ -45,12 +45,12 @@ const Dashboard = () => {
 
   // };
 
-  const { data: sessions, isLoading: isSessionsLoading } = useQuery({
+  const { data: sessions } = useQuery({
     queryKey: ["sessions"],
     queryFn: fetchSessions,
   })
 
-  const { data: drivers, isLoading: isDriversLoading } = useQuery({
+  const { data: drivers } = useQuery({
     queryKey: ["drivers"],
     queryFn: fetchDrivers,
   })
@@ -113,7 +113,7 @@ const Dashboard = () => {
     setFilteredSession,
   ]);
 
-  if (isSessionsLoading && isDriversLoading) {
+  if (!filteredSession) {
     return <Loading />
   }
 
