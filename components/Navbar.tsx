@@ -11,12 +11,6 @@ import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import DriverSelector from "./DriverSelector";
 
-// interface NavbarProps {
-//   yearOptions: number[];
-//   trackOptions: string[];
-//   sessionOptions: string[];
-// }
-
 const Navbar = () => {
   const { open } = useSidebar();
 

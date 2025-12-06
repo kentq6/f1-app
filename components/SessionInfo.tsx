@@ -31,7 +31,7 @@ const SessionInfo = () => {
 
           {/* Flag and Country Acronym */}
           <div className="flex flex-col items-center overflow-hidden">
-            <div className="w-24 h-16 md:w-48 md:h-32 lg:w-36 lg:h-24 rounded-md overflow-hidden">
+            <div className="w-24 h-16 md:w-48 md:h-32 lg:w-36 lg:h-24 rounded-md overflow-hidden border border-white">
               <Image
                 src={`/country-flags/${filteredSession.country_code}.svg`}
                 width={100}
