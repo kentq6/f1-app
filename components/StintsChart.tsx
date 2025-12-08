@@ -111,33 +111,32 @@ const StintsChart = () => {
       switch (compound) {
         case "SOFT":
           return {
-            bg: isDark ? "rgba(218, 41, 28, 0.8)" : "rgba(218, 41, 28, 1)",
+            bg: "rgba(218, 41, 28, 1)",
           };
         case "MEDIUM":
           return {
-            bg: isDark ? "rgba(255, 215, 0, 0.8)" : "rgba(255, 215, 0, 1)",
+            bg: "rgba(255, 215, 0, 1)",
           };
         case "HARD":
           return {
-            bg: isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(30, 30, 30, 1)",
+            bg: "rgba(255, 255, 255, 1)",
+            // no borderColors here; assign border color logic in chartData below
           };
         case "INTERMEDIATE":
           return {
-            bg: isDark ? "rgba(67, 176, 42, 0.8)" : "rgba(67, 176, 42, 1)",
+            bg: "rgba(67, 176, 42, 1)",
           };
         case "WET":
           return {
-            bg: isDark ? "rgba(0, 103, 173, 0.8)" : "rgba(0, 103, 173, 1)",
+            bg: "rgba(0, 103, 173, 1)",
           };
         default:
           return {
-            bg: isDark
-              ? "rgba(128, 128, 128, 0.8)"
-              : "rgba(128, 128, 128, 1)",
+            bg: "rgba(128, 128, 128, 1)",
           };
       }
     },
-    [isDark]
+    []
   );
 
   // Chart.js data for correctly rendered contiguous stints
@@ -156,6 +155,7 @@ const StintsChart = () => {
 
     const dataArray: ChartDataItem[] = [];
     const bgColors: string[] = [];
+    const borderColors: (string | undefined)[] = [];
 
     selectedDrivers.forEach((driver) => {
       const driverLabel =
@@ -174,6 +174,12 @@ const StintsChart = () => {
           stint,
         });
         bgColors.push(colors.bg);
+        // Border color logic for HARD tire only
+        if (stint.compound === "HARD") {
+          borderColors.push(isDark ? undefined : "#000000");
+        } else {
+          borderColors.push(undefined);
+        }
       });
     });
 
@@ -183,6 +189,7 @@ const StintsChart = () => {
           label: "Stints",
           data: dataArray,
           backgroundColor: bgColors,
+          borderColor: borderColors,
           borderWidth: 0.25,
           borderSkipped: false,
           barThickness:
@@ -202,7 +209,7 @@ const StintsChart = () => {
         },
       ],
     };
-  }, [selectedDrivers, driverStintsMap, getCompoundColor]);
+  }, [selectedDrivers, driverStintsMap, getCompoundColor, isDark]);
 
   // Get min and max lap numbers for scaling
   const [lapMin, lapMax] = useMemo(() => {
