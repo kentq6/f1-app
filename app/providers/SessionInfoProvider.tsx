@@ -8,7 +8,7 @@ import React, {
 import { Driver } from "@/types/driver";
 import { SessionResult } from "@/types/sessionResult";
 import { StartingGrid } from "@/types/startingGrid";
-import useClassificationResults from "@/hooks/useSessionInfo";
+import useClassificationResults from "@/hooks/useClassificationInfo";
 
 // Discriminated union type for classification results
 export type ClassificationResult =

@@ -5,7 +5,7 @@ import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Driver } from "@/types/driver";
 
-export default function useSessionInfo() {
+export default function useClassificationInfo() {
   const { filteredSession } = useFilteredSession();
   const { driversData } = useDriversData();
 
