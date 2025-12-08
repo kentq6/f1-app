@@ -72,7 +72,7 @@ export async function generateSessionSummary(
     Return only valid JSON array, no additional text.`;
 
     const completion = await openai.chat.completions.create({
-      model: "deepseek/deepseek-chat-v3-0324:free",
+      model: "tngtech/deepseek-r1t2-chimera:free",
       messages: [
         {
           role: "system",
@@ -118,7 +118,7 @@ export async function generateSessionSummary(
 
     return formattedInsight;
   } catch (error) {
-    console.error("❌ Error generating AI insight:", error);
+    console.error("Error generating AI insight:", error);
 
     // Fallback to mock insights if AI fails
     return {

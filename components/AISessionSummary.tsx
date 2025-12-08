@@ -14,57 +14,34 @@ import {
 import getSessionInsight from "@/app/actions/getSessionInsight";
 import { ThreeDot } from "react-loading-indicators";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-import { useDriversData } from "@/app/providers/DriversProvider";
+// import { useDriversData } from "@/app/providers/DriversProvider";
+import useClassificationInfo from "@/hooks/useClassificationInfo";
 
 const AISessionSummary = () => {
   const { filteredSession } = useFilteredSession();
-  const { driversData } = useDriversData();
+  // const { driversData } = useDriversData();
+  const { drivers, classificationResults } = useClassificationInfo();
 
   const [insight, setInsight] = useState<AIInsight | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!filteredSession || driversData.length === 0) return;
+    if (!filteredSession || drivers.length === 0) return;
 
     const fetchSessionSummary = async () => {
       setLoading(true);
       setInsight(null);
 
       try {
-        let sessionResultsRaw: SessionResult[] | StartingGrid[];
-        if (filteredSession.session_type === "Qualifying") {
-          const res = await fetch(
-            `/api/starting_grid?session_key=${encodeURIComponent(
-              filteredSession.session_key
-            )}`
-          );
-          if (!res.ok) {
-            const details = await res.json().catch(() => ({}));
-            throw new Error(details?.error || "Failed to fetch starting grid");
-          }
-          sessionResultsRaw = await res.json();
-        } else {
-          const res = await fetch(
-            `/api/session_result?session_key=${encodeURIComponent(
-              filteredSession.session_key
-            )}`
-          );
-          if (!res.ok) {
-            const details = await res.json().catch(() => ({}));
-            throw new Error(details?.error || "Failed to fetch session result");
-          }
-          sessionResultsRaw = await res.json();
-        }
-
         // Build a Map for fast driver lookups
         const driversMap = new Map<number, Driver>(
-          driversData.map((d) => [d.driver_number, d])
+          drivers.map((d) => [d.driver_number, d])
         );
 
         let resultsData: QualifyingSummary[] | SessionSummary[];
         if (filteredSession.session_type === "Qualifying") {
           // results is StartingGrid[] -> QualifyingSummary[]
-          resultsData = (sessionResultsRaw as StartingGrid[]).map((r) => {
+          resultsData = (classificationResults?.data as StartingGrid[]).map((r) => {
             const driver = driversMap.get(r.driver_number);
             return {
               driver: driver?.name_acronym,
@@ -75,7 +52,7 @@ const AISessionSummary = () => {
           });
         } else {
           // results is SessionResult[] -> SessionSummary[]
-          resultsData = (sessionResultsRaw as SessionResult[]).map((r) => {
+          resultsData = (classificationResults?.data as SessionResult[]).map((r) => {
             const driver = driversMap.get(r.driver_number);
             return {
               driver: driver?.name_acronym,
@@ -103,7 +80,7 @@ const AISessionSummary = () => {
     };
 
     fetchSessionSummary();
-  }, [filteredSession, driversData]);
+  }, [filteredSession, drivers, classificationResults?.data]);
 
   return (
     <div className="flex flex-col h-full flex-1">
