@@ -11,10 +11,11 @@ So far, the following has been implemented:
 - **Session Selection**: Users can filter sessions by year, track, and session type via a custom dropdown component.
 - **Session Information**: Users are displayed the filtered information based on their session selection—the default value is the latest session available.
 - **Weather Information**: Users are displayed weather and temperature averages of the selected session.
-- **Session Results**: Users can view the position, laps completed, final times, and amount of points (if applicable) of each driver from the selected session. 
-- **Starting Grid**: Users can view the positions, lap duration, and gap to leader of each driver from the selected session.
-- **Stint Chart**: Users can view tires used and tire stints of each selected driver from the selected session.
+- **Session Results**: Users can view the final positions and results of each driver from the selected session. 
 - **Championship standings**: Users can toggle between Constructors and Drivers standings to view results up to that session's date.
+- **Pace Chart**: Users can view pace during a pace session of each selected driver from the selected session.
+- **Stints Chart**: Users can view tires used and tire stints of each selected driver from the selected session.
+- **Session Summary**: Users can view an AI-generated summary of the selected session.
 - **Shadcn/ui integration**: Utilizing [shadcn/ui](https://ui.shadcn.com/) components for high-quality design elements.
 - **ClerkJS integration**: Utilizing [Clerk](https://clerk.com/) components for user authentication (planning to implement user-specific features in the near future).
 
