@@ -14,7 +14,7 @@ import ConstructorsStandingsTable from "./ConstructorsStandingsTable";
 import DriversStandingsTable from "./DriversStandingsTable";
 import { useStandings } from "@/hooks/useStandings";
 
-const Standings = () => {
+const ChampionshipInfo = () => {
   const { driversStandings, constructorsStandings } = useStandings();
 
   const [showChampionship, setShowChampionship] = useState<
@@ -70,4 +70,4 @@ const Standings = () => {
   );
 };
 
-export default Standings;
+export default ChampionshipInfo;

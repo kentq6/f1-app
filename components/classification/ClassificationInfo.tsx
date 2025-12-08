@@ -1,8 +1,8 @@
-import StartingGrid from "./StartingGrid";
-import SessionResults from "./SessionResults";
+import StartingGrid from "./StartingGridTable";
+import SessionResults from "./SessionResultsTable";
 import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 
-const ClassificationTable = () => {
+const ClassificationInfo = () => {
   const { classificationResults } = useSessionInfo();
 
   // This should never run
@@ -19,4 +19,4 @@ const ClassificationTable = () => {
   );
 };
 
-export default ClassificationTable;
+export default ClassificationInfo;

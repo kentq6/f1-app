@@ -1,22 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Navbar from "@/components/Navbar";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
-import Navbar from "@/components/Navbar";
-import StintsChart from "@/components/StintsChart";
-import Standings from "@/components/championship/Standings";
+import ClassificationInfo from "./classification/ClassificationInfo";
+import ChampionshipInfo from "@/components/championship/ChampionshipInfo";
 import PaceChart from "@/components/PaceChart";
+import StintsChart from "@/components/StintsChart";
 import AISessionSummary from "@/components/AISessionSummary";
+import Loading from "./Loading";
 import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
-import ClassificationTable from "./classification/ClassificationTable";
 import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
-import Loading from "./Loading";
 import fetchSessions from "@/lib/fetchSessions";
 import fetchDrivers from "@/lib/fetchDrivers";
 // import { currentUser } from "@clerk/nextjs/server";
@@ -140,12 +140,12 @@ const Dashboard = () => {
 
             {/* Session Results OR Starting Grid */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-              <ClassificationTable />
+              <ClassificationInfo />
             </div>
 
             {/* Drivers'/Constructors' Standings */}
             <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
-              <Standings />
+              <ChampionshipInfo />
             </div>
 
             {/* Race Pace Chart */}
