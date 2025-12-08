@@ -10,9 +10,15 @@ import { LogIn } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import DriverSelector from "./DriverSelector";
+import { usePathname } from "next/navigation";
+
+// Check if window.location.pathname === "/dashboard" on the client side. For Next.js (app router), use const pathname = usePathname(); and check pathname === "/dashboard".
 
 const Navbar = () => {
   const { open } = useSidebar();
+
+  // Check if pathname is /dashboard, then render SessionSelect
+  const pathname = usePathname();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -37,7 +43,7 @@ const Navbar = () => {
           </div>
 
           {/* Center: Search Functionality */}
-          {!open && (
+          {pathname === "/dashboard" && !open && (
             <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
               <SessionSelect />
 
@@ -124,11 +130,13 @@ const Navbar = () => {
         >
           <div className="px-2 pt-2 pb-3 space-y-1 rounded-xl mt-2 border bg-primary-foreground flex flex-col items-stretch">
             {/* Mobile Search Session & Driver Selector */}
-            <div className="flex items-center justify-center w-full max-w-xs self-center gap-2 md:gap-6">
-              <SessionSelect />
+            {pathname === "/dashboard" && !open && (
+              <div className="flex items-center justify-center w-full max-w-xs self-center gap-2 md:gap-6">
+                <SessionSelect />
 
-              <DriverSelector />
-            </div>
+                <DriverSelector />
+              </div>
+            )}
 
             {/* Mobile Authentication */}
             <div className="flex flex-col w-full">
