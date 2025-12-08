@@ -12,10 +12,10 @@ import {
 import { Separator } from "../ui/separator";
 import ConstructorsStandingsTable from "./ConstructorsStandingsTable";
 import DriversStandingsTable from "./DriversStandingsTable";
-import { useStandings } from "@/hooks/useStandings";
+import { useChampionshipInfo } from "@/hooks/useChampionshipInfo";
 
 const ChampionshipInfo = () => {
-  const { driversStandings, constructorsStandings } = useStandings();
+  const { driversStandings, constructorsStandings } = useChampionshipInfo();
 
   const [showChampionship, setShowChampionship] = useState<
     "Constructors" | "Drivers"

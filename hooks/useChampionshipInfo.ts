@@ -29,7 +29,7 @@ const fetchRaceResultsBySessionKey = async (sessionKey: number) => {
   return await res.json();
 };
 
-export function useStandings() {
+export function useChampionshipInfo() {
   const { filteredSession } = useFilteredSession();
   const { driversData } = useDriversData();
   const queryClient = useQueryClient();
