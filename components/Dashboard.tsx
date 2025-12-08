@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Navbar from "@/components/Navbar";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
 import ClassificationInfo from "./classification/ClassificationInfo";
@@ -12,8 +11,6 @@ import AISessionSummary from "@/components/AISessionSummary";
 import Loading from "./Loading";
 import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
-import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
-import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
 import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -48,12 +45,12 @@ const Dashboard = () => {
   const { data: sessions } = useQuery({
     queryKey: ["sessions"],
     queryFn: fetchSessions,
-  })
+  });
 
   const { data: drivers } = useQuery({
     queryKey: ["drivers"],
     queryFn: fetchDrivers,
-  })
+  });
 
   useEffect(() => {
     setSessionsData(sessions ?? []);
@@ -114,58 +111,49 @@ const Dashboard = () => {
   ]);
 
   if (!filteredSession) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
-    <SessionInfoProvider>
-      <SelectedDriversProvider>
-        <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
-          <header className="top-0 left-0 w-full bg-primary-foreground border-b">
-            {/* Navbar */}
-            <Navbar />
-          </header>
-
-          {/* Grid Layout */}
-          <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
-            {/* Session Info */}
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
-              <SessionInfo />
-            </div>
-
-            {/* Weather Info */}
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
-              <WeatherInfo />
-            </div>
-
-            {/* Session Results OR Starting Grid */}
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
-              <ClassificationInfo />
-            </div>
-
-            {/* Drivers'/Constructors' Standings */}
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
-              <ChampionshipInfo />
-            </div>
-
-            {/* Race Pace Chart */}
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
-              <PaceChart />
-            </div>
-
-            {/* Stints Chart */}
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
-              <StintsChart />
-            </div>
-
-            {/* AI Session Summary */}
-            <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
-              <AISessionSummary />
-            </div>
-          </div>
+    <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
+      {/* Grid Layout */}
+      <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
+        {/* Session Info */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+          <SessionInfo />
         </div>
-      </SelectedDriversProvider>
-    </SessionInfoProvider>
+
+        {/* Weather Info */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+          <WeatherInfo />
+        </div>
+
+        {/* Session Results OR Starting Grid */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
+          <ClassificationInfo />
+        </div>
+
+        {/* Drivers'/Constructors' Standings */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
+          <ChampionshipInfo />
+        </div>
+
+        {/* Race Pace Chart */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
+          <PaceChart />
+        </div>
+
+        {/* Stints Chart */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
+          <StintsChart />
+        </div>
+
+        {/* AI Session Summary */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
+          <AISessionSummary />
+        </div>
+      </div>
+    </div>
   );
 };
 
