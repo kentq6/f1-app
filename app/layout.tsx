@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import Providers from "./providers";
-import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,13 +49,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Providers>
-            <main className="flex-1 overflow-x-hidden">
-              <header className="top-0 left-0 w-full bg-primary-foreground border-b">
-                {/* Navbar */}
-                <Navbar />
-              </header>
-              <div className="w-full">{children}</div>
-            </main>
+            <main className="flex-1">{children}</main>
           </Providers>
         </body>
       </html>

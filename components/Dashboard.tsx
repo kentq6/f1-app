@@ -16,8 +16,11 @@ import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
 import fetchSessions from "@/lib/fetchSessions";
 import fetchDrivers from "@/lib/fetchDrivers";
+import Navbar from "./Navbar";
 // import { currentUser } from "@clerk/nextjs/server";
 // import { SignedIn } from "@clerk/nextjs";
+
+// Set overflow-hidden on both the <html> and <body> tags (usually in your global CSS or layout), and ensure your main container (div with lg:h-screen) uses h-screen and w-screen. Remove paddings/margins that force extra width/height. This makes the dashboard fill the viewport and prevents scrolling.
 
 const Dashboard = () => {
   const {
@@ -74,7 +77,7 @@ const Dashboard = () => {
       setSelectedYear(latestSession.year);
       setSelectedTrack(latestSession.circuit_short_name);
       setSelectedSession(latestSession.session_name);
-      setFilteredSession(latestSession); // <--- Fetch & show latest session initially
+      setFilteredSession(latestSession);
       setInitializedFilters(true);
     }
   }, [
@@ -116,6 +119,8 @@ const Dashboard = () => {
 
   return (
     <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
+      <Navbar />
+
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
         {/* Session Info */}
