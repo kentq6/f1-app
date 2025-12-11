@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, LayoutDashboard, Inbox, Info } from "lucide-react";
+import { LayoutDashboard, Info, UserRoundPen } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,9 +10,17 @@ import {
   SidebarMenu,
 } from "../ui/sidebar";
 import AppSidebarItem from "./AppSidebarItem";
+import { useUser } from "@clerk/nextjs";
+import Loading from "../Loading";
 
 const AppSidebar = () => {
-  // Menu items.
+  const { user, isLoaded } = useUser();
+
+  if (!isLoaded) {
+    return <Loading />;
+  }
+
+  // Menu items available if loaded.
   const items = [
     {
       title: "Dashboard",
@@ -24,16 +32,16 @@ const AppSidebar = () => {
       url: "/about",
       icon: Info,
     },
-    {
-      title: "Drivers",
-      url: "#",
-      icon: Inbox,
-    },
-    {
-      title: "Teams",
-      url: "#",
-      icon: Calendar,
-    },
+    // Only show profile if there's a user.
+    ...(user
+      ? [
+          {
+            title: "Profile",
+            url: `/profile/${user.id}`,
+            icon: UserRoundPen,
+          },
+        ]
+      : []),
   ];
 
   return (
