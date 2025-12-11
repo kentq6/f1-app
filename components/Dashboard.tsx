@@ -143,6 +143,11 @@ const Dashboard = () => {
           <ChampionshipInfo />
         </div>
 
+        {/* AI Session Summary */}
+        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
+          <AISessionSummary />
+        </div>
+
         {/* Race Pace Chart */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
           <PaceChart />
@@ -151,11 +156,6 @@ const Dashboard = () => {
         {/* Stints Chart */}
         <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
           <StintsChart />
-        </div>
-
-        {/* AI Session Summary */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
-          <AISessionSummary />
         </div>
       </div>
     </div>

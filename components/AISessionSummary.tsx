@@ -83,8 +83,8 @@ const AISessionSummary = () => {
   }, [filteredSession, drivers, classificationResults?.data]);
 
   return (
-    <div className="flex flex-col h-full flex-1">
-      <h1 className="text-sm font-bold pb-1">Session Summary</h1>
+    <div className="flex flex-col h-full flex-1 overflow-auto">
+      <h1 className="text-sm font-bold pb-1">AI Session Summary</h1>
       <Separator />
       <div className="bg-background mt-2 p-4 rounded-sm sm:rounded-md border flex flex-col items-center justify-center flex-1 w-full gap-3">
         {loading ? (
