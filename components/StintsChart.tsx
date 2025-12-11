@@ -15,6 +15,7 @@ import { Separator } from "./ui/separator";
 import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
+import { useQuery } from "@tanstack/react-query";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -42,50 +43,40 @@ const StintsChart = () => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
+  const { data: stintsData } = useQuery({
+    queryKey: ["stintsData", filteredSession?.session_key],
+    queryFn: async () => {
+      const res = await fetch(
+        `/api/stints?session_key=${filteredSession?.session_key}`
+      );
+      if (!res.ok) {
+        const details = await res.json().catch(() => ({}));
+        throw new Error(details?.error || "Failed to fetch tire stint data");
+      }
+      return res.json();
+    },
+  });
+
   // Safely load stint data only if filteredSession is not null
   useEffect(() => {
-    if (!filteredSession) {
+    if (!filteredSession || !stintsData) {
       setTireStintsData([]);
       return;
     }
 
-    const fetchStints = async () => {
-      try {
-        const res = await fetch(
-          `/api/stints?session_key=${encodeURIComponent(
-            filteredSession.session_key
-          )}`
+    // Merge driver name_acronym into tire stints and set to state
+    setTireStintsData(
+      stintsData.map((stint: Stint) => {
+        const driver = drivers.find(
+          (driver) => driver.driver_number === stint.driver_number
         );
-        if (!res.ok) {
-          const details = await res.json().catch(() => ({}));
-          throw new Error(details?.error || "Failed to fetch tire stints");
-        }
-        const tireStintsRaw = await res.json();
-        const tireStints: Stint[] = Array.isArray(tireStintsRaw)
-          ? tireStintsRaw
-          : [];
-
-        // Merge driver name_acronym into tire stints
-        const mappedTireStints: DriverNameAcronym[] = tireStints.map(
-          (stint) => {
-            const driver = drivers.find(
-              (driver) => driver.driver_number === stint.driver_number
-            );
-            return {
-              ...stint,
-              name_acronym: driver?.name_acronym ?? "UNK",
-            };
-          }
-        );
-
-        setTireStintsData(mappedTireStints);
-      } catch (error) {
-        console.error("Error fetching tire stints data: ", error);
-      }
-    };
-
-    fetchStints();
-  }, [filteredSession, drivers]);
+        return {
+          ...stint,
+          name_acronym: driver?.name_acronym ?? "UNK",
+        };
+      })
+    );
+  }, [filteredSession, drivers, stintsData]);
 
   // Group stints by driver, sort stints by lap_start within each driver
   const driverStintsMap = useMemo(() => {
@@ -106,38 +97,35 @@ const StintsChart = () => {
   }, [tireStintsData]);
 
   // F1 compound colors - move to useCallback for stable reference
-  const getCompoundColor = useCallback(
-    (compound: string) => {
-      switch (compound) {
-        case "SOFT":
-          return {
-            bg: "rgba(218, 41, 28, 1)",
-          };
-        case "MEDIUM":
-          return {
-            bg: "rgba(255, 215, 0, 1)",
-          };
-        case "HARD":
-          return {
-            bg: "rgba(255, 255, 255, 1)",
-            // no borderColors here; assign border color logic in chartData below
-          };
-        case "INTERMEDIATE":
-          return {
-            bg: "rgba(67, 176, 42, 1)",
-          };
-        case "WET":
-          return {
-            bg: "rgba(0, 103, 173, 1)",
-          };
-        default:
-          return {
-            bg: "rgba(128, 128, 128, 1)",
-          };
-      }
-    },
-    []
-  );
+  const getCompoundColor = useCallback((compound: string) => {
+    switch (compound) {
+      case "SOFT":
+        return {
+          bg: "rgba(218, 41, 28, 1)",
+        };
+      case "MEDIUM":
+        return {
+          bg: "rgba(255, 215, 0, 1)",
+        };
+      case "HARD":
+        return {
+          bg: "rgba(255, 255, 255, 1)",
+          // no borderColors here; assign border color logic in chartData below
+        };
+      case "INTERMEDIATE":
+        return {
+          bg: "rgba(67, 176, 42, 1)",
+        };
+      case "WET":
+        return {
+          bg: "rgba(0, 103, 173, 1)",
+        };
+      default:
+        return {
+          bg: "rgba(128, 128, 128, 1)",
+        };
+    }
+  }, []);
 
   // Chart.js data for correctly rendered contiguous stints
   const chartData = useMemo(() => {
