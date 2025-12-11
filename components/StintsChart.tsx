@@ -64,7 +64,7 @@ const StintsChart = () => {
       return;
     }
 
-    // Merge driver name_acronym into tire stints and set to state
+    // Merge driver name_acronym into tire stints and update state
     setTireStintsData(
       stintsData.map((stint: Stint) => {
         const driver = drivers.find(

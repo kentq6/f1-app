@@ -86,6 +86,7 @@ const PaceChart = () => {
       (lap: Lap) => lap.lap_duration && lap.lap_duration > 0
     );
 
+    // Merge driver name_acronym into tire stints and update state
     setPaceData(
       validLaps.map((lap: Lap) => ({
         driver_number: lap.driver_number,
