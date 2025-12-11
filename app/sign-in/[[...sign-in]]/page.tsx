@@ -3,12 +3,18 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <main className="flex flex-col items-center p-5 gap-1 animate-fade-in min-h-screen justify-center bg-primary-foreground dark:bg-primary-foreground">
-      <Logo height={150} width={150} />
-
-      <div className="mt-1">
-        <SignIn />
+    <div className="flex flex-row min-h-screen animate-fade-in duration-300">
+      {/* Left side with logo */}
+      <div className="flex flex-1 items-center justify-center p-8 border-r">
+        <Logo height={500} width={500} />
       </div>
-    </main>
+
+      {/* Right side with SignIn */}
+      <div className="flex flex-1 items-center justify-center p-8 bg-primary-foreground">
+        <div className="w-full max-w-md">
+          <SignIn />
+        </div>
+      </div>
+    </div>
   );
 }
