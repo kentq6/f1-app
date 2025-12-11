@@ -41,31 +41,21 @@ const StartingGridTable = ({ classificationData }: StartingGridProps) => {
       return;
     }
 
-    const fetchStartingGrid = async () => {
-      try {
-        // Merge driver info into starting grid results
-        const mergedData: ClassificationData[] = classificationData.map(
-          (result: StartingGrid) => {
-            const driver = drivers.find(
-              (d) => d.driver_number === result.driver_number
-            );
-            return {
-              ...result,
-              name_acronym: driver?.name_acronym ?? "UNK",
-              team_colour: driver?.team_colour ?? "",
-              team_name: driver?.team_name ?? "",
-              headshot_url: driver?.headshot_url ?? "",
-            };
-          }
+    // Merge driver info into starting grid results and update state
+    setStartingGridData(
+      classificationData.map((result: StartingGrid) => {
+        const driver = drivers.find(
+          (d) => d.driver_number === result.driver_number
         );
-
-        setStartingGridData(mergedData);
-      } catch (err) {
-        console.error("Error fetching starting grid data: ", err);
-      }
-    };
-
-    fetchStartingGrid();
+        return {
+          ...result,
+          name_acronym: driver?.name_acronym ?? "UNK",
+          team_colour: driver?.team_colour ?? "",
+          team_name: driver?.team_name ?? "",
+          headshot_url: driver?.headshot_url ?? "",
+        };
+      })
+    );
   }, [filteredSession, classificationData, drivers]);
 
   /**

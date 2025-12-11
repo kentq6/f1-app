@@ -41,31 +41,21 @@ const SessionResults = ({ classificationData }: SessionResultsProps) => {
       return;
     }
 
-    const fetchedResults = async () => {
-      try {
-        // Merge driver info into session results
-        const mergedData: ClassificationData[] = classificationData.map(
-          (result: SessionResult) => {
-            const driver = drivers.find(
-              (d) => d.driver_number === result.driver_number
-            );
-            return {
-              ...result,
-              name_acronym: driver?.name_acronym ?? "UNK",
-              team_colour: driver?.team_colour ?? "",
-              team_name: driver?.team_name ?? "",
-              headshot_url: driver?.headshot_url ?? "",
-            };
-          }
+    // Merge driver info into session results and update state
+    setSessionResultsData(
+      classificationData.map((result: SessionResult) => {
+        const driver = drivers.find(
+          (d) => d.driver_number === result.driver_number
         );
-
-        setSessionResultsData(mergedData);
-      } catch (err) {
-        console.error("Error fetching session results data: ", err);
-      }
-    };
-
-    fetchedResults();
+        return {
+          ...result,
+          name_acronym: driver?.name_acronym ?? "UNK",
+          team_colour: driver?.team_colour ?? "",
+          team_name: driver?.team_name ?? "",
+          headshot_url: driver?.headshot_url ?? "",
+        };
+      })
+    );
   }, [filteredSession, classificationData, drivers]);
 
   /**
