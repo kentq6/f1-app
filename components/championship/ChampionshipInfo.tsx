@@ -53,7 +53,7 @@ const ChampionshipInfo = () => {
           </SelectContent>
         </Select>
         <span className="text-[11px] px-1 rounded border bg-gray-50 dark:bg-background font-semibold">
-          Current Standings
+          Championship Standings
         </span>
       </div>
       <Separator />
