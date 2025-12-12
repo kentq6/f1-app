@@ -48,34 +48,29 @@ export default function useClassificationInfo() {
       return;
     }
 
-    try {
-      if (
-        !Array.isArray(classificationResultData) ||
-        !classificationResultData[0]?.session_key
-      ) {
-        throw new Error("Session data missing or unexpected format");
-      }
+    // If data is undefined or falsy, return early so rest of data only runs when data is loaded
+    if (!classificationResultData) return;
 
-      // Set the discriminated union here
-      setClassificationResults(
-        isQuali
-          ? { type: "grid", data: classificationResultData }
-          : { type: "result", data: classificationResultData }
-      );
-
-      // Fetch driver details for the session
-      const driversDataList = driversData
-        .filter(
-          (drivers) => drivers.session_key === filteredSession.session_key
-        )
-        .sort((a, b) => a.driver_number - b.driver_number);
-
-      setDrivers(driversDataList);
-    } catch (err) {
-      console.error("Could not load session driver list: ", err);
-      setDrivers([]); // fallback to empty on error
-      setClassificationResults(null); // and empty session results
+    if (
+      !Array.isArray(classificationResultData) ||
+      !classificationResultData[0]?.session_key
+    ) {
+      throw new Error("Session data missing or unexpected format");
     }
+
+    // Set the discriminated union here
+    setClassificationResults(
+      isQuali
+        ? { type: "grid", data: classificationResultData }
+        : { type: "result", data: classificationResultData }
+    );
+
+    // Fetch driver details for the session
+    const driversDataList = driversData
+      .filter((drivers) => drivers.session_key === filteredSession.session_key)
+      .sort((a, b) => a.driver_number - b.driver_number);
+
+    setDrivers(driversDataList);
   }, [filteredSession, driversData, classificationResultData, isQuali]);
 
   return { drivers, classificationResults };
