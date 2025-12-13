@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import SessionInfo from "@/components/SessionInfo";
+import SessionDetails from "@/components/SessionDetails";
 import WeatherInfo from "@/components/WeatherInfo";
 import ClassificationInfo from "./classification/ClassificationInfo";
 import ChampionshipInfo from "@/components/championship/ChampionshipInfo";
@@ -48,11 +48,15 @@ const Dashboard = () => {
   const { data: sessions } = useQuery({
     queryKey: ["sessions"],
     queryFn: fetchSessions,
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours, how long data is considered fresh before becoming stake and eligible for a refetch
+    gcTime: 48 * 60 * 60 * 1000, // 48 hours, how long inactive cache data stays in memory before it is garbage collected
   });
 
   const { data: drivers } = useQuery({
     queryKey: ["drivers"],
     queryFn: fetchDrivers,
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours, how long data is considered fresh before becoming stake and eligible for a refetch
+    gcTime: 48 * 60 * 60 * 1000, // 48 hours, how long inactive cache data stays in memory before it is garbage collected
   });
 
   useEffect(() => {
@@ -124,37 +128,37 @@ const Dashboard = () => {
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
         {/* Session Info */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
-          <SessionInfo />
+        <div className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+          <SessionDetails />
         </div>
 
         {/* Weather Info */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-1 md:col-span-2 border h-full overflow-hidden">
+        <div className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <WeatherInfo />
         </div>
 
         {/* Session Results OR Starting Grid */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border flex flex-col overflow-hidden h-full">
+        <div className="col-span-2 lg:col-span-3 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <ClassificationInfo />
         </div>
 
         {/* Drivers'/Constructors' Standings */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 lg:col-span-3 border h-full overflow-hidden flex flex-col">
+        <div className="col-span-2 lg:col-span-3 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <ChampionshipInfo />
         </div>
 
         {/* AI Session Summary */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 lg:col-span-2 border h-full overflow-hidden">
+        <div className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <AISessionSummary />
         </div>
 
         {/* Race Pace Chart */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border h-full overflow-hidden">
+        <div className="col-span-2 lg:col-span-4 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <PaceChart />
         </div>
 
         {/* Stints Chart */}
-        <div className="bg-primary-foreground p-3 rounded-lg col-span-2 md:col-span-4 border flex flex-col overflow-hidden h-full">
+        <div className="col-span-2 lg:col-span-4 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <StintsChart />
         </div>
       </div>
