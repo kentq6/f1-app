@@ -70,7 +70,7 @@ const SessionSelect = () => {
 
   return (
     <div className="flex items-center gap-2 w-full">
-      <span className="hidden lg:block font-bold text-md">Select Session:</span>
+      <span className="hidden lg:block font-bold text-md">Session:</span>
       {/* Year */}
       <Select
         value={selectedYear === "" ? "" : String(selectedYear)}

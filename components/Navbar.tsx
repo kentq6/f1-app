@@ -11,11 +11,12 @@ import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import DriverSelector from "./DriverSelector";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 
 const Navbar = () => {
   const { open } = useSidebar();
 
-  // Check if pathname is /dashboard, then render SessionSelect
+  // Get pathname for conditional rendering of SessionSelect and DriversSelect
   const pathname = usePathname();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,12 +44,19 @@ const Navbar = () => {
 
             {/* Center: Search Functionality */}
             {pathname === "/dashboard" && !open && (
-              <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
-                <SessionSelect />
+              <AnimatePresence>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="hidden md:flex items-center space-x-1 sm:space-x-2 lg:gap-2"
+                >
+                  <SessionSelect />
 
-                {/* Driver Selection Dropdown */}
-                <DriverSelector />
-              </div>
+                  {/* Driver Selection Dropdown */}
+                  <DriverSelector />
+                </motion.div>
+              </AnimatePresence>
             )}
 
             {/* Right: Auth and Toggle Light/Dark Mode Buttoms */}
@@ -62,12 +70,16 @@ const Navbar = () => {
               <div className="hidden md:block">
                 <SignedOut>
                   <SignInButton>
-                    <Button className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    <motion.button
+                      whileHover={{ scale: 1.05, boxShadow: "0 8px 24px rgba(44, 62, 80, 0.25)" }}
+                      whileTap={{ scale: 0.95 }}
+                      className="relative overflow-hidden bg-formula-one-primary hover:bg-formula-one-primary/70 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-md transition-all duration-300 cursor-pointer"
+                    >
                       <div className="relative flex items-center gap-1">
                         <span>Sign In</span>
                         <LogIn size={18} />
                       </div>
-                    </Button>
+                    </motion.button>
                   </SignInButton>
                 </SignedOut>
 
