@@ -14,13 +14,8 @@ import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
-import fetchSessions from "@/lib/fetchSessions";
-import fetchDrivers from "@/lib/fetchDrivers";
 import Navbar from "./Navbar";
 // import { currentUser } from "@clerk/nextjs/server";
-// import { SignedIn } from "@clerk/nextjs";
-
-// Set overflow-hidden on both the <html> and <body> tags (usually in your global CSS or layout), and ensure your main container (div with lg:h-screen) uses h-screen and w-screen. Remove paddings/margins that force extra width/height. This makes the dashboard fill the viewport and prevents scrolling.
 
 const Dashboard = () => {
   const {
@@ -45,24 +40,18 @@ const Dashboard = () => {
 
   // };
 
-  const { data: sessions } = useQuery({
-    queryKey: ["sessions"],
-    queryFn: fetchSessions,
-    staleTime: 24 * 60 * 60 * 1000, // 24 hours, how long data is considered fresh before becoming stake and eligible for a refetch
-    gcTime: 48 * 60 * 60 * 1000, // 48 hours, how long inactive cache data stays in memory before it is garbage collected
-  });
-
-  const { data: drivers } = useQuery({
-    queryKey: ["drivers"],
-    queryFn: fetchDrivers,
+  const { data } = useQuery({
+    queryKey: ["driversAndSessions"],
+    queryFn: async () =>
+      await fetch("/api/drivers-and-sessions").then((res) => res.json()),
     staleTime: 24 * 60 * 60 * 1000, // 24 hours, how long data is considered fresh before becoming stake and eligible for a refetch
     gcTime: 48 * 60 * 60 * 1000, // 48 hours, how long inactive cache data stays in memory before it is garbage collected
   });
 
   useEffect(() => {
-    setSessionsData(sessions ?? []);
-    setDriversData(drivers ?? []);
-  }, [setSessionsData, setDriversData, sessions, drivers]);
+    setSessionsData(data?.sessions ?? []);
+    setDriversData(data?.drivers ?? []);
+  }, [setSessionsData, setDriversData, data?.sessions, data?.drivers]);
 
   // Find the latest session by start date as default (returns undefined if no sessions exist)
   const latestSession = useMemo(() => {
