@@ -49,7 +49,7 @@ const Navbar = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="hidden md:flex items-center space-x-1 sm:space-x-2 lg:gap-2"
+                  className="hidden md:flex items-center space-x-1 sm:space-x-2 xl:gap-2"
                 >
                   <SessionSelect />
 

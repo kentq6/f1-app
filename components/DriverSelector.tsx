@@ -63,7 +63,7 @@ const DriverSelector = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="hidden lg:block font-bold text-md">Drivers:</span>
+      <span className="hidden xl:block font-bold text-md">Drivers:</span>
       <Select>
         <SelectTrigger className="h-7 text-[11px]" aria-label="Select Drivers">
           <SelectValue placeholder="Drivers" />
