@@ -83,10 +83,10 @@ const AISessionSummary = () => {
   }, [filteredSession, drivers, classificationResults?.data]);
 
   return (
-    <div className="flex flex-col h-full flex-1 overflow-auto">
+    <div className="flex flex-col h-full flex-1">
       <h1 className="text-sm font-bold pb-1">AI Session Summary</h1>
       <Separator />
-      <div className="bg-background mt-2 p-4 rounded-sm sm:rounded-md border flex flex-col items-center justify-center flex-1 w-full gap-3">
+      <div className="bg-background mt-2 p-4 rounded-sm sm:rounded-md border flex-1 w-full gap-3 overflow-auto flex items-center justify-center">
         {loading ? (
           <ThreeDot
             color="var(--color-formula-one-primary)"
@@ -95,14 +95,14 @@ const AISessionSummary = () => {
             textColor="gray"
           />
         ) : (
-          <div className="flex flex-col items-center gap-2 w-full">
+          <div className="flex flex-col items-center justify-center gap-2 w-full">
             {insight?.title && (
               <div className="font-semibold text-base text-primary text-center">
                 {insight.title}
               </div>
             )}
             {insight?.message && (
-              <div className="text-sm text-muted-foreground text-center">
+              <div className="text-sm text-center">
                 {insight.message}
               </div>
             )}
