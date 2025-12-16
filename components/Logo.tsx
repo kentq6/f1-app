@@ -37,7 +37,7 @@ const Logo = ({ height, width }: LogoProps) => {
         alt="F1 Logo"
         priority
       />
-      <span className="hidden lg:block font-bold text-[1.5rem] tracking-wide font-Oswald uppercase select-none">
+      <span className="hidden xl:block font-bold text-[1.5rem] tracking-wide font-Oswald uppercase select-none">
         Dashboard
       </span>
     </Link>
