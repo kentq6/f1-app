@@ -35,11 +35,6 @@ const Dashboard = () => {
   // Filter select
   const [initializedFilters, setInitializedFilters] = useState(false);
 
-  // const fetchUser = async () => {
-  //   const { user } = currentUser();
-
-  // };
-
   const { data } = useQuery({
     queryKey: ["driversAndSessions"],
     queryFn: async () =>
@@ -111,47 +106,49 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
-      <Navbar />
+    <main className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
+      <header>
+        <Navbar />
+      </header>
 
       {/* Grid Layout */}
       <div className="lg:flex-1 lg:min-h-0 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-10 gap-3 p-3">
         {/* Session Info */}
-        <div className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+        <section className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <SessionDetails />
-        </div>
+        </section>
 
         {/* Weather Info */}
-        <div className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+        <section className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <WeatherInfo />
-        </div>
+        </section>
 
         {/* Session Results OR Starting Grid */}
-        <div className="col-span-2 lg:col-span-3 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+        <section className="col-span-2 lg:col-span-3 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <ClassificationInfo />
-        </div>
+        </section>
 
         {/* Drivers'/Constructors' Standings */}
-        <div className="col-span-2 lg:col-span-3 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+        <section className="col-span-2 lg:col-span-3 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <ChampionshipInfo />
-        </div>
+        </section>
 
         {/* AI Session Summary */}
-        <div className="col-span-1 md:col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+        <section className="col-span-2 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <AISessionSummary />
-        </div>
+        </section>
 
         {/* Race Pace Chart */}
-        <div className="col-span-2 lg:col-span-4 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+        <section className="col-span-2 lg:col-span-4 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <PaceChart />
-        </div>
+        </section>
 
         {/* Stints Chart */}
-        <div className="col-span-2 lg:col-span-4 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
+        <section className="col-span-2 lg:col-span-4 h-full overflow-hidden bg-primary-foreground p-3 rounded-lg border">
           <StintsChart />
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };
 
