@@ -1,8 +1,7 @@
-import { sql } from "drizzle-orm";
-import { pgTable, uuid, text, index } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, index, jsonb, timestamp } from "drizzle-orm/pg-core";
 
 // Define a reusable 'createdAt' timestamp column with default value set to now
-// const createdAt = timestamp("createdAt").notNull().defaultNow();
+const createdAt = timestamp("createdAt").notNull().defaultNow();
 
 // Define a reusable 'updatedAt' timestamp column with automatic update on modification
 // const updatedAt = timestamp("updateAt")
@@ -10,30 +9,59 @@ import { pgTable, uuid, text, index } from "drizzle-orm/pg-core";
 //   .defaultNow()
 //   .$onUpdate(() => new Date())  // automatically updates to current time on update
 
-// UserFavoritesTable: stores user's favorite F1 drivers
-export const UserFavoritesTable = pgTable(
-  "userFavorites",
+// UsersTable: stores user's unique Clerk identifiers
+export const UsersTable = pgTable(
+  "Users",
   {
     id: uuid("id").primaryKey().defaultRandom(), // unique record ID
     clerkUserId: text("clerkUserId").notNull().unique(), // user's Clerk ID (must be unique)
-    // favoriteDrivers: text("favoriteDrivers"), // stringified array of driver IDs (e.g. '[ "VER", "LEC", "HAM" ]')
-    favoriteDrivers: text("favoriteDrivers")
-      .array()
-      .default(sql`'{}'::text[]`), // stringified array of driver IDs (e.g. '[ "VER", "LEC", "HAM" ]')
-    favoriteTeams: text("favoriteTeams")
-      .array()
-      .default(sql`'{}'::text[]`), // stringigied array of team names (e.g. '[Red Bull Racing, Ferrari, Ferrari]')
+    createdAt, // timestamp when user was created
   },
   (table) => [index("clerkUserIdIndex").on(table.clerkUserId)]
 );
 
-// Define the reverse relation: each availability belongs to a schedule
-// export const ScheduleAvailabilityRelations = relations(
-//   ScheduleAvailabilityTable,
-//   ({ one }) => ({
-//     schedule: one(ScheduleTable, {
-//       fields: [ScheduleAvailabilityTable.scheduleId], // local key
-//       references: [ScheduleTable.id], // foreign key
-//     })
-//   })
-// );
+// UserFavoriteDriversTable: Each row is a single favorite driver for a user
+export const UserFavoriteDriversTable = pgTable(
+  "UserFavoriteDrivers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(), // create a unique identifier
+    userId: uuid("userId") // foreign key to the User Table
+      .notNull()
+      .references(() => UsersTable.id, { onDelete: "cascade" }),
+    driverFullName: text("driverFullName").notNull(), // F1 driver number (e.g. "Max VERSTAPPEN", etc.)
+    createdAt, // timestamp when user set driver favorite
+  },
+  (table) => [index("userFavoriteDrivers_userId_idx").on(table.userId)]
+);
+
+// UserFavoriteTeamsTable: Each row is a single favorite team for a user
+export const UserFavoriteTeamsTable = pgTable(
+  "UserFavoriteTeams",
+  {
+    id: uuid("id").primaryKey().defaultRandom(), // create a unique identifer
+    userId: uuid("userId") // foreign key to the User Table
+      .notNull()
+      .references(() => UsersTable.id, { onDelete: "cascade" }),
+    teamName: text("teamName").notNull(), // Team name (e.g. "Red Bull Racing", etc.)
+    createdAt, // timestamp when user set team favorite
+  },
+  (table) => [index("userFavoriteTeams_userId_idx").on(table.userId)]
+);
+
+// AISessionInsightsTable: stores AI-generated session insights
+export const AISessionInsightsTable = pgTable(
+  "AISessionInsights",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),                // unique record ID for the insight
+    sessionKey: text("sessionKey").notNull(),                   // key identifying the session (should be unique per session+context)
+    aiType: text("aiType").notNull(),                           // "warning", "info", "success", etc
+    aiTitle: text("aiTitle").notNull(),
+    aiMessage: text("aiMessage").notNull(),
+    aiConfidence: text("aiConfidence").notNull(),               // store as text to support precise values or cast to numeric if preferred
+    // Optionally: store the raw AI insight JSON
+    aiRaw: jsonb("aiRaw"),
+    createdAt,
+    // updatedAt,
+  },
+  (table) => [index("sessionKey_idx").on(table.sessionKey)]
+);

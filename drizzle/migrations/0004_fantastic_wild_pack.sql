@@ -1,0 +1,1 @@
+ALTER TABLE "UserFavoriteDrivers" RENAME COLUMN "driverId" TO "driverFullName";
