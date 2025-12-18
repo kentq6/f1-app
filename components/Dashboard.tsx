@@ -15,7 +15,6 @@ import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "./Navbar";
-// import { currentUser } from "@clerk/nextjs/server";
 
 const Dashboard = () => {
   const {
