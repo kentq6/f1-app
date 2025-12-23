@@ -105,7 +105,7 @@ const Dashboard = () => {
   }
 
   return (
-    <main className="lg:h-screen font-sans transition-colors duration-300 overflow-hidden flex flex-col">
+    <main className="lg:h-screen overflow-hidden flex flex-col">
       <header>
         <Navbar />
       </header>
