@@ -46,9 +46,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the c
 ## Known Issues & Limitations
 
 - The OpenF1 API does not offer free live data as it requires a paid account to do so. The website will experience downtime during times that match up with live F1 events such as practices, qualifiers, and races.
-- Rate limiting is a big issue with both the API I am using and the OpenRouter chat model being used. This will be address in the future as I am focusing on completing the dashboard components as of Nov. 2025.
-- The Login/Register function serves no purpose as of Nov. 2025—it is merely there for implementation sake but I do plan to use it in the future.
-- Specific API endpoints are still in beta (i.e., Session Result, Starting Grid), so some of the components may end up breaking as the OpenF1 devs continue to work.
+- Specific endpoints from Open F1 are still in beta (i.e., Session Result, Starting Grid), so some of the components may end up breaking as the OpenF1 devs continue to work.
+- The user Login/Register functionality is currently in the works. The README will be updated with more information soon.
+- The AI feature uses a free-tier model, which is extremely inefficient at generating responses. This does affect other processes like signing in/out.
+
 
 ## Resources
 

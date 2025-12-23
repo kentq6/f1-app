@@ -29,16 +29,16 @@ const AboutPage = () => {
               <span className="font-semibold">
                 Favorite Drivers and Teams
               </span>{" "}
-              — Choose drivers and teams to follow.
+              — Choose drivers and teams to follow. These drivers/teams will be shown to registered users by default.
             </span>
           </li>
-          <li>
+          {/* <li>
             <span className="inline-flex items-center gap-2">
               <CircleCheck />
               <span className="font-semibold">Beautiful UI</span> — Enjoy a
               clean, responsive experience with light and dark modes.
             </span>
-          </li>
+          </li> */}
         </ul>
         <span className="text-sm text-muted-foreground text-center">
           <strong>Note:</strong> This website is not affiliated with Formula One
