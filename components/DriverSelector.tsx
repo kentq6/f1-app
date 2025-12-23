@@ -12,32 +12,30 @@ import { Driver } from "@/types/driver";
 import DriverRow from "./DriverRow";
 import { useCallback } from "react";
 
-// Componentize driver row: Extract the driver row (Checkbox + Label) into a memoized child component to prevent unnecessary re-renders.
-// To componentize the driver row and prevent unnecessary re-renders:
-// Create a separate functional component (e.g., DriverRow) that renders the Checkbox and Label for a driver.
-// Pass props for the driver object, whether it's selected, and the toggle handler.
-// Wrap the component in React.memo to memoize it and avoid re-rendering unless its props change.
-// This ensures each driver row only re-renders if its checked status or driver data changes.
-
 const DriverSelector = () => {
   const { drivers } = useSessionInfo();
   const { selectedDrivers, setSelectedDrivers } = useSelectedDrivers();
 
   // Driver selection handlers
-  const handleDriverToggle = useCallback((driver: Driver) => {
-    const isSelected = selectedDrivers.some(
-      (d) => d.driver_number === driver.driver_number
-    );
-    if (isSelected) {
-      // Remove driver if already selected
-      setSelectedDrivers(
-        selectedDrivers.filter((d) => d.driver_number !== driver.driver_number)
+  const handleDriverToggle = useCallback(
+    (driver: Driver) => {
+      const isSelected = selectedDrivers.some(
+        (d) => d.driver_number === driver.driver_number
       );
-    } else {
-      // Add driver if not selected
-      setSelectedDrivers([...selectedDrivers, driver]);
-    }
-  }, [selectedDrivers, setSelectedDrivers]);
+      if (isSelected) {
+        // Remove driver if already selected
+        setSelectedDrivers(
+          selectedDrivers.filter(
+            (d) => d.driver_number !== driver.driver_number
+          )
+        );
+      } else {
+        // Add driver if not selected
+        setSelectedDrivers([...selectedDrivers, driver]);
+      }
+    },
+    [selectedDrivers, setSelectedDrivers]
+  );
 
   const handleSelectAll = () => {
     // Avoid redundant updates if all drivers already selected
@@ -87,27 +85,6 @@ const DriverSelector = () => {
           </div>
           <SelectGroup>
             {drivers.map((driver) => (
-              // <div
-              //   key={`driver-select-${driver.driver_number}`}
-              //   className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"
-              //   onClick={(e) => {
-              //     e.stopPropagation();
-              //     handleDriverToggle(driver);
-              //   }}
-              // >
-              //   <Checkbox
-              //     id={`driver-select-${driver.driver_number}`}
-              //     checked={selectedDrivers.some(
-              //       (d) => d.driver_number === driver.driver_number
-              //     )}
-              //     className="h-4 w-4 border-gray-300 rounded accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              //   />
-              //   <Label className="text-xs">
-              //     {driver.name_acronym
-              //       ? `${driver.name_acronym} ${driver.driver_number}`
-              //       : `Driver ${driver.driver_number}`}
-              //   </Label>
-              // </div>
               <DriverRow
                 key={`driver-select-${driver.driver_number}`}
                 driver={driver}
