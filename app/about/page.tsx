@@ -7,7 +7,7 @@ const AboutPage = () => {
   return (
     <div>
       <Navbar />
-      <section className="w-full flex flex-col items-center justify-center min-h-[60vh]">
+      <section className="w-full flex flex-col items-center justify-center min-h-[60vh] mb-10">
         <Logo height={300} width={300} />
         <p className="text-lg mb-6 text-center">
           This is an unofficial Formula One fan project. The goal is to build an
