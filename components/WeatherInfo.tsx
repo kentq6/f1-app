@@ -82,6 +82,8 @@ const WeatherInfo = () => {
       }
       return res.json();
     },
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours, how long data is considered fresh before becoming stake and eligible for a refetch
+    gcTime: 48 * 60 * 60 * 1000, // 48 hours, how long inactive cache data stays in memory before it is garbage collected
   });
 
   useEffect(() => {
@@ -111,7 +113,7 @@ const WeatherInfo = () => {
         </span>
       </div>
       <Separator />
-      
+
       {/* Icon & Air Temp */}
       <div className="flex flex-col items-center gap-2 my-3">
         {/* Icon */}

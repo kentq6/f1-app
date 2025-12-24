@@ -40,7 +40,8 @@ export function useChampionshipInfo() {
     queryFn: async () =>
       await fetchRaceSessionsByYear(filteredSession?.year ?? 2025),
     enabled: !!filteredSession,
-    staleTime: 24 * 60 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours, how long data is considered fresh before becoming stake and eligible for a refetch
+    gcTime: 48 * 60 * 60 * 1000, // 48 hours, how long inactive cache data stays in memory before it is garbage collected
   });
 
   // Fetch all session results data in parallel, then extract and flatten
