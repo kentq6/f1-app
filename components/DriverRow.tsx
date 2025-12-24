@@ -6,20 +6,20 @@ import React from "react";
 type DriverRowProps = {
   driver: Driver;
   selectedDrivers: Driver[];
-  handleDriverToggle: (driver: Driver) => void;
+  handleToggle: (driver: Driver) => void;
 };
 
 const DriverRow = ({
   driver,
   selectedDrivers,
-  handleDriverToggle,
+  handleToggle,
 }: DriverRowProps) => {
   return (
     <div
       className="flex items-center gap-2 px-2 py-[5px] cursor-pointer rounded hover:bg-muted/80 transition-colors"
       onClick={(e) => {
         e.stopPropagation();
-        handleDriverToggle(driver);
+        handleToggle(driver);
       }}
     >
       <Checkbox

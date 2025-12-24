@@ -89,7 +89,7 @@ const DriverSelector = () => {
                 key={`driver-select-${driver.driver_number}`}
                 driver={driver}
                 selectedDrivers={selectedDrivers}
-                handleDriverToggle={handleDriverToggle}
+                handleToggle={handleDriverToggle}
               />
             ))}
           </SelectGroup>
