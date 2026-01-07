@@ -5,14 +5,14 @@ import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SessionResult } from "@/types/sessionResult";
 import sortStandingsArray from "@/lib/standingUtils";
 
-type Constructors = {
+export type ConstructorsStanding = {
   position?: number;
   team_name?: string;
   team_colour?: string;
   points?: number;
 };
 
-type Drivers = Constructors & {
+export type DriversStanding = ConstructorsStanding & {
   first_name?: string;
   last_name?: string;
   headshot_url?: string;
@@ -82,7 +82,7 @@ export function useChampionshipInfo() {
     lastPointsReachedIdx: number;
   };
 
-  const driverStandingsArray: Drivers[] = useMemo(() => {
+  const driverStandingsArray: DriversStanding[] = useMemo(() => {
     if (!filteredSession || driversData.length === 0) return [];
     // First, tally all drivers' total points
     const driverTotals: Record<number, number> = {};
@@ -133,7 +133,7 @@ export function useChampionshipInfo() {
           lastPointsReachedIdx,
         };
       })
-      .filter(Boolean) as (Drivers & { lastPointsReachedIdx: number })[];
+      .filter(Boolean) as (DriversStanding & { lastPointsReachedIdx: number })[];
   }, [sessionResultsData, driversData, filteredSession]);
 
   const driversStandings = useMemo(() => {
@@ -142,7 +142,7 @@ export function useChampionshipInfo() {
   }, [driverStandingsArray]);
 
   // === CONSTRUCTOR STANDINGS ===
-  const constructorStandingsArray: Constructors[] = useMemo(() => {
+  const constructorStandingsArray: ConstructorsStanding[] = useMemo(() => {
     if (!filteredSession || driversData.length === 0) return [];
     const teamPointsMap: {
       [teamName: string]: { team_colour: string; points: number };
