@@ -8,19 +8,17 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import FavoriteDriversSelector from "./FavoriteDriversSelector";
 
-type FavoriteDriver = {
+export type FavoriteDrivers = {
   id: string;
   driverFullName: string;
   createdAt: Date;
-};
-
-export type FavoriteDrivers = FavoriteDriver[] | undefined;
+}[] | undefined;
 
 const UserProfile = async () => {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
-  const { favoriteDrivers, error } = await getFavoriteDrivers();
+  const { favoriteDrivers }: { favoriteDrivers?: FavoriteDrivers } = await getFavoriteDrivers();
 
   return (
     <main className="lg:h-screen overflow-hidden flex flex-col">

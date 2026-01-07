@@ -16,10 +16,6 @@ type FavoriteDriversSelectorProps = {
 const FavoriteDriversSelector = ({ favoriteDrivers }: FavoriteDriversSelectorProps) => {
   const { driversStandings } = useChampionshipInfo();
 
-  // Favorite driver selection handler
-  // You should not use React Hooks like useCallback in an async component (such as a Server Component). Move the handler to a Client Component and call your async logic (e.g., API route or server action) from there. Server Components cannot have hooks; only Client Components can.
-  
-
   return (
     <div>
       <Select>
@@ -30,7 +26,7 @@ const FavoriteDriversSelector = ({ favoriteDrivers }: FavoriteDriversSelectorPro
           <SelectGroup>
             {driversStandings.map((driver) => (
               <FavoriteDriversRow
-                key={`favorite-driver-select-${driver.driver_number}`}
+                key={`favorite-driver-select-${driver.last_name}`}
                 driver={driver}
                 favoriteDrivers={favoriteDrivers}
               />
