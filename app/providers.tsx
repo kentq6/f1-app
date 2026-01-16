@@ -10,6 +10,7 @@ import { SessionsProvider } from "./providers/SessionsProvider";
 import QueryProvider from "./providers/QueryProvider";
 import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
+import { StoreProvider } from "@/store/storeProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -19,24 +20,26 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       // enableSystem
       disableTransitionOnChange
     >
-      <SessionFiltersProvider>
-        <FilteredSessionProvider>
-          <SessionsProvider>
-            <DriversProvider>
-              <QueryProvider>
-                <SessionInfoProvider>
-                  <SelectedDriversProvider>
-                    <SidebarProvider defaultOpen={false}>
-                      <AppSidebar />
-                      {children}
-                    </SidebarProvider>
-                  </SelectedDriversProvider>
-                </SessionInfoProvider>
-              </QueryProvider>
-            </DriversProvider>
-          </SessionsProvider>
-        </FilteredSessionProvider>
-      </SessionFiltersProvider>
+      <StoreProvider>
+        <SessionFiltersProvider>
+          <FilteredSessionProvider>
+            <SessionsProvider>
+              <DriversProvider>
+                <QueryProvider>
+                  <SessionInfoProvider>
+                    <SelectedDriversProvider>
+                      <SidebarProvider defaultOpen={false}>
+                        <AppSidebar />
+                        {children}
+                      </SidebarProvider>
+                    </SelectedDriversProvider>
+                  </SessionInfoProvider>
+                </QueryProvider>
+              </DriversProvider>
+            </SessionsProvider>
+          </FilteredSessionProvider>
+        </SessionFiltersProvider>
+      </StoreProvider>
     </ThemeProvider>
   );
 }
