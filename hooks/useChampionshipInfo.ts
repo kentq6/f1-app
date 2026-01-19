@@ -1,9 +1,10 @@
 import { useMemo } from "react";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SessionResult } from "@/types/sessionResult";
 import sortStandingsArray from "@/lib/standingUtils";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export type ConstructorsStanding = {
   position?: number;
@@ -30,7 +31,8 @@ const fetchRaceResultsBySessionKey = async (sessionKey: number) => {
 };
 
 export function useChampionshipInfo() {
-  const { filteredSession } = useFilteredSession();
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
+
   const { driversData } = useDriversData();
   const queryClient = useQueryClient();
 
@@ -89,7 +91,7 @@ export function useChampionshipInfo() {
     for (const r of sessionResultsData) {
       if (typeof r.driver_number !== "number") continue;
       if (!(r.driver_number in driverTotals)) driverTotals[r.driver_number] = 0;
-      driverTotals[r.driver_number] += r.points;
+      driverTotals[r.driver_number] += r.points ?? 0;
     }
 
     // Find last index each driver reached their final points total
@@ -100,7 +102,7 @@ export function useChampionshipInfo() {
     for (let idx = 0; idx < sessionResultsOrdered.length; idx++) {
       const r = sessionResultsOrdered[idx];
       if (typeof r.driver_number !== "number") continue;
-      progress[r.driver_number] = (progress[r.driver_number] ?? 0) + r.points;
+      progress[r.driver_number] = (progress[r.driver_number] ?? 0) + (r.points ?? 0);
       if (progress[r.driver_number] === driverTotals[r.driver_number]) {
         lastPointsReachedIdxMap[r.driver_number] = idx;
       }

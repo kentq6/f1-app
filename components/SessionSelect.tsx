@@ -6,18 +6,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSessionFilters } from "@/app/providers/SessionFiltersProvider";
 import { useSessionsData } from "@/app/providers/SessionsProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setSelectedYear, setSelectedCircuit, setSelectedSession } from "../store/sessionFiltersSlice";
 
 const SessionSelect = () => {
-  const {
-    selectedYear,
-    setSelectedYear,
-    selectedTrack,
-    setSelectedTrack,
-    selectedSession,
-    setSelectedSession,
-  } = useSessionFilters();
+  const { selectedYear, selectedCircuit, selectedSession } = useSelector((state: RootState) => state.sessionFilters);
+  const dispatch = useDispatch();
   const { sessionsData } = useSessionsData();
 
   // Compute options for select fields
@@ -57,7 +53,7 @@ const SessionSelect = () => {
         .filter(
           (s) =>
             (selectedYear ? s.year === selectedYear : true) &&
-            (selectedTrack ? s.circuit_short_name === selectedTrack : true)
+            (selectedCircuit ? s.circuit_short_name === selectedCircuit : true)
         )
         // Sort by date_start (oldest to newest) before mapping to names
         .sort(
@@ -73,8 +69,8 @@ const SessionSelect = () => {
       <span className="hidden xl:block font-bold text-md">Session:</span>
       {/* Year */}
       <Select
-        value={selectedYear === "" ? "" : String(selectedYear)}
-        onValueChange={(val) => setSelectedYear(val === "" ? "" : Number(val))}
+        value={selectedYear === 0 ? "0" : String(selectedYear)}
+        onValueChange={(val) => dispatch(setSelectedYear(Number(val)))}
       >
         <SelectTrigger className="h-7 text-[11px]" aria-label="Select Year">
           <SelectValue placeholder="Year" />
@@ -92,8 +88,8 @@ const SessionSelect = () => {
 
       {/* Track */}
       <Select
-        value={selectedTrack}
-        onValueChange={(val) => setSelectedTrack(val)}
+        value={selectedCircuit}
+        onValueChange={(val) => dispatch(setSelectedCircuit(val))}
       >
         <SelectTrigger className="h-7 text-[11px]" aria-label="Select Track">
           <SelectValue placeholder="Track" />
@@ -112,7 +108,7 @@ const SessionSelect = () => {
       {/* Session */}
       <Select
         value={selectedSession}
-        onValueChange={(val) => setSelectedSession(val)}
+        onValueChange={(val) => dispatch(setSelectedSession(val))}
       >
         <SelectTrigger className="h-7 text-[11px]" aria-label="Select Session">
           <SelectValue placeholder="Session" />

@@ -13,9 +13,10 @@ import {
 } from "chart.js";
 import { Separator } from "./ui/separator";
 import { useTheme } from "next-themes";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 type Lap = {
   meeting_key: number;
@@ -52,7 +53,7 @@ ChartJS.register(
 );
 
 const PaceChart = () => {
-  const { filteredSession } = useFilteredSession();
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
   const { selectedDrivers } = useSelectedDrivers();
 
   const [paceData, setPaceData] = useState<DriverPace[]>([]);

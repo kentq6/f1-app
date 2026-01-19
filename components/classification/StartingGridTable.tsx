@@ -11,9 +11,10 @@ import {
   TableRow,
 } from "../ui/table";
 import Image from "next/image";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { StartingGrid } from "@/types/startingGrid";
 import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface ClassificationData extends StartingGrid {
   name_acronym?: string;
@@ -27,7 +28,7 @@ interface StartingGridProps {
 }
 
 const StartingGridTable = ({ classificationData }: StartingGridProps) => {
-  const { filteredSession } = useFilteredSession();
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
   const { drivers } = useSessionInfo();
 
   const [startingGridData, setStartingGridData] = useState<

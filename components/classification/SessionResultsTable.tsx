@@ -12,8 +12,9 @@ import {
   TableRow,
 } from "../ui/table";
 import { SessionResult } from "@/types/sessionResult";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface ClassificationData extends SessionResult {
   name_acronym?: string;
@@ -27,7 +28,8 @@ interface SessionResultsProps {
 }
 
 const SessionResults = ({ classificationData }: SessionResultsProps) => {
-  const { filteredSession } = useFilteredSession();
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
+
   const { drivers } = useSessionInfo();
 
   const [sessionResults, setSessionResultsData] = useState<

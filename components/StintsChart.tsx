@@ -12,10 +12,11 @@ import {
 } from "chart.js";
 import { useTheme } from "next-themes";
 import { Separator } from "./ui/separator";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Stint = {
@@ -34,7 +35,8 @@ interface DriverNameAcronym extends Stint {
 }
 
 const StintsChart = () => {
-  const { filteredSession } = useFilteredSession();
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
+
   const { drivers } = useSessionInfo();
   const { selectedDrivers } = useSelectedDrivers();
 

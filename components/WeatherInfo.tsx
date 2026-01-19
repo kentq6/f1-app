@@ -10,10 +10,11 @@ import {
 import React, { useEffect, useState, useMemo } from "react";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Weather } from "@/types/weather";
 import computeAveragesByDay from "@/lib/weatherUtils";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 // Helper: Convert degrees to cardinal wind direction
 const getCardinalDirection = (degrees: number) => {
@@ -67,7 +68,7 @@ const getWeatherIcon = (temp: number, rainValue: number) => {
 };
 
 const WeatherInfo = () => {
-  const { filteredSession } = useFilteredSession();
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
   const [weatherData, setWeatherData] = useState<Weather[]>([]);
 
   const { data: weather } = useQuery({

@@ -13,4 +13,5 @@ export type Session = {
   location: string;
   gmt_offset: string;
   year: number;
+  points?: number;
 };

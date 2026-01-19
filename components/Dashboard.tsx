@@ -9,24 +9,25 @@ import PaceChart from "@/components/PaceChart";
 import StintsChart from "@/components/StintsChart";
 import AISessionSummary from "@/components/AISessionSummary";
 import Loading from "./Loading";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
 import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "./Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedYear, setSelectedCircuit, setSelectedSession } from "../store/sessionFiltersSlice";
+import { setFilteredSession } from "../store/filteredSessionSlice";
 import { RootState } from "@/store/store";
 
 const Dashboard = () => {
   const sessionFilters = useSelector((state: RootState) => state.sessionFilters);
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
   const dispatch = useDispatch();
 
+  console.log(filteredSession);
+
   // This session is the currently "active" one whose data should show on the page
-  const { filteredSession, setFilteredSession } = useFilteredSession();
   const { sessionsData, setSessionsData } = useSessionsData();
   const { setDriversData } = useDriversData();
-
   // Filter select
   const [initializedFilters, setInitializedFilters] = useState(false);
 
@@ -79,16 +80,18 @@ const Dashboard = () => {
           s.circuit_short_name === sessionFilters.selectedCircuit &&
           s.session_name === sessionFilters.selectedSession
       );
-      setFilteredSession(found ?? null);
+      dispatch(setFilteredSession(found ?? null));
+      // setFilteredSession(found ?? null);
     } else {
-      setFilteredSession(null);
+      // setFilteredSession(null);
+      dispatch(setFilteredSession(null));
     }
   }, [
+    dispatch,
     sessionFilters.selectedYear,
     sessionFilters.selectedCircuit,
     sessionFilters.selectedSession,
     sessionsData,
-    setFilteredSession,
   ]);
 
   if (!filteredSession) {

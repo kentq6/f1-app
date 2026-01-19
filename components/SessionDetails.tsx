@@ -1,10 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { useFilteredSession } from "@/app/providers/FilteredSessionProvider";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const SessionDetails = () => {
-  const { filteredSession } = useFilteredSession();
+  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
 
   return (
     <div className="flex flex-col h-full">
