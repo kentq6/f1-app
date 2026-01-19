@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import driverReducer from './driverSlice';
+import sessionFiltersReducer from './sessionFiltersSlice';
 
 export const store = configureStore({
   reducer: {
+    sessionFilters: sessionFiltersReducer,
     drivers: driverReducer,
   },
 });
