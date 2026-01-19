@@ -2,17 +2,17 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const baseUrl = "https://api.openf1.org/v1";
+    const baseUrl = `${process.env.NEXT_PUBLIC_OPENF1_BASE_URL}`;
     const driversAPIUrl = `${baseUrl}/drivers`;
     const sessionsAPIUrl = `${baseUrl}/sessions`;
 
     // Fetch both upstream resources concurrently
     const [driversRes, sessionsRes] = await Promise.all([
       fetch(driversAPIUrl, {
-        next: { revalidate: 60 }, // cache 60s
+        next: { revalidate: 86400 }, // cache 60s
       }),
       fetch(sessionsAPIUrl, {
-        next: { revalidate: 60 }, // cache 60s
+        next: { revalidate: 86400 }, // cache 60s
       }),
     ]);
 
