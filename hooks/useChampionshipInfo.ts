@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SessionResult } from "@/types/sessionResult";
 import sortStandingsArray from "@/lib/standingUtils";
@@ -32,8 +31,8 @@ const fetchRaceResultsBySessionKey = async (sessionKey: number) => {
 
 export function useChampionshipInfo() {
   const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
+  const drivers = useSelector((state: RootState) => state.driversData);
 
-  const { driversData } = useDriversData();
   const queryClient = useQueryClient();
 
   // Fetch sessions for the selected year
@@ -85,7 +84,7 @@ export function useChampionshipInfo() {
   };
 
   const driverStandingsArray: DriversStanding[] = useMemo(() => {
-    if (!filteredSession || driversData.length === 0) return [];
+    if (!filteredSession || drivers.length === 0) return [];
     // First, tally all drivers' total points
     const driverTotals: Record<number, number> = {};
     for (const r of sessionResultsData) {
@@ -119,7 +118,7 @@ export function useChampionshipInfo() {
     // Attach driver details
     return driverPointsArr
       .map(({ driver_number, points, lastPointsReachedIdx }) => {
-        const driver = [...driversData]
+        const driver = [...drivers]
           .reverse()
           .find((d) => d.driver_number === driver_number);
         if (!driver) return null;
@@ -136,7 +135,7 @@ export function useChampionshipInfo() {
         };
       })
       .filter(Boolean) as (DriversStanding & { lastPointsReachedIdx: number })[];
-  }, [sessionResultsData, driversData, filteredSession]);
+  }, [sessionResultsData, drivers, filteredSession]);
 
   const driversStandings = useMemo(() => {
     // `driverStandingsArray` already includes the tiebreak key
@@ -145,7 +144,7 @@ export function useChampionshipInfo() {
 
   // === CONSTRUCTOR STANDINGS ===
   const constructorStandingsArray: ConstructorsStanding[] = useMemo(() => {
-    if (!filteredSession || driversData.length === 0) return [];
+    if (!filteredSession || drivers.length === 0) return [];
     const teamPointsMap: {
       [teamName: string]: { team_colour: string; points: number };
     } = {};
@@ -166,7 +165,7 @@ export function useChampionshipInfo() {
         points,
       })
     );
-  }, [driverStandingsArray, driversData, filteredSession]);
+  }, [driverStandingsArray, drivers, filteredSession]);
 
   const constructorsStandings = useMemo(() => {
     return sortStandingsArray(constructorStandingsArray);

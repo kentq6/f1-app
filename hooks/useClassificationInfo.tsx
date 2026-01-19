@@ -1,6 +1,5 @@
 import { ClassificationResult } from "@/app/providers/SessionInfoProvider";
 import { useEffect, useState } from "react";
-import { useDriversData } from "@/app/providers/DriversProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Driver } from "@/types/driver";
 import { useSelector } from "react-redux";
@@ -8,9 +7,8 @@ import { RootState } from "@/store/store";
 
 export default function useClassificationInfo() {
   const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
+  const driversData = useSelector((state: RootState) => state.driversData);
   
-  const { driversData } = useDriversData();
-
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [classificationResults, setClassificationResults] =
     useState<ClassificationResult | null>(null);

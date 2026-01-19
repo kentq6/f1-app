@@ -13,7 +13,6 @@ import {
 } from "@/lib/ai";
 import getSessionInsight from "@/app/actions/getSessionInsight";
 import { ThreeDot } from "react-loading-indicators";
-// import { useDriversData } from "@/app/providers/DriversProvider";
 import useClassificationInfo from "@/hooks/useClassificationInfo";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -21,7 +20,6 @@ import { RootState } from "@/store/store";
 const AISessionSummary = () => {
   const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
 
-  // const { driversData } = useDriversData();
   const { drivers, classificationResults } = useClassificationInfo();
 
   const [insight, setInsight] = useState<AIInsight | null>(null);

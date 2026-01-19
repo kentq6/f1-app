@@ -3,7 +3,7 @@
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar/AppSidebar";
-import { DriversProvider } from "./providers/DriversProvider";
+// import { DriversProvider } from "./providers/DriversProvider";
 import { SessionsProvider } from "./providers/SessionsProvider";
 import QueryProvider from "./providers/QueryProvider";
 import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
@@ -20,7 +20,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     >
       <StoreProvider>
         <SessionsProvider>
-          <DriversProvider>
+          {/* <DriversProvider> */}
             <QueryProvider>
               <SessionInfoProvider>
                 <SelectedDriversProvider>
@@ -31,7 +31,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                 </SelectedDriversProvider>
               </SessionInfoProvider>
             </QueryProvider>
-          </DriversProvider>
+          {/* </DriversProvider> */}
         </SessionsProvider>
       </StoreProvider>
     </ThemeProvider>
