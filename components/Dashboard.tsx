@@ -9,22 +9,30 @@ import PaceChart from "@/components/PaceChart";
 import StintsChart from "@/components/StintsChart";
 import AISessionSummary from "@/components/AISessionSummary";
 import Loading from "./Loading";
-import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "./Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedYear, setSelectedCircuit, setSelectedSession } from "../store/sessionFiltersSlice";
+import {
+  setSelectedYear,
+  setSelectedCircuit,
+  setSelectedSession,
+} from "../store/sessionFiltersSlice";
 import { setFilteredSession } from "../store/filteredSessionSlice";
 import { RootState } from "@/store/store";
+import { setSessionsData } from "@/store/sessionsDataSlice";
 import { setDriversData } from "../store/driversDataSlice";
 
 const Dashboard = () => {
-  const sessionFilters = useSelector((state: RootState) => state.sessionFilters);
-  const filteredSession = useSelector((state: RootState) => state.filteredSession.filteredSession);
+  const sessionsData = useSelector((state: RootState) => state.sessionsData);
+  const sessionFilters = useSelector(
+    (state: RootState) => state.sessionFilters
+  );
+  // This session is the currently "active" one whose data should show on the page
+  const filteredSession = useSelector(
+    (state: RootState) => state.filteredSession.filteredSession
+  );
   const dispatch = useDispatch();
 
-  // This session is the currently "active" one whose data should show on the page
-  const { sessionsData, setSessionsData } = useSessionsData();
   // Filter select
   const [initializedFilters, setInitializedFilters] = useState(false);
 
@@ -38,15 +46,20 @@ const Dashboard = () => {
 
   const { data: latestSession } = useQuery({
     queryKey: ["latestSession"],
-    queryFn: async () => await fetch("/api/sessions?session_key=latest").then((res) => res.json()),
+    queryFn: async () =>
+      await fetch("/api/sessions?session_key=latest").then((res) => res.json()),
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 48 * 60 * 60 * 1000,
   });
 
   useEffect(() => {
-    setSessionsData(driversAndSessionsData?.sessions ?? []);
+    dispatch(setSessionsData(driversAndSessionsData?.sessions ?? []));
     dispatch(setDriversData(driversAndSessionsData?.drivers ?? []));
-  }, [dispatch, setSessionsData, driversAndSessionsData?.sessions, driversAndSessionsData?.drivers]);
+  }, [
+    dispatch,
+    driversAndSessionsData?.sessions,
+    driversAndSessionsData?.drivers,
+  ]);
 
   useEffect(() => {
     if (sessionsData.length > 0 && !initializedFilters && latestSession) {
@@ -55,12 +68,7 @@ const Dashboard = () => {
       dispatch(setSelectedSession(latestSession[0].session_name));
       setInitializedFilters(true);
     }
-  }, [
-    dispatch,
-    sessionsData,
-    initializedFilters,
-    latestSession,
-  ]);
+  }, [dispatch, sessionsData, initializedFilters, latestSession]);
 
   // When all three filters (year, track, session type) are set, show updated session
   // Only set filteredSession when the session actually changes due to filter interaction

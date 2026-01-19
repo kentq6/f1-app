@@ -3,7 +3,6 @@
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar/AppSidebar";
-import { SessionsProvider } from "./providers/SessionsProvider";
 import QueryProvider from "./providers/QueryProvider";
 import { SessionInfoProvider } from "@/app/providers/SessionInfoProvider";
 import { SelectedDriversProvider } from "@/app/providers/SelectedDriversProvider";
@@ -18,18 +17,16 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       <StoreProvider>
-        <SessionsProvider>
-          <QueryProvider>
-            <SessionInfoProvider>
-              <SelectedDriversProvider>
-                <SidebarProvider defaultOpen={false}>
-                  <AppSidebar />
-                  {children}
-                </SidebarProvider>
-              </SelectedDriversProvider>
-            </SessionInfoProvider>
-          </QueryProvider>
-        </SessionsProvider>
+        <QueryProvider>
+          <SessionInfoProvider>
+            <SelectedDriversProvider>
+              <SidebarProvider defaultOpen={false}>
+                <AppSidebar />
+                {children}
+              </SidebarProvider>
+            </SelectedDriversProvider>
+          </SessionInfoProvider>
+        </QueryProvider>
       </StoreProvider>
     </ThemeProvider>
   );

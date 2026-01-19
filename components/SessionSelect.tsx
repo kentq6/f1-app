@@ -6,15 +6,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSessionsData } from "@/app/providers/SessionsProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedYear, setSelectedCircuit, setSelectedSession } from "../store/sessionFiltersSlice";
 
 const SessionSelect = () => {
+  const sessionsData = useSelector((state: RootState) => state.sessionsData);
   const { selectedYear, selectedCircuit, selectedSession } = useSelector((state: RootState) => state.sessionFilters);
   const dispatch = useDispatch();
-  const { sessionsData } = useSessionsData();
 
   // Compute options for select fields
   const yearOptions = Array.from(new Set(sessionsData.map((s) => s.year))).sort(
