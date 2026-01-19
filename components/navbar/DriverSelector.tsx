@@ -4,8 +4,8 @@ import {
   SelectGroup,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Button } from "./ui/button";
+} from "../ui/select";
+import { Button } from "../ui/button";
 import { useSessionInfo } from "@/app/providers/SessionInfoProvider";
 import { useSelectedDrivers } from "@/app/providers/SelectedDriversProvider";
 import { Driver } from "@/types/driver";

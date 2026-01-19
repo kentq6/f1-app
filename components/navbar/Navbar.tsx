@@ -2,13 +2,13 @@
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { SidebarTrigger, useSidebar } from "./ui/sidebar";
-import Logo from "./Logo";
+import { SidebarTrigger, useSidebar } from "../ui/sidebar";
+import Logo from "../Logo";
 import React, { useState } from "react";
 import SessionSelect from "./SessionSelect";
 import { LogIn } from "lucide-react";
-import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
+import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
 import DriverSelector from "./DriverSelector";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";

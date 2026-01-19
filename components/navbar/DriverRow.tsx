@@ -1,6 +1,6 @@
 import { Driver } from "@/types/driver";
-import { Checkbox } from "./ui/checkbox";
-import { Label } from "./ui/label";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 import React from "react";
 
 type DriverRowProps = {

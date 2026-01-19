@@ -10,7 +10,7 @@ import StintsChart from "@/components/StintsChart";
 import AISessionSummary from "@/components/AISessionSummary";
 import Loading from "./Loading";
 import { useQuery } from "@tanstack/react-query";
-import Navbar from "./Navbar";
+import Navbar from "./navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setSelectedYear,

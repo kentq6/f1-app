@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setSelectedYear, setSelectedCircuit, setSelectedSession } from "../store/sessionFiltersSlice";
+import { setSelectedYear, setSelectedCircuit, setSelectedSession } from "@/store/sessionFiltersSlice";
 
 const SessionSelect = () => {
   const sessionsData = useSelector((state: RootState) => state.sessionsData);
